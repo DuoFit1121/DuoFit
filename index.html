@@ -256,6 +256,8 @@ const TEST_MODE = false;    // true — подписка включается б
 /* Тестировщики: Telegram ID людей, которым доступна кнопка «Включить подписку (тест)».
    Остальные видят обычную оплату. Узнать свой ID: бот @userinfobot в Telegram. */
 const TESTERS = [1931164453];
+/* Яндекс Метрика: номер счётчика с metrika.yandex.ru. 0 — аналитика выключена. */
+const YM_ID = 113561691;
 /* Подарочные коды: владелец создаёт их в своём генераторе (duofit-admin.html) секретным ключом,
    приложение проверяет подпись этим открытым ключом. Код привязан к Telegram ID получателя и сроку. */
 const GIFT_PUB={"kty":"EC","x":"fb3jJrhJi32h6EXatJrnK5ursFYU8bhPQJvSO4_4oc0","y":"A8lY7uEcr3JjREBPfwoKxVzp10AIfxFpY4frQqyzx-s","crv":"P-256"};
@@ -1791,6 +1793,7 @@ function render(){
   const app=$("#app");
   const main=["program","food","library","progress","profile"].includes(view);
   $("#tabs").hidden=!main;
+  if(view==="paywall"&&lastTracked!=="paywall") track("paywall_open"); lastTracked=view;
   { const bt={program:"program",workout:"program",paywall:"program",paying:"program",welcome:"program",guide:"program",food:"food",foodsetup:"food",progress:"progress",library:"library",exercise:"library",profile:"profile",full:"profile",onboard:"profile"}[view]||"program";
     const bg=document.getElementById("bgpat"); if(bg&&bg.dataset.tab!==bt) bg.dataset.tab=bt; }
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.v===view));
@@ -2219,13 +2222,13 @@ const A={
   finishOnboard:()=>{
     const prev=S.profile?{goal:opts().goal,asked:S.profile.goal,c:S.premium&&S.full?calc():null}:null;
     S.profile={sex:draft.sex,goal:draft.goal,level:+draft.level,place:draft.place,eq:draft.place==="home"?(draft.eq||[]):[]};
-    if(!S.start) S.start=today();
+    if(!S.start){ S.start=today(); track("onboard_done",{"цель":GOALS[draft.goal],"место":draft.place==="home"?"дом":"зал"}); }
     if(S.full&&S.full.sex!==draft.sex) S.full.sex=draft.sex;S.swaps={};save();selWeek=0;view="program";haptic("success");render();
     if(prev&&prev.asked!==draft.goal) popup(goalChangeText(prev));
   },
   editBasic:()=>{draft=Object.assign({},S.profile,{eq:(S.profile.eq||[]).slice()});view="onboard";render();},
   week:v=>{selWeek=+v;render();},
-  startDay:v=>{workout={w:selWeek,d:+v,sets:{},kg:{},start:Date.now()};view="workout";render();},
+  startDay:v=>{track(S.history.length?"workout_start":"first_workout_start");workout={w:selWeek,d:+v,sets:{},kg:{},start:Date.now()};view="workout";render();},
   exInfo:v=>{ if(!exOpen(v)){ lockSheet(v); return; } openEx=v;workout&&view==="workout"?(workout._ret=true):null;view="exercise";render();},
   setDone:(v,el)=>{
     const i=+el.dataset.i, s=+el.dataset.s, cur=workout.sets[i]||0;
@@ -2266,6 +2269,7 @@ const A={
     stopTimer(); save(); haptic("success");
     const cst={title:day.title,min,sets:day.items.reduce((a,it,i)=>a+Math.min(it.sets,workout.sets[i]||0),0),total:S.history.length,prem:o.prem,
       weekDone:weeks[workout.w-1].days.every((x,i)=>S.done[`${o.prem?"p":"f"}${workout.w}-${i}`])&&weeks[workout.w-1].days.length>1};
+    track("workout_done",{"номер":cst.total}); if(cst.total===1) track("first_workout_done");
     if(o.prem){ view="feedback"; $("#app").innerHTML=vFeedback(); $("#tabs").hidden=true; celebrate(cst); return; }
     workout=null; view="program"; render(); celebrate(cst);
   },
@@ -2321,7 +2325,7 @@ const A={
   fset:(v,el)=>{ const k=el.dataset.k; draft3[k]=k==="meals"?+v:k==="veg"?v==="1":v; render(); },
   fexcl:v=>{ draft3.excl=draft3.excl||[]; draft3.excl=draft3.excl.includes(v)?draft3.excl.filter(x=>x!==v):[...draft3.excl,v]; render(); },
   fyn:(v,el)=>{ draft3[el.dataset.k]=v==="1"; render(); },
-  saveFood:()=>{
+  saveFood:()=>{ track("food_setup");
     const d=draft3, err=m=>{$("#foodErr").textContent=m;};
     if(!d.meals) return err("Выбери, сколько раз в день ешь.");
     if(d.veg===undefined) return err("Выбери тип питания.");
@@ -2359,6 +2363,7 @@ const A={
     S.full={sex:d.sex,age,height,weight,waist:n("waist")||null,hips:n("hips")||null,chest:n("chest")||null,days:+d.days,lims:d.lims||[],caution,preg:d.q_preg===true,target:tg2.t||null,startW:(S.full&&S.full.startW)||weight,tgoal:tg2.t?tg2.goal:null,
       str:cautionNow?{dbMax:dbMax||null}:Object.assign({push:nz(d.push),squat:nz(d.squat),pull:nz(d.pull),dbMax:dbMax||null},anchors)};
     if(!S.body.length||S.body[S.body.length-1].d!==today()) S.body.push({d:today(),w:weight,waist:S.full.waist,hips:S.full.hips,chest:S.full.chest});
+    track("full_anketa_done");
     S.swaps={}; save(); selWeek=0; view="program"; haptic("success"); render();
     if(caution) popup("По твоим ответам нагрузку стоит согласовать с врачом. Мы включили щадящий режим.");
   },
@@ -2375,7 +2380,7 @@ const A={
   resetSwaps:()=>{S.swaps={};save();render();},
   wkok:v=>{ S.wkSeen=v; save(); render(); },
   testSub:()=>{ if(isTester()) testSubscribe(); },
-  giftGo:()=>{ activateGift(); },
+  giftGo:()=>{ track("gift_try"); activateGift(); },
   giftOpen:()=>{ view="profile"; render(); const el=document.getElementById("giftCard"); if(el){ el.scrollIntoView({block:"center"}); const i=document.getElementById("giftCode"); if(i) i.focus(); } },
   copyId:v=>{ try{ navigator.clipboard.writeText(v).then(()=>popup("ID скопирован. Отправь его тому, кто дарит подписку.")).catch(()=>popup("Твой ID: "+v)); }catch(e){ popup("Твой ID: "+v); } },
   testOff:()=>{ S.testPrem=false; S.premium=giftActive(); S.premSrc=giftActive()?"gift":null; S.premUntil=giftActive()?S.gift.until+"T23:59:00":null; save(); view="program"; render(); syncStatus(); },
@@ -2468,6 +2473,7 @@ function testSubscribe(){
   });
 }
 async function requestSubscription(){
+  track("subscribe_click",{"тариф":selPlan});
   if(TEST_MODE){
     confirmBox("Тестовый режим: оплата не подключена. Включить подписку для проверки?",ok=>{
       if(!ok) return; S.premium=true; S.premUntil=new Date(Date.now()+PLANS[selPlan].days*864e5).toISOString(); save(); afterPremium();
@@ -2504,6 +2510,7 @@ async function syncStatus(manual){
   }catch(e){ if(manual){ const el=$("#payErr"); if(el) el.textContent=e.message; } }
 }
 function afterPremium(){
+  if(S.premSrc!=="test"&&S.premSrc!=="gift") track("purchase",{"тариф":selPlan,"цена":PLANS[selPlan]&&PLANS[selPlan].price});
   haptic("success"); payUrl="";
   if(S.full){ view="program"; render(); popup(`Подписка активна до ${untilText()}.`); }
   else { draft2={sex:S.profile&&S.profile.sex}; view="full"; render(); }
@@ -2637,6 +2644,28 @@ function celebrate(st){
   if(!reduce) confetti(w);
   w.querySelector("#dfCelebOk").onclick=()=>w.remove();
 }
+
+/* ---------- Аналитика (Яндекс Метрика) ----------
+   Цели воронки: открыл → анкета → тренировка → тарифы → оплата. Источник берётся из метки ссылки
+   t.me/Duofit_coach_bot?startapp=МЕТКА и передаётся в Метрику как параметр визита «источник». */
+let ymReady=false, lastTracked="";
+function startParam(){
+  try{ const sp=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.start_param; if(sp) return String(sp).slice(0,64); }catch(e){}
+  try{ const q=new URLSearchParams(location.search); return (q.get("tgWebAppStartParam")||q.get("startapp")||q.get("src")||"").slice(0,64)||null; }catch(e){ return null; }
+}
+function initMetrika(){
+  if(!YM_ID||TEST_MODE||ymReady) return;
+  ymReady=true;
+  (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();
+    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
+  const src=startParam()||S.src||"прямой заход";
+  if(!S.src&&startParam()){ S.src=startParam(); try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+  ym(YM_ID,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true,
+    params:{"источник":src,"подписка":S.premium?"да":"нет","цель":S.profile?GOALS[S.profile.goal]||"":"нет анкеты","пол":S.profile&&S.profile.sex==="f"?"женщина":S.profile&&S.profile.sex==="m"?"мужчина":"—"}});
+  if(!S.firstSeen){ S.firstSeen=today(); try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} track("first_open",{"источник":src}); }
+}
+function track(goal,params){ try{ if(YM_ID&&ymReady&&window.ym) ym(YM_ID,"reachGoal",goal,params||{}); }catch(e){} }
 
 /* ---------- Таймер отдыха ---------- */
 function startTimer(sec){
@@ -2776,6 +2805,7 @@ function applyTheme(){
   render();
   if(fromNotif){ const el=document.getElementById("notifCard"); if(el) el.scrollIntoView({block:"start"}); }
   if(inTg) setTimeout(doSync,1500);
+  initMetrika();
 })();
 </script>
 </body>
