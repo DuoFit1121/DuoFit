@@ -115,7 +115,8 @@ const inTg = !!(tg && tg.initData);
    Когда будет бот-сервер: SUBSCRIBE_ENDPOINT вернёт ссылку на счёт в Stars,
    а статус подписки будет проверяться на сервере по Telegram ID. */
 const SUBSCRIBE_ENDPOINT = "";   // например "https://api.duofit.ru/subscribe"
-const PRICE_TEXT = "299 ⭐ в месяц"; // цену поменяете перед запуском
+const PRICE_STARS = 250;                          // цена подписки в Telegram Stars за 30 дней
+const PRICE_TEXT = `${PRICE_STARS} ⭐ в месяц`;   // текст цены на экране подписки
 
 /* ---------- Справочник упражнений ----------
    place: g — зал, h — дом, b — и там и там
