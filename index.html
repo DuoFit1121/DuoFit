@@ -216,6 +216,9 @@ const inTg = !!(tg && tg.initData);
    Оплата открывается во внешнем браузере, статус подписки хранит сервер (server/server.js). */
 const API_BASE = "";        // приложение и сервер на одном домене — оставьте пустым; иначе, например, "https://duofit.ru"
 const TEST_MODE = false;    // true — подписка включается без оплаты, только для проверки интерфейса
+/* Тестировщики: Telegram ID людей, которым доступна кнопка «Включить подписку (тест)».
+   Остальные видят обычную оплату. Узнать свой ID: бот @userinfobot в Telegram. */
+const TESTERS = [1931164453];
 /* Тарифы по умолчанию. Реальные цены (в том числе цену первого месяца) приложение получает с сервера. */
 let PLANS = {
   m1:{title:"1 месяц",days:30,price:800,full:800,first:false},
@@ -1994,6 +1997,8 @@ function vProfile(){
   <div class="card small"><p><span class="badge ai">ИИ</span> Макс и Ева — виртуальные персонажи DuoFit, не реальные люди.</p>
   <p class="hint">Программы составлены по общим принципам тренировок и не являются медицинской рекомендацией. При заболеваниях, травмах, беременности проконсультируйся с врачом.</p>
   <p class="hint">Твои данные хранятся на этом устройстве и в облачном хранилище Telegram.</p></div>
+  ${isTester()&&!TEST_MODE?`<div class="card small" style="border-style:dashed"><b>🧪 Режим тестировщика</b><p class="hint mt0">Видно только тебе. Тестовая подписка: ${S.testPrem?"включена":"выключена"}.</p>
+   ${S.testPrem?`<button class="btn sm sec" data-a="testOff">Выключить тестовую подписку</button>`:`<button class="btn sm sec" data-a="testSub">Включить тестовую подписку</button>`}</div>`:""}
   <button class="btn sec" data-a="reset">Удалить мои данные</button>`;
 }
 
@@ -2007,6 +2012,7 @@ function vPaywall(){
   ${NEED_EMAIL&&!TEST_MODE?`<div class="field"><label>Email для чека</label><input id="payEmail" type="email" inputmode="email" placeholder="you@mail.ru" value="${esc(S.email||"")}"></div>`:""}
   <p id="payErr" class="small" style="color:var(--warn)"></p>
   <button class="btn" data-a="subscribe" id="payBtn">${S.premium?"Продлить подписку":"Оформить подписку"}</button>
+  ${isTester()&&!TEST_MODE?`<button class="btn sec" data-a="testSub" style="border-style:dashed">🧪 Включить подписку (тест)</button>`:""}
   <button class="btn sec" data-a="back">Позже</button>`;
 }
 
@@ -2321,6 +2327,8 @@ const A={
   libgrp:v=>{ if(!S.premium){ groupSheet(v); return; } libOpen[v]=!libOpen[v]; render(); },
   resetSwaps:()=>{S.swaps={};save();render();},
   wkok:v=>{ S.wkSeen=v; save(); render(); },
+  testSub:()=>{ if(isTester()) testSubscribe(); },
+  testOff:()=>{ S.testPrem=false; S.premium=false; S.premUntil=null; save(); view="program"; render(); syncStatus(); },
   guide:()=>{ guideRet=view; view="guide"; render(); },
   gsec:v=>{ guideOpen[v]=!guideOpen[v]; render(); },
   guideHint:()=>{ S.guideSeen=1; save(); render(); },
@@ -2361,6 +2369,15 @@ async function api(path,body){
   if(!r.ok) throw new Error(j.error||"Сервер недоступен, попробуй позже");
   return j;
 }
+function isTester(){
+  if(TEST_MODE) return true;
+  try{ const u=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user; return !!(u&&TESTERS.map(String).includes(String(u.id))); }catch(e){ return false; }
+}
+function testSubscribe(){
+  confirmBox("Тестовый режим: включить подписку без оплаты? Она видна только тебе и не влияет на других пользователей.",ok=>{
+    if(!ok) return; S.testPrem=true; S.premium=true; S.premUntil=new Date(Date.now()+PLANS[selPlan].days*864e5).toISOString(); save(); afterPremium();
+  });
+}
 async function requestSubscription(){
   if(TEST_MODE){
     confirmBox("Тестовый режим: оплата не подключена. Включить подписку для проверки?",ok=>{
@@ -2389,7 +2406,8 @@ async function syncStatus(manual){
   try{
     const st=await api("/api/status",{initData:tg.initData});
     if(st.plans) PLANS=st.plans;
-    const was=S.premium; S.premium=!!st.active; S.premUntil=st.until; save();
+    const was=S.premium, test=isTester()&&S.testPrem&&!st.active;
+    S.premium=!!st.active||test; if(!test) S.premUntil=st.until; save();
     if(view==="paywall"&&!payBusy) render();
     if(S.premium&&(!was||view==="paying")){ afterPremium(); return; }
     if(manual&&!S.premium){ const e=$("#payErr"); if(e) e.textContent="Оплата пока не поступила. Если ты уже оплатил, подожди минуту и проверь снова."; }
