@@ -11,7 +11,7 @@
   --bg:#101318; --card:#181c23; --card2:#212631; --line:#2c323e; --text:#f2f4f7; --hint:#a7afbc;
   --accent:#ff7a50; --accent-text:#1f0d05; --accent-ink:#ff9370; --accent-soft:rgba(255,122,80,.14);
   --max:#7aa2ff; --max-bg:#4d7cf5; --eva:#e8457f; --ok:#3dd68c; --ok-text:#06210f; --warn:#f6b94a;
-  --shadow:none; --overlay:rgba(5,7,10,.62);
+  --shadow:none; --overlay:rgba(5,7,10,.62); --ga:.26;
   --r:16px; color-scheme:dark;
 }
 /* Светлая тема. Подсказки ≥ 5,5:1, акцентный текст ≥ 5:1. */
@@ -19,20 +19,47 @@
   --bg:#f4f5f7; --card:#ffffff; --card2:#eef0f4; --line:#dfe3e9; --text:#14171c; --hint:#555e6c;
   --accent:#ff7a50; --accent-text:#1f0d05; --accent-ink:#c2410c; --accent-soft:rgba(255,122,80,.14);
   --max:#2f62e0; --max-bg:#3d6ff0; --eva:#d93a73; --ok:#15803d; --ok-text:#ffffff; --warn:#b45309;
-  --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.04); --overlay:rgba(16,24,40,.45);
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.04); --overlay:rgba(16,24,40,.45); --ga:.2;
   color-scheme:light;
 }
 @media (prefers-color-scheme: light){
   :root:not([data-theme]){
     --bg:#f4f5f7; --card:#ffffff; --card2:#eef0f4; --line:#dfe3e9; --text:#14171c; --hint:#555e6c;
     --accent-ink:#c2410c; --max:#2f62e0; --max-bg:#3d6ff0; --eva:#d93a73; --ok:#15803d; --ok-text:#ffffff; --warn:#b45309;
-    --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.04); --overlay:rgba(16,24,40,.45); color-scheme:light;
+    --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.04); --overlay:rgba(16,24,40,.45); --ga:.2; color-scheme:light;
   }
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 [hidden]{display:none!important}
 html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 img{max-width:100%;display:block}
+body{background:transparent}
+/* Фон в стиле обоев Telegram: бледные контурные фитнес-иконки и мягкий цветной градиент.
+   Карточки сплошные, поэтому узор виден только в промежутках и не мешает читать. */
+#bgpat{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+/* Узор: слой больше экрана на одну плитку и сдвигается ровно на плитку — повтор бесшовный.
+   Двигается только transform, поэтому анимация не перерисовывает страницу и почти не тратит батарею. */
+#bgpat:before{content:"";position:absolute;top:-320px;left:-320px;right:0;bottom:0;background-image:var(--pat);background-size:320px 320px;
+  animation:patDrift 90s linear infinite;will-change:transform}
+/* Цветные пятна: медленно смещаются и «дышат». */
+#bgpat:after{content:"";position:absolute;inset:-20%;
+  background-image:radial-gradient(55% 42% at 18% 18%,rgba(var(--g1),var(--ga)),transparent 70%),radial-gradient(52% 42% at 82% 82%,rgba(var(--g2),var(--ga)),transparent 70%);
+  animation:glowFloat 22s ease-in-out infinite alternate;will-change:transform}
+/* Третий цвет медленно проявляется и гаснет — так заметна смена оттенков. */
+#bgpat .g3{position:absolute;inset:-20%;background-image:radial-gradient(45% 38% at 78% 25%,rgba(var(--g3),var(--ga)),transparent 70%),radial-gradient(42% 36% at 22% 78%,rgba(var(--g1),calc(var(--ga) * .8)),transparent 70%);
+  animation:glowSwap 16s ease-in-out infinite alternate;will-change:transform,opacity}
+@keyframes glowSwap{0%{opacity:0;transform:translate3d(-4%,3%,0) scale(1)}100%{opacity:1;transform:translate3d(4%,-4%,0) scale(1.12)}}
+@keyframes patDrift{from{transform:translate3d(0,0,0)}to{transform:translate3d(320px,320px,0)}}
+@keyframes glowFloat{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(7%,-6%,0) scale(1.12)}100%{transform:translate3d(-6%,7%,0) scale(1.04)}}
+:root[data-anim="off"] #bgpat:before,:root[data-anim="off"] #bgpat:after,:root[data-anim="off"] #bgpat .g3{animation:none}
+:root[data-anim="off"] #bgpat .g3{opacity:.5}
+@media (prefers-reduced-motion: reduce){ #bgpat:before,#bgpat:after,#bgpat .g3{animation:none} #bgpat .g3{opacity:.5} }
+/* Узор у каждой вкладки свой; цвет линий нейтральный и бледный (около 10%), подходит к светлой и тёмной теме. */
+#bgpat[data-tab="program"]{--pat:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22320%22 viewBox=%220 0 320 320%22%3E%3Cg fill=%22none%22 stroke=%22rgba%28128,134,146,0.16%29%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cg transform=%22translate%2840 38%29 rotate%28-20%29 scale%281%29%22%3E%3Crect x=%22-24%22 y=%22-10%22 width=%227%22 height=%2220%22 rx=%222%22/%3E%3Crect x=%2217%22 y=%22-10%22 width=%227%22 height=%2220%22 rx=%222%22/%3E%3Crect x=%22-30%22 y=%22-6%22 width=%226%22 height=%2212%22 rx=%222%22/%3E%3Crect x=%2224%22 y=%22-6%22 width=%226%22 height=%2212%22 rx=%222%22/%3E%3Cpath d=%22M-17 0h34%22/%3E%3C/g%3E%3Cg transform=%22translate%28120 30%29 rotate%2810%29 scale%281%29%22%3E%3Ccircle r=%2213%22/%3E%3Cpath d=%22M0-13v-5M-4-19h8M0-6v6l5 3%22/%3E%3C/g%3E%3Cg transform=%22translate%28205 45%29 rotate%28-8%29 scale%281%29%22%3E%3Cpath d=%22M-6-18h12v5c4 2 6 5 6 9v20a3 3 0 0 1-3 3h-18a3 3 0 0 1-3-3v-20c0-4 2-7 6-9z%22/%3E%3Cpath d=%22M-12 2h24%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 40%29 rotate%2812%29 scale%281%29%22%3E%3Cpath d=%22M-9-3c-4-16 22-16 18 0%22/%3E%3Cpath d=%22M-12 8c0-9 5-13 12-13s12 4 12 13c0 5-3 9-7 9h-10c-4 0-7-4-7-9z%22/%3E%3C/g%3E%3Cg transform=%22translate%2825 115%29 rotate%2815%29 scale%280.9%29%22%3E%3Cpath d=%22M3-16l-12 18h9l-3 14 12-18h-9z%22/%3E%3C/g%3E%3Cg transform=%22translate%28100 110%29 rotate%28-6%29 scale%281%29%22%3E%3Cpath d=%22M0 12c-14-8-18-16-14-22 3-5 10-5 14 1 4-6 11-6 14-1 4 6 0 14-14 22z%22/%3E%3Cpath d=%22M-12 1h7l3-5 4 9 3-4h7%22/%3E%3C/g%3E%3Cg transform=%22translate%28180 120%29 rotate%280%29 scale%281%29%22%3E%3Ccircle r=%2214%22/%3E%3Ccircle r=%224%22/%3E%3Cpath d=%22M0-10v2M0 8v2M-10 0h2M8 0h2%22/%3E%3C/g%3E%3Cg transform=%22translate%28265 118%29 rotate%28-12%29 scale%281%29%22%3E%3Cpath d=%22M-20 6c0-8 2-14 6-14l4 4c3 2 6 2 9 1l7 4c6 2 14 3 14 9v2h-40z%22/%3E%3Cpath d=%22M-20 10h40M-9-3l3 3M-5-6l3 3%22/%3E%3C/g%3E%3Cg transform=%22translate%2845 200%29 rotate%288%29 scale%281%29%22%3E%3Cpath d=%22M-6-18h12v5c4 2 6 5 6 9v20a3 3 0 0 1-3 3h-18a3 3 0 0 1-3-3v-20c0-4 2-7 6-9z%22/%3E%3Cpath d=%22M-12 2h24%22/%3E%3C/g%3E%3Cg transform=%22translate%28125 190%29 rotate%280%29 scale%280.8%29%22%3E%3Cpath d=%22M0-11l3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z%22/%3E%3C/g%3E%3Cg transform=%22translate%28200 205%29 rotate%28-10%29 scale%281%29%22%3E%3Crect x=%22-18%22 y=%22-20%22 width=%226%22 height=%2212%22 rx=%223%22/%3E%3Crect x=%2212%22 y=%22-20%22 width=%226%22 height=%2212%22 rx=%223%22/%3E%3Cpath d=%22M-15-8c0 30 30 30 30 0%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 195%29 rotate%286%29 scale%280.9%29%22%3E%3Cpath d=%22M0-12c6 8 9 12 9 17a9 9 0 0 1-18 0c0-5 3-9 9-17z%22/%3E%3C/g%3E%3Cg transform=%22translate%2830 285%29 rotate%28-14%29 scale%280.9%29%22%3E%3Cpath d=%22M-9-3c-4-16 22-16 18 0%22/%3E%3Cpath d=%22M-12 8c0-9 5-13 12-13s12 4 12 13c0 5-3 9-7 9h-10c-4 0-7-4-7-9z%22/%3E%3C/g%3E%3Cg transform=%22translate%28115 275%29 rotate%2828%29 scale%281%29%22%3E%3Crect x=%22-24%22 y=%22-10%22 width=%227%22 height=%2220%22 rx=%222%22/%3E%3Crect x=%2217%22 y=%22-10%22 width=%227%22 height=%2220%22 rx=%222%22/%3E%3Crect x=%22-30%22 y=%22-6%22 width=%226%22 height=%2212%22 rx=%222%22/%3E%3Crect x=%2224%22 y=%22-6%22 width=%226%22 height=%2212%22 rx=%222%22/%3E%3Cpath d=%22M-17 0h34%22/%3E%3C/g%3E%3Cg transform=%22translate%28205 285%29 rotate%28-10%29 scale%280.9%29%22%3E%3Ccircle r=%2213%22/%3E%3Cpath d=%22M0-13v-5M-4-19h8M0-6v6l5 3%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 280%29 rotate%2814%29 scale%280.9%29%22%3E%3Cpath d=%22M-20 6c0-8 2-14 6-14l4 4c3 2 6 2 9 1l7 4c6 2 14 3 14 9v2h-40z%22/%3E%3Cpath d=%22M-20 10h40M-9-3l3 3M-5-6l3 3%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");--g1:255,122,80;--g2:77,124,245;--g3:224,161,46}
+#bgpat[data-tab="food"]{--pat:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22320%22 viewBox=%220 0 320 320%22%3E%3Cg fill=%22none%22 stroke=%22rgba%28128,134,146,0.16%29%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cg transform=%22translate%2840 38%29 rotate%28-20%29 scale%281%29%22%3E%3Cpath d=%22M0-6c-9-6-18 0-15 11 2 7 7 12 11 11 2-1 2-1 4 0 4 1 9-4 11-11 3-11-6-17-15-11z%22/%3E%3Cpath d=%22M0-6c0-5 2-8 5-9M2-12c4-3 8-2 9 0-3 3-7 3-9 0z%22/%3E%3C/g%3E%3Cg transform=%22translate%28120 30%29 rotate%2810%29 scale%281%29%22%3E%3Cpath d=%22M-15 15c6-14 12-22 18-24 4-1 7 2 6 6-2 6-10 12-24 18z%22/%3E%3Cpath d=%22M6-10l4-8M9-7l8-3M8-9l7-6M-6 3l3 2M-1-3l3 2%22/%3E%3C/g%3E%3Cg transform=%22translate%28205 45%29 rotate%28-8%29 scale%281%29%22%3E%3Cpath d=%22M-14 0c6-9 18-9 24 0-6 9-18 9-24 0zM10 0l9-7v14z%22/%3E%3Ccircle cx=%22-6%22 cy=%22-2%22 r=%221.5%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 40%29 rotate%2812%29 scale%281%29%22%3E%3Cpath d=%22M0-18c6 0 8 8 10 14 3 8 2 18-10 18S-13 6-10-4C-8-10-6-18 0-18z%22/%3E%3Ccircle cy=%225%22 r=%225%22/%3E%3C/g%3E%3Cg transform=%22translate%2825 115%29 rotate%2815%29 scale%280.9%29%22%3E%3Cpath d=%22M-8-18v10a3 3 0 0 0 6 0v-10M-5-18v36M8-18c-5 4-5 14 0 16v20%22/%3E%3C/g%3E%3Cg transform=%22translate%28100 110%29 rotate%28-6%29 scale%281%29%22%3E%3Cpath d=%22M0-16c7 0 12 11 12 18a12 12 0 0 1-24 0c0-7 5-18 12-18z%22/%3E%3C/g%3E%3Cg transform=%22translate%28180 120%29 rotate%280%29 scale%281%29%22%3E%3Cpath d=%22M-3 18v-10M3 18v-10%22/%3E%3Cpath d=%22M-12 8a6 6 0 0 1 0-11 7 7 0 0 1 12-6 7 7 0 0 1 12 6 6 6 0 0 1 0 11z%22/%3E%3C/g%3E%3Cg transform=%22translate%28265 118%29 rotate%28-12%29 scale%281%29%22%3E%3Cpath d=%22M-12-6h20v8a10 10 0 0 1-20 0z%22/%3E%3Cpath d=%22M8-3h3a4 4 0 0 1 0 8h-3M-6-16c-2 3 2 5 0 8M0-16c-2 3 2 5 0 8%22/%3E%3C/g%3E%3Cg transform=%22translate%2845 200%29 rotate%288%29 scale%281%29%22%3E%3Cpath d=%22M-16-6c2 16 22 22 32 10-12 4-24-2-26-14z%22/%3E%3Cpath d=%22M-16-6l-2-4%22/%3E%3C/g%3E%3Cg transform=%22translate%28125 190%29 rotate%280%29 scale%280.8%29%22%3E%3Cpath d=%22M-14 14C-14-6 0-14 16-16 14 0 6 14-14 14zM-14 14L8-8%22/%3E%3C/g%3E%3Cg transform=%22translate%28200 205%29 rotate%28-10%29 scale%281%29%22%3E%3Cpath d=%22M-16-2h32a16 14 0 0 1-32 0z%22/%3E%3Cpath d=%22M-8-8c2-4 6-4 8 0M2-8c2-4 6-4 8 0%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 195%29 rotate%286%29 scale%280.9%29%22%3E%3Ccircle cx=%22-7%22 cy=%228%22 r=%226%22/%3E%3Ccircle cx=%228%22 cy=%2210%22 r=%226%22/%3E%3Cpath d=%22M-6 2c2-10 6-16 12-18M8 4c0-8-2-14-2-20M6-16c4-2 8-1 10 2-4 2-8 1-10-2z%22/%3E%3C/g%3E%3Cg transform=%22translate%2830 285%29 rotate%28-14%29 scale%280.9%29%22%3E%3Cpath d=%22M0-16c7 0 12 11 12 18a12 12 0 0 1-24 0c0-7 5-18 12-18z%22/%3E%3C/g%3E%3Cg transform=%22translate%28115 275%29 rotate%2828%29 scale%281%29%22%3E%3Cpath d=%22M0-6c-9-6-18 0-15 11 2 7 7 12 11 11 2-1 2-1 4 0 4 1 9-4 11-11 3-11-6-17-15-11z%22/%3E%3Cpath d=%22M0-6c0-5 2-8 5-9M2-12c4-3 8-2 9 0-3 3-7 3-9 0z%22/%3E%3C/g%3E%3Cg transform=%22translate%28205 285%29 rotate%28-10%29 scale%280.9%29%22%3E%3Cpath d=%22M-15 15c6-14 12-22 18-24 4-1 7 2 6 6-2 6-10 12-24 18z%22/%3E%3Cpath d=%22M6-10l4-8M9-7l8-3M8-9l7-6M-6 3l3 2M-1-3l3 2%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 280%29 rotate%2814%29 scale%280.9%29%22%3E%3Cpath d=%22M0-12c6 8 9 12 9 17a9 9 0 0 1-18 0c0-5 3-9 9-17z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");--g1:47,179,122;--g2:224,161,46;--g3:42,179,184}
+#bgpat[data-tab="progress"]{--pat:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22320%22 viewBox=%220 0 320 320%22%3E%3Cg fill=%22none%22 stroke=%22rgba%28128,134,146,0.16%29%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cg transform=%22translate%2840 38%29 rotate%28-20%29 scale%281%29%22%3E%3Cpath d=%22M-18-16v32h36%22/%3E%3Cpath d=%22M-12 8l8-8 6 5 12-14M12-9h6v6%22/%3E%3C/g%3E%3Cg transform=%22translate%28120 30%29 rotate%2810%29 scale%281%29%22%3E%3Crect x=%22-16%22 y=%22-16%22 width=%2232%22 height=%2232%22 rx=%226%22/%3E%3Cpath d=%22M-8-5a8 8 0 0 1 16 0z%22/%3E%3Cpath d=%22M0-5l3-4%22/%3E%3C/g%3E%3Cg transform=%22translate%28205 45%29 rotate%28-8%29 scale%281%29%22%3E%3Ccircle r=%2214%22/%3E%3Ccircle r=%228%22/%3E%3Ccircle r=%222%22/%3E%3Cpath d=%22M2-2l14-14M12-16h4v4%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 40%29 rotate%2812%29 scale%281%29%22%3E%3Cpath d=%22M-10-14h20v8a10 10 0 0 1-20 0z%22/%3E%3Cpath d=%22M-10-11h-5c0 7 3 9 7 9M10-11h5c0 7-3 9-7 9M0 4v6M-6 10h12v6h-12z%22/%3E%3C/g%3E%3Cg transform=%22translate%2825 115%29 rotate%2815%29 scale%280.9%29%22%3E%3Cpath d=%22M0 16V-14M-9-5L0-14l9 9%22/%3E%3C/g%3E%3Cg transform=%22translate%28100 110%29 rotate%28-6%29 scale%281%29%22%3E%3Ccircle r=%2212%22/%3E%3Ccircle r=%224%22/%3E%3Cpath d=%22M12 0h14v7h-14M16 0v3M20 0v3M24 0v3%22/%3E%3C/g%3E%3Cg transform=%22translate%28180 120%29 rotate%280%29 scale%281%29%22%3E%3Cpath d=%22M-8-18l5 10M8-18l-5 10%22/%3E%3Ccircle cy=%224%22 r=%2210%22/%3E%3Cpath d=%22M0-1l2 4 4 1-3 3 1 4-4-2-4 2 1-4-3-3 4-1z%22/%3E%3C/g%3E%3Cg transform=%22translate%28265 118%29 rotate%28-12%29 scale%281%29%22%3E%3Crect x=%22-15%22 y=%22-12%22 width=%2230%22 height=%2227%22 rx=%224%22/%3E%3Cpath d=%22M-15-4h30M-8-17v8M8-17v8M-6 7l4 4 8-8%22/%3E%3C/g%3E%3Cg transform=%22translate%2845 200%29 rotate%288%29 scale%281%29%22%3E%3Ccircle r=%2213%22/%3E%3Cpath d=%22M-6 0l4 4 8-8%22/%3E%3C/g%3E%3Cg transform=%22translate%28125 190%29 rotate%280%29 scale%280.8%29%22%3E%3Cpath d=%22M0-11l3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z%22/%3E%3C/g%3E%3Cg transform=%22translate%28200 205%29 rotate%28-10%29 scale%281%29%22%3E%3Cpath d=%22M-18-16v32h36%22/%3E%3Cpath d=%22M-12 8l8-8 6 5 12-14M12-9h6v6%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 195%29 rotate%286%29 scale%280.9%29%22%3E%3Ccircle r=%2213%22/%3E%3Cpath d=%22M0-13v-5M-4-19h8M0-6v6l5 3%22/%3E%3C/g%3E%3Cg transform=%22translate%2830 285%29 rotate%28-14%29 scale%280.9%29%22%3E%3Ccircle r=%2214%22/%3E%3Ccircle r=%228%22/%3E%3Ccircle r=%222%22/%3E%3Cpath d=%22M2-2l14-14M12-16h4v4%22/%3E%3C/g%3E%3Cg transform=%22translate%28115 275%29 rotate%2828%29 scale%281%29%22%3E%3Cpath d=%22M0 16V-14M-9-5L0-14l9 9%22/%3E%3C/g%3E%3Cg transform=%22translate%28205 285%29 rotate%28-10%29 scale%280.9%29%22%3E%3Crect x=%22-16%22 y=%22-16%22 width=%2232%22 height=%2232%22 rx=%226%22/%3E%3Cpath d=%22M-8-5a8 8 0 0 1 16 0z%22/%3E%3Cpath d=%22M0-5l3-4%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 280%29 rotate%2814%29 scale%280.9%29%22%3E%3Cpath d=%22M-8-18l5 10M8-18l-5 10%22/%3E%3Ccircle cy=%224%22 r=%2210%22/%3E%3Cpath d=%22M0-1l2 4 4 1-3 3 1 4-4-2-4 2 1-4-3-3 4-1z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");--g1:77,141,245;--g2:155,107,242;--g3:42,179,184}
+#bgpat[data-tab="library"]{--pat:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22320%22 viewBox=%220 0 320 320%22%3E%3Cg fill=%22none%22 stroke=%22rgba%28128,134,146,0.16%29%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cg transform=%22translate%2840 38%29 rotate%28-20%29 scale%281.35%29%22%3E%3Ccircle cx=%225%22 cy=%22-17%22 r=%223.5%22/%3E%3Cpath d=%22M3-12l-4 12 7 5-3 11M-1 0l-9 5M2-8l8 5M1-8l-8-2%22/%3E%3C/g%3E%3Cg transform=%22translate%28120 30%29 rotate%2810%29 scale%281%29%22%3E%3Crect x=%22-24%22 y=%22-10%22 width=%227%22 height=%2220%22 rx=%222%22/%3E%3Crect x=%2217%22 y=%22-10%22 width=%227%22 height=%2220%22 rx=%222%22/%3E%3Crect x=%22-30%22 y=%22-6%22 width=%226%22 height=%2212%22 rx=%222%22/%3E%3Crect x=%2224%22 y=%22-6%22 width=%226%22 height=%2212%22 rx=%222%22/%3E%3Cpath d=%22M-17 0h34%22/%3E%3C/g%3E%3Cg transform=%22translate%28205 45%29 rotate%28-8%29 scale%281.35%29%22%3E%3Ccircle cx=%22-2%22 cy=%22-17%22 r=%223.5%22/%3E%3Cpath d=%22M-2-12l-2 12h11l1 12M-4 0l-6 12M-2-8h13%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 40%29 rotate%2812%29 scale%281.35%29%22%3E%3Ccircle cy=%22-17%22 r=%223.5%22/%3E%3Cpath d=%22M0-12v14l-3 16M0 2l6 6-6 3M-8-23l8 8 8-8%22/%3E%3C/g%3E%3Cg transform=%22translate%2825 115%29 rotate%2815%29 scale%280.9%29%22%3E%3Cpath d=%22M-9-3c-4-16 22-16 18 0%22/%3E%3Cpath d=%22M-12 8c0-9 5-13 12-13s12 4 12 13c0 5-3 9-7 9h-10c-4 0-7-4-7-9z%22/%3E%3C/g%3E%3Cg transform=%22translate%28100 110%29 rotate%28-6%29 scale%281.35%29%22%3E%3Ccircle cx=%22-17%22 cy=%22-6%22 r=%223.5%22/%3E%3Cpath d=%22M-13-4l26 7M-9-3v10M13 3l3 4%22/%3E%3C/g%3E%3Cg transform=%22translate%28180 120%29 rotate%280%29 scale%281.35%29%22%3E%3Cpath d=%22M-18-19h36M-12-19v4M12-19v4%22/%3E%3Ccircle cy=%22-9%22 r=%223.5%22/%3E%3Cpath d=%22M0-5v14l-3 10M0 9l3 10M-7-18l7 9 7-9%22/%3E%3C/g%3E%3Cg transform=%22translate%28265 118%29 rotate%28-12%29 scale%281%29%22%3E%3Crect x=%22-18%22 y=%22-7%22 width=%2224%22 height=%2214%22 rx=%227%22/%3E%3Ccircle cx=%226%22 cy=%220%22 r=%227%22/%3E%3Ccircle cx=%226%22 cy=%220%22 r=%223%22/%3E%3C/g%3E%3Cg transform=%22translate%2845 200%29 rotate%288%29 scale%281.35%29%22%3E%3Ccircle cx=%22-12%22 cy=%22-12%22 r=%223.5%22/%3E%3Cpath d=%22M-9-9l8 8 10 0M-1-1l-2 12M9-1l9 6M-9-9l-8-6%22/%3E%3C/g%3E%3Cg transform=%22translate%28125 190%29 rotate%280%29 scale%280.8%29%22%3E%3Cpath d=%22M0-11l3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z%22/%3E%3C/g%3E%3Cg transform=%22translate%28200 205%29 rotate%28-10%29 scale%281%29%22%3E%3Crect x=%22-18%22 y=%22-20%22 width=%226%22 height=%2212%22 rx=%223%22/%3E%3Crect x=%2212%22 y=%22-20%22 width=%226%22 height=%2212%22 rx=%223%22/%3E%3Cpath d=%22M-15-8c0 30 30 30 30 0%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 195%29 rotate%286%29 scale%281.215%29%22%3E%3Ccircle cx=%225%22 cy=%22-17%22 r=%223.5%22/%3E%3Cpath d=%22M3-12l-4 12 7 5-3 11M-1 0l-9 5M2-8l8 5M1-8l-8-2%22/%3E%3C/g%3E%3Cg transform=%22translate%2830 285%29 rotate%28-14%29 scale%281.215%29%22%3E%3Ccircle cx=%22-2%22 cy=%22-17%22 r=%223.5%22/%3E%3Cpath d=%22M-2-12l-2 12h11l1 12M-4 0l-6 12M-2-8h13%22/%3E%3C/g%3E%3Cg transform=%22translate%28115 275%29 rotate%2828%29 scale%281%29%22%3E%3Ccircle r=%2214%22/%3E%3Ccircle r=%224%22/%3E%3Cpath d=%22M0-10v2M0 8v2M-10 0h2M8 0h2%22/%3E%3C/g%3E%3Cg transform=%22translate%28205 285%29 rotate%28-10%29 scale%281.215%29%22%3E%3Ccircle cy=%22-17%22 r=%223.5%22/%3E%3Cpath d=%22M0-12v14l-3 16M0 2l6 6-6 3M-8-23l8 8 8-8%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 280%29 rotate%2814%29 scale%281.215%29%22%3E%3Ccircle cx=%22-17%22 cy=%22-6%22 r=%223.5%22/%3E%3Cpath d=%22M-13-4l26 7M-9-3v10M13 3l3 4%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");--g1:155,107,242;--g2:255,122,80;--g3:77,141,245}
+#bgpat[data-tab="profile"]{--pat:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22320%22 viewBox=%220 0 320 320%22%3E%3Cg fill=%22none%22 stroke=%22rgba%28128,134,146,0.16%29%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cg transform=%22translate%2840 38%29 rotate%28-20%29 scale%281%29%22%3E%3Cpath d=%22M-11 8V-2a11 11 0 0 1 22 0V8l3 4h-28z%22/%3E%3Cpath d=%22M-3 15a3 3 0 0 0 6 0M0-13v-3%22/%3E%3C/g%3E%3Cg transform=%22translate%28120 30%29 rotate%2810%29 scale%281%29%22%3E%3Ccircle r=%225%22/%3E%3Ccircle r=%2210%22/%3E%3Cpath d=%22M0-15v5M0 10v5M-15 0h5M10 0h5M-10.6-10.6l3.5 3.5M7.1 7.1l3.5 3.5M-10.6 10.6l3.5-3.5M7.1-7.1l3.5-3.5%22/%3E%3C/g%3E%3Cg transform=%22translate%28205 45%29 rotate%28-8%29 scale%281%29%22%3E%3Crect x=%22-14%22 y=%22-6%22 width=%2228%22 height=%2222%22 rx=%222%22/%3E%3Cpath d=%22M-16-12h32v6h-32zM0-12v28M0-12c-4-8-12-6-8 0M0-12c4-8 12-6 8 0%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 40%29 rotate%2812%29 scale%281%29%22%3E%3Cpath d=%22M-16-12h32v20h-18l-8 7v-7h-6z%22/%3E%3Cpath d=%22M-9-2h2M-1-2h2M7-2h2%22/%3E%3C/g%3E%3Cg transform=%22translate%2825 115%29 rotate%2815%29 scale%280.9%29%22%3E%3Ccircle cy=%22-7%22 r=%227%22/%3E%3Cpath d=%22M-14 16c0-9 6-14 14-14s14 5 14 14%22/%3E%3C/g%3E%3Cg transform=%22translate%28100 110%29 rotate%28-6%29 scale%281%29%22%3E%3Cpath d=%22M0-17l14 5v9c0 10-6 16-14 20-8-4-14-10-14-20v-9z%22/%3E%3Cpath d=%22M-5 1l4 4 7-8%22/%3E%3C/g%3E%3Cg transform=%22translate%28180 120%29 rotate%280%29 scale%281%29%22%3E%3Crect x=%22-17%22 y=%22-11%22 width=%2234%22 height=%2222%22 rx=%223%22/%3E%3Cpath d=%22M-17-4h34M-11 5h8%22/%3E%3C/g%3E%3Cg transform=%22translate%28265 118%29 rotate%28-12%29 scale%281%29%22%3E%3Cpath d=%22M0-14c1 8 6 13 14 14-8 1-13 6-14 14-1-8-6-13-14-14 8-1 13-6 14-14z%22/%3E%3C/g%3E%3Cg transform=%22translate%2845 200%29 rotate%288%29 scale%281%29%22%3E%3Cpath d=%22M0 12c-14-8-18-16-14-22 3-5 10-5 14 1 4-6 11-6 14-1 4 6 0 14-14 22z%22/%3E%3Cpath d=%22M-12 1h7l3-5 4 9 3-4h7%22/%3E%3C/g%3E%3Cg transform=%22translate%28125 190%29 rotate%280%29 scale%280.8%29%22%3E%3Cpath d=%22M0-11l3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z%22/%3E%3C/g%3E%3Cg transform=%22translate%28200 205%29 rotate%28-10%29 scale%281%29%22%3E%3Crect x=%22-15%22 y=%22-12%22 width=%2230%22 height=%2227%22 rx=%224%22/%3E%3Cpath d=%22M-15-4h30M-8-17v8M8-17v8M-6 7l4 4 8-8%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 195%29 rotate%286%29 scale%280.9%29%22%3E%3Cpath d=%22M-11 8V-2a11 11 0 0 1 22 0V8l3 4h-28z%22/%3E%3Cpath d=%22M-3 15a3 3 0 0 0 6 0M0-13v-3%22/%3E%3C/g%3E%3Cg transform=%22translate%2830 285%29 rotate%28-14%29 scale%280.9%29%22%3E%3Crect x=%22-14%22 y=%22-6%22 width=%2228%22 height=%2222%22 rx=%222%22/%3E%3Cpath d=%22M-16-12h32v6h-32zM0-12v28M0-12c-4-8-12-6-8 0M0-12c4-8 12-6 8 0%22/%3E%3C/g%3E%3Cg transform=%22translate%28115 275%29 rotate%2828%29 scale%281%29%22%3E%3Cpath d=%22M-16-12h32v20h-18l-8 7v-7h-6z%22/%3E%3Cpath d=%22M-9-2h2M-1-2h2M7-2h2%22/%3E%3C/g%3E%3Cg transform=%22translate%28205 285%29 rotate%28-10%29 scale%280.9%29%22%3E%3Ccircle r=%225%22/%3E%3Ccircle r=%2210%22/%3E%3Cpath d=%22M0-15v5M0 10v5M-15 0h5M10 0h5M-10.6-10.6l3.5 3.5M7.1 7.1l3.5 3.5M-10.6 10.6l3.5-3.5M7.1-7.1l3.5-3.5%22/%3E%3C/g%3E%3Cg transform=%22translate%28285 280%29 rotate%2814%29 scale%280.9%29%22%3E%3Cpath d=%22M0-14c1 8 6 13 14 14-8 1-13 6-14 14-1-8-6-13-14-14 8-1 13-6 14-14z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");--g1:42,179,184;--g2:255,122,80;--g3:155,107,242}
 #app{max-width:520px;margin:0 auto;padding:16px 16px 96px;min-height:100vh}
 h1{font-size:26px;line-height:1.15;margin:4px 0 8px}
 h2{font-size:19px;margin:22px 0 10px}
@@ -144,6 +171,15 @@ ul.it li:first-child{border-top:0}
 .xbtn.add{color:var(--accent-ink);border-color:var(--accent)}
 .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .center{text-align:center}
+.celebrate{position:fixed;inset:0;z-index:45;display:flex;align-items:center;justify-content:center;padding:16px;background:var(--overlay,rgba(0,0,0,.55));animation:fadeIn .2s ease}
+.celebrate canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:46}
+.celebrate .cc{position:relative;z-index:47;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px 18px 18px;max-width:420px;width:100%;text-align:center;animation:popIn .35s cubic-bezier(.2,1.4,.4,1)}
+.celebrate .big{font-size:46px;line-height:1;margin-bottom:6px}
+.celebrate h2{margin:4px 0 2px;font-size:22px}
+.celebrate .stats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:12px 0}
+.celebrate .stats span{background:var(--card2);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600}
+.celebrate .quote{display:flex;gap:10px;align-items:flex-start;text-align:left;margin-top:6px}
+@keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
 .sheet-bg{position:fixed;inset:0;background:var(--overlay,rgba(0,0,0,.55));z-index:40;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .18s ease}
 .sheet{background:var(--card);border:1px solid var(--line);border-bottom:0;border-radius:20px 20px 0 0;width:100%;max-width:520px;padding:10px 18px calc(18px + env(safe-area-inset-bottom));animation:slideUp .22s ease;max-height:88vh;overflow-y:auto}
 .sheet .grip{width:40px;height:4px;border-radius:9px;background:var(--line);margin:0 auto 12px}
@@ -189,6 +225,7 @@ ul.it li:first-child{border-top:0}
 </style>
 </head>
 <body>
+<div id="bgpat" data-tab="program" aria-hidden="true"><i class="g3"></i></div>
 <div id="app"></div>
 <div id="timer" class="timer" hidden><div><div class="small">Отдых</div><b id="tleft">0:00</b></div><button data-a="skipTimer">Пропустить</button></div>
 <nav id="tabs" class="tabs" hidden><div>
@@ -1754,6 +1791,8 @@ function render(){
   const app=$("#app");
   const main=["program","food","library","progress","profile"].includes(view);
   $("#tabs").hidden=!main;
+  { const bt={program:"program",workout:"program",paywall:"program",paying:"program",welcome:"program",guide:"program",food:"food",foodsetup:"food",progress:"progress",library:"library",exercise:"library",profile:"profile",full:"profile",onboard:"profile"}[view]||"program";
+    const bg=document.getElementById("bgpat"); if(bg&&bg.dataset.tab!==bt) bg.dataset.tab=bt; }
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.v===view));
   app.innerHTML=({welcome:vWelcome,onboard:vOnboard,program:vProgram,library:vLibrary,progress:vProgress,profile:vProfile,workout:vWorkout,guide:vGuide,paywall:vPaywall,paying:vPaying,full:vFull,exercise:vExercise,food:vFood,foodsetup:vFoodSetup}[view]||vProgram)();
   if(inTg){ if(main||view==="welcome") tg.BackButton.hide(); else tg.BackButton.show(); }
@@ -2000,6 +2039,7 @@ function vProfile(){
   <div class="card small"><p><span class="badge ai">ИИ</span> Макс и Ева — виртуальные персонажи DuoFit, не реальные люди.</p>
   <p class="hint">Программы составлены по общим принципам тренировок и не являются медицинской рекомендацией. При заболеваниях, травмах, беременности проконсультируйся с врачом.</p>
   <p class="hint">Твои данные хранятся на этом устройстве и в облачном хранилище Telegram.</p></div>
+  <div class="card"><label class="check" style="margin:0"><input type="checkbox" data-anim-toggle ${S.noAnim?"":"checked"}><span>Анимированный фон<br><span class="hint small">узор медленно плывёт, как обои в Telegram</span></span></label></div>
   ${giftHtml()}
   ${isTester()&&!TEST_MODE?`<div class="card small" style="border-style:dashed"><b>🧪 Режим тестировщика</b><p class="hint mt0">Видно только тебе. Тестовая подписка: ${S.testPrem?"включена":"выключена"}.</p>
    ${S.testPrem?`<button class="btn sm sec" data-a="testOff">Выключить тестовую подписку</button>`:`<button class="btn sm sec" data-a="testSub">Включить тестовую подписку</button>`}</div>`:""}
@@ -2224,8 +2264,10 @@ const A={
       extMsg=`\n\n${nm} ${fe?"собрала":"собрал"} новый цикл на 4 недели${F.weeks?`: до цели ${kgTxt(F.target||0)} кг ещё около ${F.weeks} ${plural(F.weeks,"недели","недель","недель")}`:F.reached?": цель достигнута, теперь закрепляем результат":""}. Часть упражнений обновлена, веса — от твоих результатов.`;
     }
     stopTimer(); save(); haptic("success");
-    if(o.prem){ view="feedback"; $("#app").innerHTML=vFeedback(); $("#tabs").hidden=true; return; }
-    workout=null; view="program"; render();
+    const cst={title:day.title,min,sets:day.items.reduce((a,it,i)=>a+Math.min(it.sets,workout.sets[i]||0),0),total:S.history.length,prem:o.prem,
+      weekDone:weeks[workout.w-1].days.every((x,i)=>S.done[`${o.prem?"p":"f"}${workout.w}-${i}`])&&weeks[workout.w-1].days.length>1};
+    if(o.prem){ view="feedback"; $("#app").innerHTML=vFeedback(); $("#tabs").hidden=true; celebrate(cst); return; }
+    workout=null; view="program"; render(); celebrate(cst);
   },
   fb:v=>{
     const d=+v; S.adj.sets=Math.max(-1,Math.min(1,(S.adj.sets||0)+d));
@@ -2523,6 +2565,79 @@ function notifHtml(){
   </div>`;
 }
 
+/* ---------- Праздник после тренировки ----------
+   Конфетти и короткая фраза тренера: мужчинам — Макс, женщинам — Ева.
+   За важные отметки (первая тренировка, 5, 10, 25, 50, 100, вся неделя) — особые фразы. */
+const DONE_Q={
+ m:["Подход за подходом — и вот она, ещё одна победа. Я записал, горжусь.",
+    "Я посчитал: ты только что стал сильнее, чем был утром. Цифры не врут.",
+    "Отличная работа. Теперь самое важное упражнение: поесть и выспаться.",
+    "Минус одна отговорка, плюс одна тренировка. Хороший обмен.",
+    "Мне спать не нужно, а тебе нужно. Восстанавливайся — мышцы растут именно сейчас.",
+    "Если бы у меня были руки, я бы пожал твою. Пока просто ставлю галочку ✅",
+    "Сегодняшний ты сделал завтрашнему тебе отличный подарок.",
+    "Прогресс — это скучно и регулярно. Ты делаешь именно так, и это работает.",
+    "Сделано! Я уже прикидываю, на сколько прибавить вес в следующий раз 😏",
+    "Мотивация приходит и уходит, а ты просто пришёл и сделал. Это и есть дисциплина.",
+    "Сильный ход. Записываю в историю — потом вместе посмотрим, как всё начиналось.",
+    "Ещё одна тренировка в копилку. Копилка, кстати, уже звенит."],
+ f:["Умница! Ещё одна тренировка — ещё один шаг к себе, которой ты гордишься 💛",
+    "Ты это сделала! Теперь вода, вкусный ужин и немного заслуженной лени.",
+    "Тело скажет спасибо — может, через месяц. А я говорю спасибо уже сейчас.",
+    "Красиво отработала! Макс уже считает прогресс, а я просто радуюсь за тебя.",
+    "Каждая тренировка — маленькое обещание себе, и ты его сдержала.",
+    "Вот это настрой! Сохрани это чувство — оно лучше любой мотивации.",
+    "Готово! Не забудь растяжку и улыбнуться себе в зеркало 😉",
+    "Ты сильнее, чем думала утром. Проверено сегодняшней тренировкой.",
+    "Сегодня ты выбрала себя. Это лучший выбор дня.",
+    "Минус одна тренировка в плане, плюс одна в копилке результата ✨",
+    "Если спросят, где ты была, — строила лучшую версию себя.",
+    "Отдыхай, ты это заслужила. Завтра тело будет чуточку сильнее."]
+};
+const MILE_Q={
+ 1:{m:"Первая тренировка позади! Самое трудное — начать, и ты уже начал. Дальше будет интереснее.",f:"Первая тренировка — есть! Самое трудное позади: ты начала. Я так рада, что мы вместе 💛"},
+ 5:{m:"Уже 5 тренировок! Это больше не случайность — это привычка, которая формируется.",f:"5 тренировок! Это уже не случайность, а твоя новая привычка. Горжусь ✨"},
+ 10:{m:"10 тренировок! По моим расчётам, именно сейчас становится заметна разница. Проверь в зеркале.",f:"10 тренировок! Самое время заметить, как изменились силы и настроение 💛"},
+ 25:{m:"25 тренировок. Это уровень человека, который не бросает. Уважаю.",f:"25 тренировок! Ты из тех, кто доводит дело до конца. Я в восторге."},
+ 50:{m:"50 тренировок! Полсотни раз ты выбрал дело вместо отговорки. Это мощно.",f:"50 тренировок! Полсотни раз ты выбрала себя. Это невероятно 💛"},
+ 100:{m:"100 тренировок. Я ИИ, но, кажется, у меня мурашки. Легенда.",f:"100 тренировок! У меня нет слов, только конфетти. Ты — легенда 🎉"}
+};
+function doneQuote(total,weekDone){
+  const sx=(S.full&&S.full.sex)||(S.profile&&S.profile.sex), k=sx==="f"?"f":"m";
+  if(MILE_Q[total]) return {q:MILE_Q[total][k],mile:true};
+  if(weekDone) return {q:k==="f"?"Неделя закрыта полностью — ни одного пропуска! Это и есть результат 💛":"Вся неделя закрыта, ни одного пропуска. Именно так и строится результат.",mile:true};
+  const L=DONE_Q[k]; return {q:L[(total-1)%L.length],mile:false};
+}
+function confetti(host){
+  const cv=document.createElement("canvas"); host.appendChild(cv);
+  const dpr=Math.min(2,window.devicePixelRatio||1), W=innerWidth, H=innerHeight; cv.width=W*dpr; cv.height=H*dpr;
+  const ctx=cv.getContext("2d"); ctx.scale(dpr,dpr);
+  const cols=["#ff7a50","#4d8df5","#2fb37a","#9b6bf2","#e0a12e","#2ab3b8","#ff6fa3"];
+  const P=Array.from({length:150},(_,i)=>({x:W/2+(Math.random()-.5)*W*.3,y:H*.35,vx:(Math.random()-.5)*12,vy:-6-Math.random()*10,
+    w:6+Math.random()*6,h:3+Math.random()*4,r:Math.random()*6,vr:(Math.random()-.5)*.4,c:cols[i%cols.length]}));
+  const t0=performance.now();
+  (function frame(t){
+    const el=(t-t0)/1000; ctx.clearRect(0,0,W,H);
+    P.forEach(p=>{ p.vy+=.32; p.vx*=.99; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.globalAlpha=Math.max(0,1-Math.max(0,el-1.8)/0.8); ctx.fillStyle=p.c; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore(); });
+    if(el<2.6&&document.body.contains(cv)) requestAnimationFrame(frame); else cv.remove();
+  })(t0);
+}
+function celebrate(st){
+  const old=document.getElementById("dfCeleb"); if(old) old.remove();
+  const c=coach(), Q=doneQuote(st.total,st.weekDone);
+  const w=document.createElement("div"); w.id="dfCeleb"; w.className="celebrate";
+  w.innerHTML=`<div class="cc" role="dialog" aria-label="Тренировка завершена"><div class="big">${Q.mile?"🏆":"🎉"}</div>
+    <h2>Тренировка завершена!</h2><p class="hint small mt0">${esc(st.title)}</p>
+    <div class="stats"><span>⏱ ${st.min} мин</span><span>✅ ${st.sets} ${plural(st.sets,"подход","подхода","подходов")}</span><span>🔥 ${st.total}-я тренировка</span></div>
+    ${c?`<div class="quote">${avatar(c)}<div class="bubble grow"><b>${c.name}</b>${esc(Q.q)}</div></div>`:`<p>${esc(Q.q)}</p>`}
+    <button class="btn" id="dfCelebOk">${st.prem?"Оценить тренировку":"Отлично!"}</button></div>`;
+  document.body.appendChild(w);
+  const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(!reduce) confetti(w);
+  w.querySelector("#dfCelebOk").onclick=()=>w.remove();
+}
+
 /* ---------- Таймер отдыха ---------- */
 function startTimer(sec){
   stopTimer(); timerEnd=Date.now()+sec*1000; $("#timer").hidden=false; tick();
@@ -2564,6 +2679,7 @@ document.addEventListener("input",e=>{
   if(t.dataset.kg!==undefined && workout){ workout.kg[t.dataset.kg]=t.value.replace(",",".").replace(/[^\d.]/g,"").slice(0,6); }
 });
 document.addEventListener("change",e=>{ const t=e.target; if(t.dataset.f&&t.type==="checkbox") draft2[t.dataset.f]=t.checked;
+  if(t.hasAttribute&&t.hasAttribute("data-anim-toggle")){ S.noAnim=!t.checked; document.documentElement.setAttribute("data-anim",S.noAnim?"off":"on"); save(); }
   if(t.dataset.nt){ notifCfg()[t.dataset.nt]=t.checked; save(); haptic("light"); render(); }
   if(t.hasAttribute&&t.hasAttribute("data-nt-time")&&/^\d{2}:\d{2}$/.test(t.value)){
     let v=t.value; if(v<"06:00") v="06:00"; if(v>"22:30") v="22:30"; t.value=v; notifCfg().time=v; save(); }
@@ -2651,6 +2767,7 @@ function applyTheme(){
     setInterval(()=>{ if(view==="paying"&&!document.hidden) syncStatus(); },5000);
   }
   if(S.profile&&!S.profile.sex&&S.full) S.profile.sex=S.full.sex;
+  document.documentElement.setAttribute("data-anim",S.noAnim?"off":"on");
   if(S.profile&&!S.start) S.start=(S.history[0]&&S.history[0].d)||today();
   if(S.premSrc==="gift"&&!giftActive()){ S.premium=false; S.premSrc=null; S.premUntil=null; save(); }   // подарок закончился
   const fromNotif=location.hash==="#notif"&&S.profile;
