@@ -12,6 +12,7 @@
   --accent:#ff7a50; --accent-text:#1f0d05; --accent-ink:#ff9370; --accent-soft:rgba(255,122,80,.14);
   --max:#7aa2ff; --max-bg:#4d7cf5; --eva:#e8457f; --ok:#3dd68c; --ok-text:#06210f; --warn:#f6b94a;
   --shadow:none; --overlay:rgba(5,7,10,.62); --ga:.26;
+  --bodyC:#566074; --bodyD:#434b5c; --mOff:#5e687c; --mOffD:#4b5466; --mOn:#ff6a42; --mOn2:#ffad8f; --equip:#c9ced8; --equipD:#9aa1ae; --band:#3fbf8f; --water:#7fb8e8; --hair:#39404e;
   --r:16px; color-scheme:dark;
 }
 /* Светлая тема. Подсказки ≥ 5,5:1, акцентный текст ≥ 5:1. */
@@ -20,13 +21,14 @@
   --accent:#ff7a50; --accent-text:#1f0d05; --accent-ink:#c2410c; --accent-soft:rgba(255,122,80,.14);
   --max:#2f62e0; --max-bg:#3d6ff0; --eva:#d93a73; --ok:#15803d; --ok-text:#ffffff; --warn:#b45309;
   --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.04); --overlay:rgba(16,24,40,.45); --ga:.2;
+  --bodyC:#c3c9d4; --bodyD:#d6dae2; --mOff:#b8bfcb; --mOffD:#cfd4dc; --mOn:#f25a30; --mOn2:#f8a488; --equip:#4a5263; --equipD:#7b8292; --band:#2aa876; --water:#5a9fd8; --hair:#8a93a6;
   color-scheme:light;
 }
 @media (prefers-color-scheme: light){
   :root:not([data-theme]){
     --bg:#f4f5f7; --card:#ffffff; --card2:#eef0f4; --line:#dfe3e9; --text:#14171c; --hint:#555e6c;
     --accent-ink:#c2410c; --max:#2f62e0; --max-bg:#3d6ff0; --eva:#d93a73; --ok:#15803d; --ok-text:#ffffff; --warn:#b45309;
-    --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.04); --overlay:rgba(16,24,40,.45); --ga:.2; color-scheme:light;
+    --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.04); --overlay:rgba(16,24,40,.45); --ga:.2; color-scheme:light; --bodyC:#c3c9d4; --bodyD:#d6dae2; --mOff:#b8bfcb; --mOffD:#cfd4dc; --mOn:#f25a30; --mOn2:#f8a488; --equip:#4a5263; --equipD:#7b8292; --band:#2aa876; --water:#5a9fd8; --hair:#8a93a6;
   }
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -361,21 +363,31 @@ const EX = [
  {id:"ellipse",n:"Эллиптический тренажёр",slot:"cardio",place:"g",eq:"gym",avoid:[],lvl:1,m:"Сердце и сосуды; ноги, ягодицы, руки — без ударной нагрузки",how:["Стопы полностью на педалях","Работай и руками, и ногами, спина прямая","Темп такой, чтобы можно было говорить короткими фразами"]},
  {id:"rower",n:"Гребной тренажёр",slot:"cardio",place:"g",eq:"gym",avoid:["back"],lvl:2,m:"Сердце и сосуды; спина, ноги, ягодицы",how:["Сначала толкай ногами, потом отклоняйся корпусом и тяни рукоять к низу груди","Возвращайся в обратном порядке: руки, корпус, ноги","Спина прямая, темп ровный"]},
  {id:"shadow",n:"Бой с тенью",slot:"cardio",place:"h",eq:"none",avoid:[],lvl:1,m:"Сердце и сосуды; плечи, мышцы живота",how:["Ноги на ширине плеч, одна чуть впереди, кулаки у подбородка","Чередуй прямые и боковые удары, не выпрямляя локти до щелчка","Двигайся на носках, без прыжков","На ударе — выдох"]},
- {id:"cat_cow",n:"Кошка-корова",slot:"mob",place:"b",eq:"none",avoid:[],lvl:1,dose:"10 медленных повторов",m:"Разгибатели спины, мышцы живота — подвижность позвоночника",how:["Стоя на четвереньках, на вдохе прогни спину и подними взгляд","На выдохе округли спину, подбородок к груди","Двигайся медленно, без боли"]},
- {id:"open_book",n:"Раскрытие «книга»",slot:"mob",place:"b",eq:"none",avoid:[],lvl:1,dose:"по 8 на сторону",m:"Грудные, мышцы грудного отдела спины — подвижность и осанка",how:["Лёжа на боку, колени согнуты под 90°, руки вытянуты вперёд вместе","Верхней рукой рисуй дугу и разворачивай грудь, пока рука не ляжет на другую сторону","Колени остаются на полу","Следи взглядом за рукой"]},
- {id:"hip_flex",n:"Растяжка сгибателей бедра",slot:"mob",place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на сторону",m:"Сгибатели бедра, квадрицепс — снимает напряжение с поясницы",how:["Встань в выпад, заднее колено на полу (подложи полотенце)","Подкрути таз и сожми ягодицу задней ноги","Мягко сместись вперёд до натяжения спереди бедра","Поясницу не прогибай"]},
- {id:"child",n:"Поза ребёнка",slot:"mob",place:"b",eq:"none",avoid:[],lvl:1,dose:"45 с",m:"Разгибатели спины, широчайшие, ягодицы — расслабление",how:["Сядь на пятки, колени шире таза","Наклонись вперёд и вытяни руки по полу","Расслабь спину и дыши животом"]},
- {id:"st_ham",n:"Растяжка задней поверхности бедра сидя",slot:"stretch",place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на ногу",m:"Задняя поверхность бедра, икры",how:["Сядь на пол, одна нога прямая, вторая согнута, стопа у внутренней стороны бедра","Наклоняйся к прямой ноге от таза, спина остаётся прямой","Тянись до лёгкого натяжения под коленом и держи","Не пружинь и не тяни себя руками за стопу через боль"]},
- {id:"st_quad",n:"Растяжка передней поверхности бедра лёжа на боку",slot:"stretch",place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на ногу",m:"Квадрицепс, сгибатели бедра",how:["Ляг на бок, нижнюю руку подложи под голову","Согни верхнюю ногу и возьмись рукой за голеностоп","Мягко подтяни пятку к ягодице, колени рядом","Чуть подай таз вперёд, поясницу не прогибай. Если беспокоит колено, не сгибай его до конца"]},
- {id:"st_glute",n:"Растяжка ягодиц лёжа («четвёрка»)",slot:"stretch",place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на сторону",m:"Ягодицы, грушевидная мышца",how:["Ляг на спину, колени согнуты, стопы на полу","Положи лодыжку одной ноги на колено другой","Обхвати руками бедро нижней ноги и подтяни её к груди","Голова и плечи лежат на полу, дыши спокойно"]},
- {id:"st_chest",n:"Растяжка груди в дверном проёме",slot:"stretch",place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с",m:"Грудь, передние дельты",how:["Встань в дверном проёме, предплечья на косяках, локти на уровне плеч","Сделай небольшой шаг вперёд, пока не почувствуешь растяжение в груди","Плечи опущены, живот подтянут","Если тянет в плечевом суставе, а не в груди, опусти локти ниже"]},
- {id:"st_side",n:"Боковой наклон стоя",slot:"stretch",place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на сторону",m:"Широчайшие, косые мышцы живота",how:["Встань прямо, ноги на ширине плеч","Подними одну руку вверх и наклонись в противоположную сторону","Тянись рукой вверх и в сторону, таз не уводи","Корпус не заваливается вперёд"]},
- {id:"st_shoulder",n:"Растяжка плеча поперёк корпуса",slot:"stretch",place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на руку",m:"Задние дельты, верх спины",how:["Вытяни руку перед собой и переведи её поперёк груди","Другой рукой мягко прижми её к груди выше локтя","Плечо опущено, не поднимай его к уху"]},
- {id:"st_tri",n:"Растяжка трицепса за головой",slot:"stretch",place:"b",eq:"none",avoid:["shoulders"],lvl:1,dose:"по 30 с на руку",m:"Трицепс, широчайшие",how:["Подними руку вверх и согни в локте, ладонь за головой к лопатке","Другой рукой мягко потяни локоть к затылку","Спина прямая, рёбра не выпячивай"]},
- {id:"st_calf",n:"Растяжка икр у стены",slot:"stretch",place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на ногу",m:"Икроножные и камбаловидные мышцы",how:["Встань лицом к стене, упрись в неё руками","Одну ногу отставь назад, пятку прижми к полу, носок вперёд","Сгибай переднее колено и подавай таз к стене","Чтобы растянуть глубже, чуть согни заднее колено"]},
- {id:"st_butterfly",n:"«Бабочка»",slot:"stretch",place:"b",eq:"none",avoid:[],lvl:1,dose:"30–45 с",m:"Приводящие мышцы бедра, тазобедренные суставы",how:["Сядь на пол, соедини стопы, колени разведи в стороны","Подтяни пятки ближе к себе, насколько удобно","Сиди с прямой спиной и мягко опускай колени вниз","Не дави на колени руками"]},
- {id:"st_knees",n:"Колени к груди лёжа",slot:"stretch",place:"b",eq:"none",avoid:[],lvl:1,dose:"30–45 с",m:"Поясница, ягодицы",how:["Ляг на спину и подтяни оба колена к груди","Обхвати их руками","Расслабь поясницу и спокойно дыши, можно мягко покачаться"]},
- {id:"st_neck",n:"Растяжка шеи",slot:"stretch",place:"b",eq:"none",avoid:[],lvl:1,dose:"по 20 с на сторону",m:"Верх трапеций, мышцы шеи",how:["Сядь прямо, плечи опущены","Наклони голову ухом к плечу","Для лёгкого усиления положи ладонь на голову, не тяни","Двигайся медленно, без вращений головой"]},
+ {id:"cat_cow",n:"Кошка-корова",slot:"mob",alt:["fl_spine"],place:"b",eq:"none",avoid:[],lvl:1,dose:"10 медленных повторов",m:"Разгибатели спины, мышцы живота — подвижность позвоночника",how:["Стоя на четвереньках, на вдохе прогни спину и подними взгляд","На выдохе округли спину, подбородок к груди","Двигайся медленно, без боли"]},
+ {id:"open_book",n:"Раскрытие «книга»",slot:"mob",alt:["fl_thor"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 8 на сторону",m:"Грудные, мышцы грудного отдела спины — подвижность и осанка",how:["Лёжа на боку, колени согнуты под 90°, руки вытянуты вперёд вместе","Верхней рукой рисуй дугу и разворачивай грудь, пока рука не ляжет на другую сторону","Колени остаются на полу","Следи взглядом за рукой"]},
+ {id:"hip_flex",n:"Растяжка сгибателей бедра",slot:"mob",alt:["fl_hip"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на сторону",m:"Сгибатели бедра, квадрицепс — снимает напряжение с поясницы",how:["Встань в выпад, заднее колено на полу (подложи полотенце)","Подкрути таз и сожми ягодицу задней ноги","Мягко сместись вперёд до натяжения спереди бедра","Поясницу не прогибай"]},
+ {id:"child",n:"Поза ребёнка",slot:"mob",alt:["fl_spine"],place:"b",eq:"none",avoid:[],lvl:1,dose:"45 с",m:"Разгибатели спины, широчайшие, ягодицы — расслабление",how:["Сядь на пятки, колени шире таза","Наклонись вперёд и вытяни руки по полу","Расслабь спину и дыши животом"]},
+ {id:"st_ham",n:"Растяжка задней поверхности бедра сидя",slot:"stretch",alt:["fl_ham"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на ногу",m:"Задняя поверхность бедра, икры",how:["Сядь на пол, одна нога прямая, вторая согнута, стопа у внутренней стороны бедра","Наклоняйся к прямой ноге от таза, спина остаётся прямой","Тянись до лёгкого натяжения под коленом и держи","Не пружинь и не тяни себя руками за стопу через боль"]},
+ {id:"st_quad",n:"Растяжка передней поверхности бедра лёжа на боку",slot:"stretch",alt:["fl_hip"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на ногу",m:"Квадрицепс, сгибатели бедра",how:["Ляг на бок, нижнюю руку подложи под голову","Согни верхнюю ногу и возьмись рукой за голеностоп","Мягко подтяни пятку к ягодице, колени рядом","Чуть подай таз вперёд, поясницу не прогибай. Если беспокоит колено, не сгибай его до конца"]},
+ {id:"st_glute",n:"Растяжка ягодиц лёжа («четвёрка»)",slot:"stretch",alt:["fl_glute"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на сторону",m:"Ягодицы, грушевидная мышца",how:["Ляг на спину, колени согнуты, стопы на полу","Положи лодыжку одной ноги на колено другой","Обхвати руками бедро нижней ноги и подтяни её к груди","Голова и плечи лежат на полу, дыши спокойно"]},
+ {id:"st_chest",n:"Растяжка груди в дверном проёме",slot:"stretch",alt:["fl_thor","fl_shoulder"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с",m:"Грудь, передние дельты",how:["Встань в дверном проёме, предплечья на косяках, локти на уровне плеч","Сделай небольшой шаг вперёд, пока не почувствуешь растяжение в груди","Плечи опущены, живот подтянут","Если тянет в плечевом суставе, а не в груди, опусти локти ниже"]},
+ {id:"st_side",n:"Боковой наклон стоя",slot:"stretch",alt:["fl_side"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на сторону",m:"Широчайшие, косые мышцы живота",how:["Встань прямо, ноги на ширине плеч","Подними одну руку вверх и наклонись в противоположную сторону","Тянись рукой вверх и в сторону, таз не уводи","Корпус не заваливается вперёд"]},
+ {id:"st_shoulder",n:"Растяжка плеча поперёк корпуса",slot:"stretch",alt:["fl_shoulder"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на руку",m:"Задние дельты, верх спины",how:["Вытяни руку перед собой и переведи её поперёк груди","Другой рукой мягко прижми её к груди выше локтя","Плечо опущено, не поднимай его к уху"]},
+ {id:"st_tri",n:"Растяжка трицепса за головой",slot:"stretch",alt:["fl_shoulder"],place:"b",eq:"none",avoid:["shoulders"],lvl:1,dose:"по 30 с на руку",m:"Трицепс, широчайшие",how:["Подними руку вверх и согни в локте, ладонь за головой к лопатке","Другой рукой мягко потяни локоть к затылку","Спина прямая, рёбра не выпячивай"]},
+ {id:"st_calf",n:"Растяжка икр у стены",slot:"stretch",alt:["fl_calf"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на ногу",m:"Икроножные и камбаловидные мышцы",how:["Встань лицом к стене, упрись в неё руками","Одну ногу отставь назад, пятку прижми к полу, носок вперёд","Сгибай переднее колено и подавай таз к стене","Чтобы растянуть глубже, чуть согни заднее колено"]},
+ {id:"st_butterfly",n:"«Бабочка»",slot:"stretch",alt:["fl_add"],place:"b",eq:"none",avoid:[],lvl:1,dose:"30–45 с",m:"Приводящие мышцы бедра, тазобедренные суставы",how:["Сядь на пол, соедини стопы, колени разведи в стороны","Подтяни пятки ближе к себе, насколько удобно","Сиди с прямой спиной и мягко опускай колени вниз","Не дави на колени руками"]},
+ {id:"st_knees",n:"Колени к груди лёжа",slot:"stretch",alt:["fl_glute"],place:"b",eq:"none",avoid:[],lvl:1,dose:"30–45 с",m:"Поясница, ягодицы",how:["Ляг на спину и подтяни оба колена к груди","Обхвати их руками","Расслабь поясницу и спокойно дыши, можно мягко покачаться"]},
+ {id:"st_fold",n:"Наклон стоя к ногам",slot:"stretch",alt:["fl_ham"],place:"b",eq:"none",avoid:["back"],lvl:1,dose:"30–45 с",m:"Задняя поверхность бедра, икры, поясница",how:["Встань прямо, стопы на ширине таза, колени слегка согнуты","Наклонись от таза, руки свободно тянутся к полу или голеням","Расслабь шею и дыши; с каждым выдохом опускайся чуть ниже","Поднимайся медленно, округляя спину позвонок за позвонком"]},
+ {id:"st_down_dog",n:"Собака мордой вниз",slot:"stretch",alt:["fl_ham","fl_calf"],place:"b",eq:"none",avoid:["shoulders"],lvl:1,dose:"30–45 с",m:"Задняя поверхность бедра, икры, широчайшие, плечи",how:["Из упора на ладонях подними таз вверх — тело как перевёрнутая буква V","Ладони на ширине плеч, пальцы широко, тянись тазом вверх и назад","Пятки тянутся к полу; если не достают, слегка согни колени","Спина прямая, голова между руками, дыши спокойно"]},
+ {id:"st_half_split",n:"Полушпагат",slot:"stretch",alt:["fl_ham"],place:"b",eq:"none",avoid:["knees"],lvl:2,dose:"по 30 с на ногу",m:"Задняя поверхность бедра, икры",how:["Встань на колено, передняя нога прямая, пятка на полу, носок на себя","Таз над задним коленом, ладони на полу по бокам или на блоках","Наклоняйся к передней ноге от таза, спина прямая","Если тянет под коленом, а не в бедре, слегка согни колено"]},
+ {id:"st_pigeon",n:"Голубь",slot:"stretch",alt:["fl_glute"],place:"b",eq:"none",avoid:["knees"],lvl:2,dose:"по 30 с на сторону",m:"Ягодицы, грушевидная мышца, сгибатели бедра",how:["Из упора на ладонях выведи одно колено вперёд к руке, голень поперёк корпуса","Вторую ногу вытяни назад, таз ровно, без завала на бок","Держись на прямых руках или опустись на предплечья","Если колено беспокоит, подложи под ягодицу подушку или делай «четвёрку» лёжа"]},
+ {id:"st_wide",n:"Наклон в широком седе",slot:"stretch",alt:["fl_add"],place:"b",eq:"none",avoid:[],lvl:1,dose:"30–45 с",m:"Приводящие мышцы бедра, задняя поверхность бедра",how:["Сядь на пол, ноги широко в стороны, носки и колени смотрят вверх","Сядь на край подушки, если спина округляется","Наклоняйся вперёд от таза, руки скользят по полу","Спина прямая: лучше чуть меньше амплитуда, чем круглая поясница"]},
+ {id:"st_side_lunge",n:"Боковой выпад с растяжкой",slot:"stretch",alt:["fl_add"],place:"b",eq:"none",avoid:["knees"],lvl:1,dose:"по 30 с на сторону",m:"Приводящие мышцы бедра",how:["Встань широко, носки чуть врозь","Перенеси вес на одну ногу и согни её, вторая остаётся прямой","Таз уводи назад, спина прямая, пятки на полу","Почувствуй натяжение по внутренней стороне прямой ноги"]},
+ {id:"st_frog",n:"Лягушка",slot:"stretch",alt:["fl_add"],place:"b",eq:"none",avoid:["knees"],lvl:2,dose:"30–45 с",m:"Приводящие мышцы бедра, тазобедренные суставы",how:["Встань на четвереньки и опустись на предплечья","Разведи колени широко, голени параллельны, стопы развёрнуты в стороны","Медленно отводи таз назад до натяжения по внутренней стороне бёдер","Подложи под колени мягкое: на жёстком полу больно"]},
+ {id:"st_cobra",n:"Кобра",slot:"stretch",alt:["fl_spine","fl_hip"],place:"b",eq:"none",avoid:["back"],lvl:1,dose:"20–30 с",m:"Мышцы живота, сгибатели бедра, грудь — подвижность позвоночника",how:["Ляг на живот, ладони под плечами, локти прижаты","Медленно выпрями руки и подними грудь, таз остаётся на полу","Плечи опущены от ушей, шея продолжает позвоночник","Поясница не должна болеть: если тянет, поднимайся ниже, на предплечья"]},
+ {id:"st_thread",n:"Нить в иголку",slot:"stretch",alt:["fl_thor"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на сторону",m:"Мышцы грудного отдела, задние дельты — подвижность и осанка",how:["Встань на четвереньки: ладони под плечами, колени под тазом","Одну руку проведи под корпусом в сторону, ладонью вверх","Опусти плечо и висок на пол, таз не уводи в сторону","Возвращаясь, раскрой руку вверх и проводи её взглядом"]},
+ {id:"st_twist",n:"Скрутка лёжа",slot:"stretch",alt:["fl_spine","fl_side"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на сторону",m:"Косые мышцы, поясница, ягодицы",how:["Ляг на спину, руки в стороны, колени согнуты и вместе","Опусти колени в одну сторону, лопатки остаются на полу","Голову поверни в противоположную сторону","Дыши медленно; возвращай колени через центр, без рывков"]},
+ {id:"st_neck",n:"Растяжка шеи",slot:"stretch",alt:["fl_neck"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 20 с на сторону",m:"Верх трапеций, мышцы шеи",how:["Сядь прямо, плечи опущены","Наклони голову ухом к плечу","Для лёгкого усиления положи ладонь на голову, не тяни","Двигайся медленно, без вращений головой"]},
 ];
 const EXI = Object.fromEntries(EX.map(e=>[e.id,e]));
 /* Разделы библиотеки по мышцам. Упражнение попадает во все группы, которые заметно нагружает. Генератор программ этим не пользуется. */
@@ -395,7 +407,8 @@ const MUSC={
  curl_db:"arms", curl_band:"arms", towel_curl:"arms", hammer:"arms", pushup_close:"arms chest", pushdown:"arms", ext_db:"arms", dips_chair:"arms",
  bike:"cardio", incline:"cardio", ellipse:"cardio", rower:"cardio back", jacks:"cardio", burpee:"cardio", march:"cardio", shadow:"cardio",
  cat_cow:"posture", open_book:"posture", hip_flex:"posture stretch", child:"posture stretch",
- st_ham:"stretch", st_quad:"stretch", st_glute:"stretch", st_chest:"stretch", st_side:"stretch", st_shoulder:"stretch", st_tri:"stretch", st_calf:"stretch", st_butterfly:"stretch", st_knees:"stretch", st_neck:"stretch posture"
+ st_ham:"stretch", st_quad:"stretch", st_fold:"stretch legs", st_down_dog:"stretch legs shoulders", st_half_split:"stretch legs", st_pigeon:"stretch glutes",
+ st_wide:"stretch legs", st_side_lunge:"stretch legs", st_frog:"stretch legs", st_cobra:"stretch posture", st_thread:"stretch posture", st_twist:"stretch posture", st_glute:"stretch", st_chest:"stretch", st_side:"stretch", st_shoulder:"stretch", st_tri:"stretch", st_calf:"stretch", st_butterfly:"stretch", st_knees:"stretch", st_neck:"stretch posture"
 };
 const MG_ICON={chest:"🏋️",back:"🧗",shoulders:"🙆",arms:"💪",legs:"🦵",glutes:"🔥",core:"🎯",posture:"🧘",stretch:"🤸",cardio:"❤️"};
 const SLOT_MG={squat:"legs",hinge:"legs",glute:"glutes",lunge:"legs",push_h:"chest",push_v:"shoulders",pull_h:"back",pull_v:"back",core:"core",lat:"shoulders",rear:"posture",bi:"arms",tri:"arms",cardio:"cardio",mob:"posture",stretch:"stretch"};
@@ -403,13 +416,14 @@ const mgOf=e=>(MUSC[e.id]||SLOT_MG[e.slot]).split(" ");
 const SLOT = {squat:"Приседания",hinge:"Наклоны и мосты",glute:"Ягодицы",lunge:"Выпады",push_h:"Жимы (грудь)",push_v:"Жимы (плечи)",pull_h:"Тяги (спина)",pull_v:"Вертикальные тяги",core:"Кор и пресс",lat:"Дельты",rear:"Задние дельты и осанка",stretch:"Растяжка",bi:"Бицепс",tri:"Трицепс",cardio:"Кардио",mob:"Мобильность"};
 const FALLBACK = {lunge:"glute",push_v:"lat",pull_v:"pull_h",glute:"hinge",bi:"pull_h",tri:"push_h",lat:"pull_h",cardio:"core",rear:"pull_h",mob:"core"};
 
-const GOALS = {lose:"Похудение",recomp:"Сбросить жир и подкачаться",gain:"Набор массы",tone:"Подтянутая форма",strength:"Сила",back:"Здоровая спина и осанка"};
+const GOALS = {lose:"Похудение",recomp:"Сбросить жир и подкачаться",gain:"Набор массы",tone:"Подтянутая форма",strength:"Сила",back:"Здоровая спина и осанка",flex:"Растяжка"};
 const WEIGHT_GOALS=new Set(["lose","gain"]);   // цели с прогнозом по весу
-const GOAL_K={lose:0.85,recomp:0.93,gain:1.1,tone:1,strength:1.05,back:1};   // калории от расхода
-const GOAL_P={lose:1.6,recomp:2.0,gain:1.8,tone:1.6,strength:1.8,back:1.6}; // белок, г на кг
+const GOAL_K={lose:0.85,recomp:0.93,gain:1.1,tone:1,strength:1.05,back:1,flex:1};   // калории от расхода
+const GOAL_P={lose:1.6,recomp:2.0,gain:1.8,tone:1.6,strength:1.8,back:1.6,flex:1.4}; // белок, г на кг
 const GOAL_FOOD={lose:"дефицит 15% от расхода: вес снижается без потери сил",recomp:"небольшой дефицит 7% и много белка: жир уходит, мышцы растут",
   gain:"профицит 10%: материал для роста мышц",tone:"калории на уровне расхода: вес держится, форма улучшается",
-  strength:"калории чуть выше расхода (+5%) и больше белка: энергия на тяжёлые тренировки",back:"калории на уровне расхода: вес держится, нагрузка щадящая"};
+  strength:"калории чуть выше расхода (+5%) и больше белка: энергия на тяжёлые тренировки",back:"калории на уровне расхода: вес держится, нагрузка щадящая",
+  flex:"калории на уровне расхода: энергии хватает на занятия, вес держится"};
 const LEVELS = {1:"Новичок",2:"Средний",3:"Опытный"};
 const PLACES = {gym:"Зал",home:"Дом"};
 const EQ = {db:"Гантели",bar:"Турник",band:"Резинки"};
@@ -426,6 +440,32 @@ const DAYS = {
  G:{t:"Ноги",s:["squat","hinge","lunge","glute","core"]}
 };
 const SPLITS = {2:["A","B"],3:["A","B","C"],4:["U","L","U","L"],5:["P","Q","G","U","L"]};
+/* Растяжка: дни по зонам. В конце — одно упражнение на контроль и силу в новой амплитуде. */
+Object.assign(DAYS,{
+ FA:{t:"Ноги и таз",s:["fl_ham","fl_hip","fl_glute","fl_add","fl_calf","core"]},
+ FB:{t:"Спина и плечи",s:["fl_spine","fl_thor","fl_shoulder","fl_side","fl_neck","rear"]},
+ FC:{t:"Всё тело",s:["fl_spine","fl_ham","fl_hip","fl_thor","fl_add","fl_shoulder","core"]}
+});
+const FL_SPLITS={2:["FA","FB"],3:["FA","FB","FC"],4:["FA","FB","FA","FB"],5:["FA","FB","FC","FA","FB"]};
+/* ---------- Тест гибкости ----------
+   Четыре простых теста по 5 уровней. По ним считается уровень программы растяжки, длительность,
+   время удержаний и зона-акцент (самая скованная получает дополнительное упражнение в каждый день). */
+const FLEX_T=[
+ {k:"fold",t:"Наклон вперёд сидя",how:"Сядь на пол, ноги прямые и вместе. Наклонись вперёд от таза, колени не сгибай.",ex:"st_ham",slot:"fl_ham",zone:"задняя поверхность бедра",
+  o:["Пальцы до колен","До середины голени","До щиколоток","Касаюсь пальцев ног","Ладони дальше стоп"]},
+ {k:"shoulder",t:"Замок за спиной",how:"Одна рука сверху за головой, другая снизу за спиной. Попробуй соединить пальцы, сделай на обе стороны и отметь худшую.",ex:"st_tri",slot:"fl_shoulder",zone:"плечи",
+  o:["Между пальцами больше ладони","Около ладони","Кончики пальцев касаются","Пальцы сцепляются","Беру ладонь в ладонь"]},
+ {k:"hips",t:"«Бабочка»",how:"Сядь, соедини стопы, пятки поближе к себе. Колени опускай вниз, не дави руками. Измерь расстояние от колена до пола.",ex:"st_butterfly",slot:"fl_add",zone:"внутренняя поверхность бедра и таз",
+  o:["Больше двух ладоней","Около двух ладоней","Около ладони","Меньше половины ладони","Колени на полу"]},
+ {k:"quad",t:"Пятка к ягодице",how:"Ляг на бок, возьми рукой стопу верхней ноги и тяни пятку к ягодице. Колени рядом, поясница не прогибается.",ex:"st_quad",slot:"fl_hip",zone:"передняя поверхность бедра",
+  o:["Не достаю рукой до стопы","Держу стопу, пятка далеко","Пятка в ладони от ягодицы","Почти касается","Касается без прогиба в пояснице"]}
+];
+function flexLast(){ const a=S.flex||[]; return a.length?a[a.length-1]:null; }
+function flexFirst(){ const a=S.flex||[]; return a.length?a[0]:null; }
+function flexAvg(t){ return t?FLEX_T.reduce((s,x)=>s+(t.s[x.k]||1),0)/FLEX_T.length:null; }
+function flexLevelOf(){ const t=flexLast(); if(!t) return Math.min((S.profile&&S.profile.level)||1,2); const a=flexAvg(t); return a<2.5?1:a<3.75?2:3; }
+function flexWeak(){ const t=flexLast(); if(!t) return null; let w=null; FLEX_T.forEach(x=>{ if(t.s[x.k]<4&&(!w||t.s[x.k]<t.s[w.k])) w=x; }); return w; }
+function flexDue(){ const t=flexLast(); return !t||daysBetween(t.d,today())>=28; }
 
 /* Личный тренер: мужчинам — Макс, женщинам — Ева. Подсказки обращаются к пользователю в его роде. */
 const COACH={
@@ -525,6 +565,12 @@ const TIPS_GOAL={
   "Техника ломается на последнем повторе? Вес пока великоват. Прибавляй, когда все подходы чистые.",
   "Силовой прогресс не линейный: бывают недели без прибавки. Разгрузка помогает выйти на новый уровень.",
   "Плотный хват, правильное дыхание и напряжённый корпус добавляют килограммы в жиме и тяге."],
+ flex:["Тянись в тепле: после разминки или тренировки мышцы растягиваются легче и безопаснее.",
+  "Растяжка — не терпение боли. Лёгкое натяжение, которое к концу удержания слабеет, — то, что нужно.",
+  "На выдохе мышцы расслабляются: углубляй растяжку именно на выдохе.",
+  "Гибкость растёт медленно: заметный шаг — за 1–2 недели. Регулярность важнее рекордов.",
+  "Не пружинь: резкие покачивания заставляют мышцу сжиматься, а не тянуться.",
+  "Сильные мышцы в новой амплитуде удерживают результат. Поэтому в конце дня есть упражнение на контроль."],
  back:["Сидишь долго? Каждые 45–60 минут вставай и пройдись хотя бы пару минут.",
   "Сильные ягодицы и пресс разгружают поясницу. Поэтому они есть в каждой тренировке.",
   "Поднимай тяжёлое с пола, приседая, а не наклоняясь на прямых ногах.",
@@ -565,7 +611,7 @@ function save(){
   try{ scheduleSync(); }catch(e){}
   if(inTg && tg.CloudStorage){
     try{
-      tg.CloudStorage.setItem("profile",JSON.stringify({p:S.profile,f:S.full,a:S.adj,s:S.swaps,x:S.extra||0}));
+      tg.CloudStorage.setItem("profile",JSON.stringify({p:S.profile,f:S.full,a:S.adj,s:S.swaps,x:S.extra||0,fl:(S.flex||[]).slice(-12)}));
       tg.CloudStorage.setItem("body",JSON.stringify(S.body.slice(-40)));
     }catch(e){}
   }
@@ -576,7 +622,7 @@ function cloudRestore(){
     if(err||!v) return;
     try{
       const p=v.profile?JSON.parse(v.profile):null;
-      if(p&&p.p){S.profile=p.p;S.full=p.f;S.adj=p.a||{sets:0};S.swaps=p.s||{};S.extra=p.x||0;}
+      if(p&&p.p){S.profile=p.p;S.full=p.f;S.adj=p.a||{sets:0};S.swaps=p.s||{};S.extra=p.x||0;S.flex=p.fl||[];}
       if(v.body) S.body=JSON.parse(v.body)||[];
       if(S.profile){view="program";save();render();}
     }catch(e){}
@@ -610,6 +656,11 @@ const PREF={
  tri:{gym:["pushdown","ext_db"],home:["ext_db","dips_chair","pushup_close"]},
  cardio:{gym:["bike","incline","ellipse","rower"],home:["jacks","march","shadow","burpee"]}
 };
+/* Растяжка: сложные варианты первыми — новичку они отсекаются по уровню, с ростом гибкости появляются сами. */
+[["fl_ham",["st_half_split","st_ham","st_fold","st_down_dog"]],["fl_hip",["hip_flex","st_quad","st_cobra"]],["fl_glute",["st_pigeon","st_glute","st_knees"]],
+ ["fl_add",["st_frog","st_wide","st_butterfly","st_side_lunge"]],["fl_spine",["st_cobra","cat_cow","st_twist","child"]],["fl_thor",["st_thread","open_book","st_chest"]],
+ ["fl_shoulder",["st_shoulder","st_tri","st_chest"]],["fl_side",["st_side","st_twist"]],["fl_calf",["st_down_dog","st_calf"]],["fl_neck",["st_neck"]]]
+ .forEach(([k,l])=>PREF[k]={gym:l,home:l});
 function bmiOf(f){ return f&&f.height&&f.weight ? f.weight/Math.pow(f.height/100,2) : null; }
 function opts(){
   const p=S.profile||{}, f=S.premium&&S.full?S.full:null;
@@ -628,6 +679,7 @@ function opts(){
     noKneeLoad: caution||obese||lims.includes("knees"),
     noHeavy: youth||age>=60||caution||(senior&&obese)
   };
+  if(goal==="flex"){ o.level=caution?1:flexLevelOf(); o.weak=flexWeak(); }
   if(f){ o.plan=planLength(o,f); o.weeks=o.plan.weeks+4*(S.extra||0); }
   const n=[];
   if(f){
@@ -643,12 +695,14 @@ function opts(){
     if(o.goal==="recomp") n.push("сброс жира и рост мышц: силовая схема с прибавкой весов, небольшой дефицит калорий, белка больше обычного");
     if(o.goal==="strength") n.push(o.noHeavy?"сила: по возрасту или здоровью без предельных весов, 8–12 повторов":o.level===1?"сила: первые 4 недели 6–8 повторов, пока осваиваешь технику, дальше 4–6":"сила: 4–6 повторов в базовых упражнениях, отдых 2–3 минуты");
     if(o.goal==="back") n.push("здоровая спина: без тяжёлых нагрузок на позвоночник, больше тяг и упражнений на осанку, мобильность в конце каждой тренировки");
+    if(o.goal==="flex"){ n.push("растяжка: статические удержания, каждую неделю чуть дольше; в конце дня — упражнение на контроль в новой амплитуде");
+      n.push(flexLast()?`уровень по тесту гибкости: ${LEVELS[o.level].toLowerCase()}${o.weak?`; акцент — ${o.weak.zone}`:"; все зоны в хорошей форме, развиваем равномерно"}`:"пройди тест гибкости в «Прогрессе»: программа подстроится под самые скованные зоны"); }
     if(lims.length) n.push("бережём: "+lims.map(x=>LIMS[x].toLowerCase()).join(", "));
     if(o.goal==="back") n.push("укрепляем ягодицы: они разгружают поясницу");
-    else if(o.sex==="f"&&o.goal!=="gain") n.push("дополнительный акцент на ягодицы");
+    else if(o.sex==="f"&&o.goal!=="gain"&&o.goal!=="flex") n.push("дополнительный акцент на ягодицы");
     if(caution) n.push("щадящий режим по ответам о безопасности");
     const st=f.str||{};
-    if(st.bench||st.sq||st.dl) n.push("рабочие веса рассчитаны от твоих известных весов в базовых упражнениях");
+    if(o.goal==="flex"){} else if(st.bench||st.sq||st.dl) n.push("рабочие веса рассчитаны от твоих известных весов в базовых упражнениях");
     else if(st.push||st.squat) n.push("рабочие веса рассчитаны по тестам силы, весу тела, полу, возрасту и уровню");
     else n.push("рабочие веса рассчитаны по уровню, весу тела, полу и возрасту; пройди тесты силы в анкете, чтобы расчёт был точнее");
     if(st.dbMax&&o.place==="home") n.push(`веса ограничены твоими гантелями: до ${st.dbMax} кг`);
@@ -686,6 +740,11 @@ function planLength(o,f){
     wk=12+4*extra; why.push(extra?`рекомпозиция идёт медленнее похудения; при ИМТ ${r1(bmi0)} нужно больше времени, чтобы ушёл жир`:"заметная рекомпозиция занимает около 3 месяцев");
   } else if(o.goal==="strength"){
     wk=12; why.push("силовой прогресс строится циклами: 3 цикла по 4 недели");
+  } else if(o.goal==="flex"){
+    const t=flexLast();
+    if(t){ const gap=FLEX_T.reduce((a,x)=>a+Math.max(0,4-(t.s[x.k]||1)),0);
+      wk=gap?8+gap*1.5:8; why.push(gap?`по тесту гибкости до хорошего уровня не хватает ${gap} ${plural(gap,"шага","шагов","шагов")}: гибкость растёт медленно, примерно шаг за 1–2 недели`:"по тесту гибкость уже хорошая: курс на закрепление и развитие"); }
+    else { wk=o.level===1?12:8; why.push(o.level===1?"гибкость меняется медленно: заметный результат — за 2–3 месяца регулярных занятий":"курс развития гибкости; пройди тест, чтобы срок стал точнее"); }
   } else if(o.goal==="back"){
     wk=8; why.push("базовый курс укрепления спины и осанки");
     if(f.lims.includes("back")){ wk+=4; why.push("спина уже беспокоит — темп мягче"); }
@@ -736,8 +795,9 @@ function pick(slot,o,variant,key,usedFam){
     if(pool.length){
       if(o.prem&&S.swaps[key]){ const sw=EXI[S.swaps[key]]; if(sw&&pool.includes(sw)) return sw; }
       let cand=pool;
-      if(isLoaded(pool[0],o)) cand=pool.filter(e=>isLoaded(e,o)); // не меняем упражнение с весом на упражнение без веса
-      const top=cand.slice(0,s==="mob"?4:3);   // 3 варианта: в длинных программах циклы не повторяют друг друга подряд
+      if(o.goal==="flex"){ const bw=pool.filter(e=>e.eq==="none"); if(bw.length) cand=bw; }   // в растяжке — без снарядов и рабочих весов
+      else if(isLoaded(pool[0],o)) cand=pool.filter(e=>isLoaded(e,o)); // не меняем упражнение с весом на упражнение без веса
+      const top=cand.slice(0,s==="mob"||s.startsWith("fl_")?4:3);   // 3 варианта: в длинных программах циклы не повторяют друг друга подряд
       return top[variant%top.length];
     }
     s=FALLBACK[s];
@@ -851,6 +911,11 @@ function recWeight(it,week){
   return {kg,t:L.t,text:loadText(kg,L.t),why,capped};
 }
 function weekInfo(w,o){
+  if(o.goal==="flex"){
+    const c=(w-1)%4;
+    if(!o.prem) return w===1?{note:"Неделя знакомства: тянись до лёгкого натяжения, без боли. Дыши медленно, на выдохе чуть глубже.",ds:0}:{note:"Удержания стали на 5 секунд дольше. Если тянет так же, как неделю назад, — это прогресс.",ds:0};
+    return {note:["Тянись до лёгкого натяжения, без боли. На выдохе — чуть глубже.","Удержания на 5 секунд дольше.","+1 круг в каждом упражнении растяжки.","Лёгкая неделя: на круг меньше и удержания короче. Тело закрепляет новую амплитуду."][c],ds:c===2?1:c===3?-1:0};
+  }
   if(!o.prem) return w===1
     ? {note:"Неделя знакомства: работай в нижней границе повторов, следи за техникой.",ds:0}
     : {note:"Добавь 1–2 повтора в каждом подходе или чуть увеличь вес.",ds:0};
@@ -866,6 +931,12 @@ function weekInfo(w,o){
   return {note:notes[c],ds};
 }
 function warmup(code,o){
+  if(o.goal==="flex"){
+    const w=[o.place==="gym"?"Велотренажёр или ходьба на дорожке — 3 мин":"Ходьба на месте — 3 мин","Круговые движения шеей, плечами, тазом, коленями и стопами — по 8","Махи ногами вперёд-назад и в стороны у опоры — по 10","Кошка-корова — 6 медленных повторов"];
+    const c=["Расслабление лёжа на спине — 1 мин","Глубокое медленное дыхание — 1 мин"];
+    if(o.senior) c.push("Стойка на одной ноге у опоры — по 30 с на каждую");
+    return {min:o.senior?8:5,items:w,cool:c,coolMin:o.senior?3:2};
+  }
   const upper=["U","P","Q"].includes(code), lower=["L","G"].includes(code);
   const min=o.senior?10:o.lowImpact?8:6;
   const w=[o.place==="gym"?"Велотренажёр или ходьба на дорожке — 3 мин":"Ходьба на месте — 3 мин","Круговые движения плечами, тазом и в голеностопах — по 10"];
@@ -883,7 +954,7 @@ function warmup(code,o){
   return {min,items:w,cool:c,coolMin};
 }
 function buildProgram(){
-  const o=opts(), split=SPLITS[o.days]||SPLITS[3], weeks=[];
+  const o=opts(), split=o.goal==="flex"?(FL_SPLITS[o.days]||FL_SPLITS[3]):(SPLITS[o.days]||SPLITS[3]), weeks=[];
   for(let w=1;w<=o.weeks;w++){
     const wi=weekInfo(w,o), days=[], cyc=Math.floor((w-1)/4), seen={};
     split.forEach((code,d)=>{
@@ -897,27 +968,69 @@ function buildProgram(){
       if((o.goal==="back"||(o.sex==="f"&&o.goal!=="gain"))&&!slots.includes("glute")&&(code==="A"||code==="C")) slots.splice(slots.indexOf("core"),0,"glute");
       if(o.goal==="lose"||o.obese) slots.push("cardio");
       if(o.goal==="back") slots.push("mob");
+      if(o.goal==="flex"&&o.weak){ const last=slots[slots.length-1]; if(!slots.includes(o.weak.slot)||code!=="FB") slots.splice(slots.length-1,0,o.weak.slot); }
       const items=[], usedFam=new Set();
       slots.forEach((slot,i)=>{
         const key=`${code}${d}|${slot}|${i}`;
-        const variant=(slot==="core"||slot==="cardio"||slot==="mob")?d+cyc:occ+cyc;
+        const variant=(slot==="core"||slot==="cardio"||slot==="mob"||slot.startsWith("fl_"))?d+cyc+occ:occ+cyc;
         const e=pick(slot,o,variant,key,usedFam);
         if(!e) return;
         usedFam.add(fam(e));
+        if(o.goal==="flex"&&(e.slot==="stretch"||e.slot==="mob")){ items.push(flexItem(e,o,w,wi,slot,key)); return; }
         const sc=scheme(e,o,w);
-        let sets=sc.timed?1:baseSets(o)+(e.iso||e.slot==="core"?0:wi.ds)+(o.prem?S.adj.sets:0);
+        let sets=sc.timed?1:baseSets(o)+(e.iso||e.slot==="core"?0:wi.ds)+(S.adj.sets||0);
         if(o.caution&&!sc.timed) sets-=1;
+        if(o.goal==="flex"&&!sc.timed) sets=2+(S.adj.sets||0);      // в растяжке силовое упражнение — только для контроля
         sets=Math.max(sc.timed?1:2,Math.min(5,sets));
         if(sc.timed) sets=1;
         items.push({id:e.id,slot:e.slot,ps:e.alt&&e.alt.includes(slot)?slot:e.slot,key,sets,reps:sc.reps,rest:sc.rest,timed:!!sc.timed,min:sc.min});
       });
-      days.push({code,title:tpl.t,items,warm:warmup(code,o)});
+      const warm=warmup(code,o); fitTime(items,warm,o);
+      days.push({code,title:tpl.t,items,warm});
     });
     weeks.push({n:w,note:wi.note,days});
   }
+  // если в пиковой неделе цикла по времени убрали изолирующее упражнение — убираем его во всём цикле, чтобы состав дней не прыгал
+  if(o.prem) for(let c0=0;c0<weeks.length;c0+=4){ const pk=weeks[Math.min(c0+2,weeks.length-1)];
+    for(let i=c0;i<Math.min(c0+4,weeks.length);i++) weeks[i].days.forEach((d,di)=>{ const keep=new Set(((pk.days[di]||{}).items||[]).map(x=>x.key)); d.items=d.items.filter(x=>keep.has(x.key)); }); }
+  // разгрузочная неделя всегда легче предыдущей: если пик недели 3 урезан по времени, урезаем и неделю 4
+  if(o.prem) for(let i=3;i<weeks.length;i+=4) weeks[i].days.forEach((d,di)=>d.items.forEach(it=>{
+    const prev=(weeks[i-1].days[di]||{items:[]}).items.find(x=>x.key===it.key); if(!prev||it.timed) return;
+    it.sets=Math.max(it.flex?1:2,Math.min(it.sets,prev.sets-1)); }));
   return weeks;
 }
-function minutes(day){return Math.round(day.items.reduce((s,it)=>s+(it.timed?it.min||parseInt(it.reps)||8:it.sets*(it.rest+45)/60),0)+(day.warm?day.warm.min+(day.warm.coolMin||5):5));}
+/* Тренировка не должна растягиваться больше чем на 75 минут (70 — после 50 лет и при ИМТ 30+),
+   включая разминку и заминку. Если пик недели не помещается, сначала снимаем подходы в изолирующих
+   упражнениях, потом пятый и четвёртый подход в базовых, и только потом убираем одно изолирующее упражнение. */
+function fitTime(items,warm,o){
+  const LIM=o.senior||o.obese?70:75, dur=()=>minutes({items,warm}), iso=it=>EXI[it.id].iso||["core","lat","bi","tri","rear","glute"].includes(it.ps);
+  let guard=0;
+  while(dur()>LIM&&guard++<40){
+    const pool=items.filter(it=>!it.timed&&!it.flex);
+    let c=pool.filter(it=>iso(it)&&it.sets>2).sort((a,b)=>b.sets-a.sets)[0]
+        ||pool.filter(it=>it.sets>3).sort((a,b)=>b.sets-a.sets)[0];
+    if(c){ c.sets--; c.trim=1; continue; }
+    // убирать можно только второстепенное: руки и дельты; ягодицы у женщин и при цели «спина», задние дельты при «спине» — ключевые
+    const keep=new Set(["core","cardio","mob"]); if(o.goal==="back") keep.add("rear").add("glute"); if(o.sex==="f"&&o.goal!=="gain") keep.add("glute");
+    const acc=items.map((it,i)=>[it,i]).filter(([it])=>iso(it)&&!keep.has(EXI[it.id].slot)&&!keep.has(it.ps));
+    if(acc.length&&items.length>5){ items.splice(acc[acc.length-1][1],1); continue; }
+    c=pool.filter(it=>it.sets>2).sort((a,b)=>b.sets-a.sets)[0]; if(c){ c.sets--; c.trim=1; continue; }
+    break;
+  }
+}
+/* Упражнение растяжки: круги (подходы) по удержанию. Удержание растёт по неделям цикла и от цикла к циклу,
+   круги — от уровня гибкости, недели и оценки после тренировки. */
+function flexItem(e,o,w,wi,slot,key){
+  const c=(w-1)%4, cyc=Math.floor((w-1)/4), bil=/на (ногу|сторону|руку)/.exec(e.dose||""), dyn=/повтор/.test(e.dose||"")||(/^по \d+ на/.test(e.dose||"")&&!/ с /.test(e.dose||""));
+  let sec=[0,30,40,45][o.level]+(c===1?5:c===2?5:c===3?-10:0)+(w>1&&c===0?5:0)+Math.min(15,cyc*5);
+  if(o.senior) sec=Math.min(sec,45);
+  sec=Math.max(20,Math.min(o.level===3?75:60,sec));
+  let sets=[0,2,2,3][o.level]+wi.ds+(S.adj.sets||0); if(o.caution) sets-=1; sets=Math.max(1,Math.min(4,sets));
+  const reps=dyn?e.dose.replace(/^по /,""):`${sec} с${bil?" на "+bil[1]:""}`;
+  const min=Math.max(1,Math.round(sets*((dyn?40:sec*(bil?2:1))+15)/60*10)/10);
+  return {id:e.id,slot:e.slot,ps:slot,key,sets,reps,rest:15,timed:false,min,flex:true};
+}
+function minutes(day){return Math.round(day.items.reduce((s,it)=>s+(it.timed?it.min||parseInt(it.reps)||8:it.min?it.min:it.sets*(it.rest+45)/60),0)+(day.warm?day.warm.min+(day.warm.coolMin||5):5));}
 
 /* ---------- Расчёты ---------- */
 function calc(){
@@ -1109,10 +1222,44 @@ function weeklyHtml(){
    <button class="btn sm sec" data-a="wkok" data-v="${m.wk}">Понятно</button></div>`;
 }
 /* Что дальше после последней недели программы: новый цикл до достижения цели. */
+/* ---------- Тест гибкости: экран, карточка в программе и в прогрессе ---------- */
+let flexDraft={}, flexRet="progress", exRet=null;
+function vFlexTest(){
+  const c=coach(), av=c?avatar(c):duo, ready=FLEX_T.every(x=>flexDraft[x.k]);
+  return `<h1>Тест гибкости</h1><div class="card"><div class="row" style="align-items:flex-start">${av}<div class="bubble grow">4 простых теста, 3–4 минуты. Сначала разомнись: 2–3 минуты ходьбы и круговые движения. Тянись до лёгкого натяжения, без рывков и боли. По результатам ${c?c.name:"тренер"} подстроит программу.</div></div></div>
+  ${FLEX_T.map((x,i)=>`<div class="card"><h3>${i+1}. ${x.t}</h3><p class="small hint mt0">${x.how}</p>
+    ${EXANIM[x.ex]&&exOpenAny(x.ex)?`<button class="link small" data-a="exInfo" data-v="${x.ex}">Как выглядит упражнение</button>`:""}
+    ${x.o.map((t,j)=>`<button class="opt${flexDraft[x.k]===j+1?" on":""}" data-a="flexPick" data-v="${x.k}|${j+1}"><b>${j+1}. ${t}</b></button>`).join("")}</div>`).join("")}
+  <button class="btn" data-a="flexSave" ${ready?"":"disabled"}>Сохранить результат</button>
+  <button class="btn sec" data-a="back">Отмена</button>`;
+}
+function exOpenAny(id){ try{ return exOpen(id); }catch(e){ return false; } }
+function flexBars(t,first){
+  return FLEX_T.map(x=>{ const v=t.s[x.k]||1, d=first&&first!==t?v-(first.s[x.k]||1):0;
+    return `<div style="margin:8px 0"><div class="row between small"><span>${x.t}</span><b>${v} из 5${d>0?` <span style="color:var(--ok)">+${d}</span>`:""}</b></div>
+    <div style="height:8px;border-radius:99px;background:var(--card2);overflow:hidden;margin-top:4px"><div style="height:100%;width:${v*20}%;background:var(--accent);border-radius:99px"></div></div>
+    <div class="hint small">${x.o[v-1]}</div></div>`; }).join("");
+}
+function flexHtml(){
+  if(opts().goal!=="flex") return "";
+  const t=flexLast(), f0=flexFirst(), c=coach(), nm=c?c.name:"Тренер";
+  if(!t) return `<h2>Гибкость</h2><div class="card"><p class="mt0 small">Пройди тест гибкости — 4 упражнения, 3–4 минуты. По нему ${nm} выберет уровень программы, время удержаний и зону, которой нужно больше внимания.</p><button class="btn sm" data-a="flexTest">Пройти тест</button></div>`;
+  const due=flexDue(), w=flexWeak();
+  return `<h2>Гибкость</h2><div class="card">${flexBars(t,f0)}
+    <p class="small">${f0!==t?`С первого теста (${fmtDate(f0.d)}): ${Math.round((flexAvg(t)-flexAvg(f0))*10)/10>0?"+":""}${String(Math.round((flexAvg(t)-flexAvg(f0))*10)/10).replace(".",",")} в среднем. `:""}Уровень программы: <b>${LEVELS[flexLevelOf()].toLowerCase()}</b>${w?` · акцент: ${w.zone}`:" · все зоны в хорошей форме"}.</p>
+    <p class="hint small">Последний тест ${fmtDate(t.d)}. ${due?"Пора повторить: тест раз в 4 недели показывает, как растёт гибкость, и обновляет программу.":"Повторяй тест раз в 4 недели: чаще изменения почти не видны."}</p>
+    <button class="btn sm${due?"":" sec"}" data-a="flexTest">${due?"Повторить тест":"Пройти тест ещё раз"}</button></div>`;
+}
+function flexPromptHtml(o){
+  if(o.goal!=="flex"||!flexDue()) return "";
+  const t=flexLast(), c=coach();
+  return `<div class="card"><div class="row" style="align-items:flex-start">${c?avatar(c):duo}<div class="bubble grow"><b>${t?"Время проверить гибкость":"Тест гибкости"}</b>${t?"Прошло 4 недели с прошлого теста. Пройди его снова — посмотрим прогресс и обновим программу: уровень, удержания и акцент.":"3–4 минуты, и программа подстроится под тебя: уровень, время удержаний и самые скованные зоны."}</div></div>
+   <button class="btn sm" data-a="flexTest">Пройти тест</button></div>`;
+}
 function cycleHtml(weeks,o){
   if(!o.prem||selWeek!==weeks.length) return "";
   const F=forecast()||{}, c=coach(), nm=c?c.name:"Тренер";
-  const why=F.weeks?`До цели ${kgTxt(F.target||0)} кг ещё около ${F.weeks} ${plural(F.weeks,"недели","недель","недель")}, поэтому продолжаем.`:F.reached?"Цель достигнута, теперь закрепляем результат.":"Продолжаем прогрессировать.";
+  const why=o.goal==="flex"?(flexDue()?"Пройди тест гибкости: по нему подстроим следующий цикл.":"Гибкость растёт — продолжаем."):F.weeks?`До цели ${kgTxt(F.target||0)} кг ещё около ${F.weeks} ${plural(F.weeks,"недели","недель","недель")}, поэтому продолжаем.`:F.reached?"Цель достигнута, теперь закрепляем результат.":"Продолжаем прогрессировать.";
   return `<div class="card"><div class="row" style="align-items:flex-start">${c?avatar(c):duo}<div class="bubble grow"><b>Что дальше</b><br>${why} Когда закончишь эту неделю, ${nm} добавит новый цикл на 4 недели: часть упражнений обновится, веса — от твоих результатов.</div></div>
    <button class="btn sm sec" data-a="addCycle">Добавить цикл сейчас</button></div>`;
 }
@@ -1794,11 +1941,12 @@ function render(){
   const main=["program","food","library","progress","profile"].includes(view);
   $("#tabs").hidden=!main;
   if(view==="paywall"&&lastTracked!=="paywall") track("paywall_open"); lastTracked=view;
-  { const bt={program:"program",workout:"program",paywall:"program",paying:"program",welcome:"program",guide:"program",food:"food",foodsetup:"food",progress:"progress",library:"library",exercise:"library",profile:"profile",full:"profile",onboard:"profile"}[view]||"program";
+  { const bt={program:"program",workout:"program",paywall:"program",paying:"program",welcome:"program",guide:"program",food:"food",foodsetup:"food",progress:"progress",flextest:"progress",library:"library",exercise:"library",profile:"profile",full:"profile",onboard:"profile"}[view]||"program";
     const bg=document.getElementById("bgpat"); if(bg&&bg.dataset.tab!==bt) bg.dataset.tab=bt; }
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.v===view));
-  app.innerHTML=({welcome:vWelcome,onboard:vOnboard,program:vProgram,library:vLibrary,progress:vProgress,profile:vProfile,workout:vWorkout,guide:vGuide,paywall:vPaywall,paying:vPaying,full:vFull,exercise:vExercise,food:vFood,foodsetup:vFoodSetup}[view]||vProgram)();
+  app.innerHTML=({welcome:vWelcome,onboard:vOnboard,program:vProgram,library:vLibrary,progress:vProgress,profile:vProfile,workout:vWorkout,guide:vGuide,paywall:vPaywall,paying:vPaying,full:vFull,exercise:vExercise,food:vFood,foodsetup:vFoodSetup,flextest:vFlexTest}[view]||vProgram)();
   if(inTg){ if(main||view==="welcome") tg.BackButton.hide(); else tg.BackButton.show(); }
+  if(view==="exercise") startExAnim();
   window.scrollTo(0,0);
 }
 
@@ -1827,6 +1975,7 @@ function vOnboard(){
   ${opt("goal","tone","Подтянутая форма","Тонус, выносливость, здоровье",d.goal==="tone")}
   ${opt("goal","strength","Сила","Поднимать больше: базовые упражнения с большим весом",d.goal==="strength")}
   ${opt("goal","back","Здоровая спина и осанка","Крепкий кор и ровная осанка без тяжёлых нагрузок на позвоночник",d.goal==="back")}
+  ${opt("goal","flex","Растяжка","Гибкость и подвижность: наклоны глубже, плечи и тазобедренные свободнее",d.goal==="flex")}
   <h2>Уровень</h2>
   ${opt("level","1","Новичок","Не тренируюсь или перерыв больше полугода",d.level==1)}
   ${opt("level","2","Средний","Тренируюсь регулярно от 6 месяцев",d.level==2)}
@@ -1853,6 +2002,7 @@ function vProgram(){
   <p class="hint mt0"><button class="link" data-a="guide" style="float:right;padding:0;margin-left:8px">❓ Помощь</button>${GOALS[o.goal]} · ${PLACES[o.place]} · ${o.days} трен. в неделю${o.prem?` · ${o.weeks} ${plural(o.weeks,"неделя","недели","недель")}`:""}</p></div></div>
   ${o.prem?weeklyHtml():""}<div class="card">${tip()}</div>
   ${S.guideSeen?"":`<div class="card small row" style="align-items:center"><span style="font-size:20px">📖</span><span class="grow">Первый раз в DuoFit? <button class="link" data-a="guide">Как пользоваться приложением</button></span><button class="xbtn" data-a="guideHint" aria-label="Скрыть">✕</button></div>`}`;
+  h+=flexPromptHtml(o);
   if(o.caution) h+=`<div class="card warn"><b>Щадящий режим.</b><p class="small">По твоим ответам нагрузку стоит согласовать с врачом. Пока мы снизили интенсивность и убрали прыжки.</p></div>`;
   if(o.prem&&o.goalAsked==="tone"&&o.goal!=="tone") h+=`<div class="card warn"><b>${o.goal==="lose"?"Начнём со снижения веса.":"Начнём со сброса жира."}</b><p class="small">Подтянутое тело видно, когда жировая прослойка небольшая. При твоём индексе массы тела (${o.bmi.toFixed(1)}) мы собрали программу «${GOALS[o.goal]}»: ${o.goal==="lose"?"дефицит калорий и силовые, чтобы сохранить мышцы":"небольшой дефицит калорий и силовые с прибавкой весов"}. Когда индекс опустится${o.goal==="lose"?" ниже 30":" ниже 27,5"}, программа сама переключится.</p></div>`;
   if(o.prem&&o.obese&&o.goalAsked==="recomp") h+=`<div class="card warn"><b>Начнём с похудения.</b><p class="small">При твоём индексе массы тела быстрее и полезнее для здоровья сначала снизить вес. Силовые в программе остаются, так что мышцы тоже будут расти. Когда индекс опустится ниже 30, программа сама переключится на рекомпозицию.</p></div>`;
@@ -1884,7 +2034,7 @@ function vWorkout(){
   const c=coach();
   let h=`<span class="badge">НЕДЕЛЯ ${workout.w} · ДЕНЬ ${workout.d+1}</span><h1 style="margin-top:8px">${day.title}</h1>
   ${c?`<div class="row" style="margin:8px 0">${avatar(c)}<div class="bubble grow"><b>${c.name}</b>${c.id==="m"?"Поехали. Сначала разминка, потом работаем по плану.":"Начинаем с разминки, потом спокойно по плану. Техника важнее веса."}</div></div>`:""}
-  <p class="hint mt0">Отмечай подходы: после каждого запустится таймер отдыха.${prem&&day.items.some(x=>recWeight(x,workout.w))?" Начни с рекомендованного веса: если повторов выходит больше верхней границы, прибавь, если меньше нижней, убавь. Запиши вес, с которым реально работал, и в следующий раз мы его учтём.":day.items.some(x=>EXI[x.id].eq!=="none"&&!x.timed)?" Вес подбирай так, чтобы в конце подхода оставалось 1–2 повтора в запасе.":""}</p>
+  <p class="hint mt0">${day.items.some(x=>x.flex)?"Отмечай круги: после каждого — 15 секунд, чтобы сменить позу или сторону. Тянись до лёгкого натяжения, без боли и пружинящих движений.":"Отмечай подходы: после каждого запустится таймер отдыха."}${prem&&day.items.some(x=>recWeight(x,workout.w))?" Начни с рекомендованного веса: если повторов выходит больше верхней границы, прибавь, если меньше нижней, убавь. Запиши вес, с которым реально работал, и в следующий раз мы его учтём.":day.items.some(x=>EXI[x.id].eq!=="none"&&!x.timed)?" Вес подбирай так, чтобы в конце подхода оставалось 1–2 повтора в запасе.":""}</p>
   <div class="card"><h3>Разминка · ${day.warm.min} мин</h3><ul class="list small">${day.warm.items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
   <div class="card">`;
   day.items.forEach((it,i)=>{
@@ -1912,6 +2062,7 @@ function vExercise(){
   const where=e.place==="g"?"Зал":e.place==="h"?"Дом":"Зал и дом";
   return `${mgOf(e).map(g=>`<span class="badge" style="margin-right:4px">${MGROUPS[g]}</span>`).join("")}<h1 style="margin-top:8px">${esc(e.n)}</h1>
   <p class="hint mt0">${where}${e.eq!=="none"&&e.eq!=="gym"?" · "+EQ[e.eq]:""} · ${LEVELS[e.lvl]}</p>
+  ${exAnimHtml(e.id)}
   <div class="card"><h3>Какие мышцы работают</h3><p class="mt0">${esc(e.m)}</p></div>
   <div class="card"><h3>Как выполнять</h3><ul class="list">${e.how.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
   ${e.avoid.length?`<div class="card warn small">Если беспокоят ${e.avoid.map(a=>LIMS[a].toLowerCase()).join(" или ")}, лучше заменить это упражнение. В подписке замена происходит автоматически по анкете.</div>`:""}
@@ -1924,7 +2075,7 @@ let openMemo={k:null,set:null};
 function exOpen(id){
   if(S.premium) return true;
   if(!S.profile) return false;
-  const k=JSON.stringify([S.profile,S.full,S.swaps]);
+  const k=JSON.stringify([S.profile,S.full,S.swaps,(S.flex||[]).slice(-1)]);
   if(openMemo.k!==k){ const set=new Set(); buildProgram().forEach(w=>w.days.forEach(d=>{ d.items.forEach(it=>set.add(it.id)); (d.warm&&d.warm.cool||[]).forEach(x=>{ if(x&&x.id) set.add(x.id); }); })); openMemo={k,set}; }
   return openMemo.set.has(id);
 }
@@ -1940,7 +2091,7 @@ function groupSheet(g){
 function showLock(o){
   const old=document.getElementById("dfSheet"); if(old) old.remove();
   const c=coach(), w=document.createElement("div"); w.id="dfSheet"; w.className="sheet-bg";
-  const feats=[["📋","Техника по шагам","как встать, как двигаться, где держать спину"],["⚠️","Безопасность","когда упражнение лучше заменить и на что"],["⚖️","Рабочий вес под тебя","рассчитан по анкете и растёт с твоими результатами"],["🔄","Замена в одно касание","равноценное упражнение, если это не подходит"]];
+  const feats=[["📋","Техника с анимацией","фигура в движении с подсветкой мышц и шаги: как встать, как двигаться"],["⚠️","Безопасность","когда упражнение лучше заменить и на что"],["⚖️","Рабочий вес под тебя","рассчитан по анкете и растёт с твоими результатами"],["🔄","Замена в одно касание","равноценное упражнение, если это не подходит"]];
   const all=`${EX.length} ${plural(EX.length,"упражнения","упражнений","упражнений")}`;
   w.innerHTML=`<div class="sheet" role="dialog" aria-label="Доступно по подписке"><div class="grip"></div>
     <div class="lockic">${o.icon}</div>
@@ -1995,7 +2146,7 @@ function vProgress(){
   <div class="grid2"><div class="stat"><b>${S.history.length}</b><span>${plural(S.history.length,"тренировка","тренировки","тренировок")}</span></div>
   <div class="stat"><b>${S.history.reduce((s,x)=>s+(x.min||0),0)}</b><span>${plural(S.history.reduce((s,x)=>s+(x.min||0),0),"минута","минуты","минут")}</span></div></div>`;
   if(!prem){
-    return h+premiumPromo("progress")+histHtml(hist);
+    return h+flexHtml()+premiumPromo("progress")+histHtml(hist);
   }
   const c=calc(), b=S.body.slice().sort((x,y)=>x.d.localeCompare(y.d));
   const fm=foodMode();
@@ -2008,7 +2159,7 @@ function vProgress(){
   h+=`
   ${fm==="ed"?"":`<div class="card"><div class="row between"><span>Индекс массы тела</span><b>${c.bmi.toFixed(1)} · ${bmiText(c.bmi)}</b></div>
    ${c.whr?`<div class="row between" style="margin-top:6px"><span>Талия / бёдра</span><b>${c.whr.toFixed(2)}</b></div>`:""}</div>`}
-  ${forecastHtml()}${resultsHtml()}
+  ${forecastHtml()}${opts().goal==="flex"?flexHtml():resultsHtml()}
   <h2>Подстройка программы</h2><div class="card"><div class="row" style="align-items:flex-start">${coach()?avatar(coach()):'<div class="av e">Е</div>'}<div class="bubble grow">${advice()}</div></div></div>
   <h2>Вес и замеры</h2><div class="card">${spark(b.map(x=>x.w))}
    <div class="grid2">
@@ -2033,6 +2184,7 @@ function vProfile(){
   ${prem?`<p class="small hint">Действует до ${untilText()}. Продление добавит выбранный срок к текущему.</p><button class="btn sec" data-a="go" data-v="paywall">Продлить</button>`:`<button class="btn" data-a="go" data-v="paywall">Оформить подписку</button>`}</div>
   ${coach()?`<div class="card"><div class="row">${avatar(coach())}<div class="grow"><b>Твой тренер: ${coach().name}</b><div class="hint small">ИИ-персонаж DuoFit</div></div></div></div>`:""}
   <button class="card row" data-a="guide" style="width:100%;text-align:left;font-family:inherit;color:var(--text);cursor:pointer"><span style="font-size:22px">📖</span><span class="grow"><b>Как пользоваться DuoFit</b><br><span class="hint small">Программа, тренировка, питание, прогресс, уведомления</span></span><span class="hint">›</span></button>
+  ${homeHtml()}
   ${notifHtml()}
   <div class="card"><h3>Базовая анкета</h3><p class="small hint mt0">${p.sex?(p.sex==="m"?"Мужчина":"Женщина")+" · ":""}${GOALS[p.goal]} · ${LEVELS[p.level]} · ${PLACES[p.place]}${p.place==="home"&&p.eq.length?" ("+p.eq.map(x=>EQ[x].toLowerCase()).join(", ")+")":""}</p>
   <button class="btn sm sec" data-a="editBasic">Изменить</button></div>
@@ -2052,8 +2204,8 @@ function vProfile(){
 function vPaywall(){
   return `<div class="card center">${coachAv()}
   <h1 style="margin-top:12px">Тренировки и питание</h1><p class="hint">${coach()?`${coach().name} соберёт программу и меню именно под тебя`:"Макс и Ева соберут программу и меню именно под тебя"}</p></div>
-  <div class="card promo"><h3>Что входит</h3><ul class="feat">${PAY_ITEMS.map(a=>`<li><i>${a[0]}</i><div><b>${a[1]}</b><span>${a[2]}</span></div></li>`).join("")}</ul></div>
-  <div class="card promo"><h3>Программа подстраивается под тебя</h3><ul class="feat">${ADAPT.map(a=>`<li><i>${a[0]}</i><div><b>${a[1]}</b><span>${gx(a[2])}</span></div></li>`).join("")}</ul></div>
+  <div class="card promo"><h3>Что входит</h3><ul class="feat">${fxItems(PAY_ITEMS).map(a=>`<li><i>${a[0]}</i><div><b>${a[1]}</b><span>${a[2]}</span></div></li>`).join("")}</ul></div>
+  <div class="card promo"><h3>Программа подстраивается под тебя</h3><ul class="feat">${fxItems(ADAPT).map(a=>`<li><i>${a[0]}</i><div><b>${a[1]}</b><span>${gx(a[2])}</span></div></li>`).join("")}</ul></div>
   ${planOpt("m1")}${planOpt("m3")}
   <p class="hint small center">Оплата по СБП или картой через ЮKassa. Без автосписаний: продлеваешь сам, когда захочешь.</p>
   ${NEED_EMAIL&&!TEST_MODE?`<div class="field"><label>Email для чека</label><input id="payEmail" type="email" inputmode="email" placeholder="you@mail.ru" value="${esc(S.email||"")}"></div>`:""}
@@ -2066,7 +2218,7 @@ function vPaywall(){
 
 /* Блок о подписке на страницах «Программа», «Питание», «Прогресс». ctx — какая страница. */
 const ADAPT=[
- ["🏋️","Веса и подходы растут вместе с тобой","Выполнил{а} все подходы — в следующий раз вес чуть больше. Было тяжело — меньше. Оценка после тренировки добавляет или убирает подход."],
+ ["🏋️","Веса и подходы растут вместе с тобой","Выполнил{а} все подходы — в следующий раз вес чуть больше. Было тяжело — меньше. Оценка после тренировки двигает и подходы, и веса."],
  ["🥗","Питание пересчитывается в течение дня","Съел{а} больше или меньше запланированного — порции на остальные приёмы пищи сразу подстраиваются под остаток нормы."],
  ["📈","Срок до цели обновляется","Прогноз пересчитывается по твоему питанию и взвешиваниям. Раз в неделю тренер подводит итоги и подсказывает, что поправить."],
  ["🔁","План растёт вместе с результатом","Длительность считается под твою цель. Не успел{а} — программа продолжится новыми циклами с обновлёнными упражнениями. Изменился вес — режим питания и тренировок переключится сам."]
@@ -2099,6 +2251,15 @@ const PAY_ITEMS=[
  ["🥗","Питание",`Норма КБЖУ, ${RECIPES.length} ${plural(RECIPES.length,"блюдо","блюда","блюд")} с рецептами,`+" граммовки под остаток дня, учёт съеденного, список покупок."],
  ["📈","Прогресс","Дневник веса и замеров, прогноз до цели, рост рабочих весов, итоги недели от тренера."]
 ];
+/* Для цели «Растяжка» пункты про рабочие веса заменяются на то, что реально подстраивается в программе растяжки. */
+const FX_SWAP={
+ "Рабочий вес в каждом упражнении":["⏱️","Удержания под твой уровень","Время и число кругов растут каждую неделю, лёгкая неделя закрепляет новую амплитуду."],
+ "Рабочие веса в каждом упражнении":["⏱️","Удержания под твой уровень","Время и круги растут каждую неделю, а не одинаковые 30 секунд."],
+ "Рост рабочих весов":["🤸","Гибкость по зонам","Тест раз в 4 недели: видно, как растут наклон, плечи, таз и бёдра."],
+ "Веса и подходы растут вместе с тобой":["🤸","Программа растёт вместе с гибкостью","Тест гибкости меняет уровень упражнений и зону-акцент, оценка после занятия — число кругов."],
+ "Срок до цели обновляется":["📈","Срок курса по тесту","Длительность считается от того, сколько шагов осталось до хорошей гибкости, и пересчитывается после каждого теста."]
+};
+const fxItems=list=>opts().goal==="flex"?list.map(a=>FX_SWAP[a[1]]||a):list;
 function premiumPromo(ctx){
   const P=PROMO[ctx], c=coach(), fe=c&&c.id==="f";
   const li=a=>`<li><i>${a[0]}</i><div><b>${a[1]}</b><span>${gx(a[2])}</span></div></li>`;
@@ -2109,8 +2270,8 @@ function premiumPromo(ctx){
   const lead=c?`<div class="row" style="align-items:flex-start;margin-top:10px">${avatar(c)}<div class="bubble grow">${c.name} ${P.lead[0]} ${P.lead[2]}</div></div>`
     :`<p class="small">Макс и Ева ${P.lead[1]} ${P.lead[2]}</p>`;
   return `<div class="card lock promo"><span class="badge pro">ПОДПИСКА</span><h2>${P.t}</h2>${lead}
-    <ul class="feat">${P.f.map(li).join("")}</ul>
-    <div class="adapt"><h3>Программа подстраивается под тебя</h3><p class="hint small mt0">Чем точнее ты отмечаешь тренировки и еду, тем точнее подстройка.</p><ul class="feat">${ADAPT.map(li).join("")}</ul></div>
+    <ul class="feat">${fxItems(P.f).map(li).join("")}</ul>
+    <div class="adapt"><h3>Программа подстраивается под тебя</h3><p class="hint small mt0">Чем точнее ты отмечаешь тренировки и еду, тем точнее подстройка.</p><ul class="feat">${fxItems(ADAPT).map(li).join("")}</ul></div>
     <div class="price-line"><span>Тренировки и питание в одной подписке</span><b>от ${rub(from)} ₽/мес</b></div>
     <p class="hint small mt0">Оплата по СБП или картой, без автосписаний.</p>
     <button class="btn" data-a="go" data-v="paywall">Выбрать тариф</button></div>`;
@@ -2146,6 +2307,7 @@ function strengthBlock(d){
     <div class="chips">${opts.map(([v,l])=>chip(k,v,l,d[k]===v)).join("")}${chip(k,"skip","Пропущу",d[k]==="skip")}</div>
     <button class="link" data-a="help" data-v="${k}">${d["help_"+k]?"Скрыть инструкцию":"Не знаю, как проверить?"}</button>${help(k)}`;
   const dbField=db?`<div class="grid2" style="margin-top:8px">${num("dbMax","Самая тяжёлая гантель дома, кг","например 10")}</div>`:"";
+  if(p.goal==="flex") return `<h2>Гибкость</h2><div class="card small">Для растяжки тесты силы не нужны: рабочих весов в программе нет. Уровень, время удержаний и зону-акцент определит <b>тест гибкости</b> — он в разделе «Прогресс» и займёт 3–4 минуты.</div>`;
   if(cautionDraft(d)) return `<h2>Сила и опыт</h2><div class="card small">По твоим ответам о безопасности тесты на силу делать не нужно. Стартовые веса рассчитаем осторожно по уровню, а дальше подстроим по твоим тренировкам.</div>${dbField}`;
   return `<h2>Сила и опыт</h2><p class="hint small mt0">По этим ответам рассчитаем стартовые рабочие веса для каждого упражнения. Если не знаешь ответ, открой инструкцию: проверка займёт пару минут. Или выбери «Пропущу», тогда посчитаем по уровню.</p>
   ${q("push","Сколько отжиманий от пола подряд сделаешь с ровной спиной?",[["0","0"],["1-5","1–5"],["6-15","6–15"],["16-30","16–30"],["30+","больше 30"]])}
@@ -2228,8 +2390,22 @@ const A={
   },
   editBasic:()=>{draft=Object.assign({},S.profile,{eq:(S.profile.eq||[]).slice()});view="onboard";render();},
   week:v=>{selWeek=+v;render();},
+  flexTest:()=>{ const t=flexLast(); flexDraft=t?Object.assign({},t.s):{}; flexRet=view; view="flextest"; render(); },
+  flexPick:v=>{ const [k,n]=v.split("|"); flexDraft[k]=+n; const y=window.scrollY; render(); window.scrollTo(0,y); haptic("light"); },
+  flexSave:()=>{
+    if(!FLEX_T.every(x=>flexDraft[x.k])) return;
+    const before=S.profile?{lvl:flexLevelOf(),weak:flexWeak(),weeks:S.full&&S.premium?opts().weeks:null}:null, prev=flexLast();
+    S.flex=(S.flex||[]).filter(x=>x.d!==today()); S.flex.push({d:today(),s:Object.assign({},flexDraft)});
+    save(); track("flex_test",{"средний балл":Math.round(flexAvg(flexLast())*10)/10});
+    const c=coach(), nm=c?c.name:"Тренер", fe=c&&c.id==="f", lv=flexLevelOf(), w=flexWeak(), o=opts();
+    let m=prev?`Результат сохранён. В среднем ${String(Math.round(flexAvg(flexLast())*10)/10).replace(".",",")} из 5${flexAvg(flexLast())>flexAvg(prev)?` — это на ${String(Math.round((flexAvg(flexLast())-flexAvg(prev))*10)/10).replace(".",",")} больше, чем в прошлый раз. Отличный прогресс!`:flexAvg(flexLast())<flexAvg(prev)?". Немного меньше, чем в прошлый раз: так бывает после усталости или в холоде. Не переживай, продолжаем.":". Гибкость держится."}`:`Результат сохранён. В среднем ${String(Math.round(flexAvg(flexLast())*10)/10).replace(".",",")} из 5.`;
+    m+=`\n\n${nm} ${fe?"обновила":"обновил"} программу: уровень — ${LEVELS[lv].toLowerCase()}${before&&before.lvl!==lv?` (был ${LEVELS[before.lvl].toLowerCase()})`:""}`;
+    m+=w?`, дополнительное упражнение каждый день — ${w.zone}.`:", все зоны в хорошей форме — развиваем равномерно.";
+    if(o.prem&&before&&before.weeks&&o.weeks!==before.weeks) m+=` Длительность программы теперь ${o.weeks} ${plural(o.weeks,"неделя","недели","недель")}.`;
+    view=flexRet==="flextest"?"progress":flexRet||"progress"; selWeek=0; haptic("success"); render(); popup(m);
+  },
   startDay:v=>{track(S.history.length?"workout_start":"first_workout_start");workout={w:selWeek,d:+v,sets:{},kg:{},start:Date.now()};view="workout";render();},
-  exInfo:v=>{ if(!exOpen(v)){ lockSheet(v); return; } openEx=v;workout&&view==="workout"?(workout._ret=true):null;view="exercise";render();},
+  exInfo:v=>{ if(!exOpen(v)){ lockSheet(v); return; } openEx=v;workout&&view==="workout"?(workout._ret=true):null;exRet=view;view="exercise";render();},
   setDone:(v,el)=>{
     const i=+el.dataset.i, s=+el.dataset.s, cur=workout.sets[i]||0;
     workout.sets[i]= s<cur ? s : s+1;
@@ -2270,16 +2446,24 @@ const A={
     const cst={title:day.title,min,sets:day.items.reduce((a,it,i)=>a+Math.min(it.sets,workout.sets[i]||0),0),total:S.history.length,prem:o.prem,
       weekDone:weeks[workout.w-1].days.every((x,i)=>S.done[`${o.prem?"p":"f"}${workout.w}-${i}`])&&weeks[workout.w-1].days.length>1};
     track("workout_done",{"номер":cst.total}); if(cst.total===1) track("first_workout_done");
-    if(o.prem){ view="feedback"; $("#app").innerHTML=vFeedback(); $("#tabs").hidden=true; celebrate(cst); return; }
-    workout=null; view="program"; render(); celebrate(cst);
+    view="feedback"; $("#app").innerHTML=vFeedback(); $("#tabs").hidden=true; celebrate(cst);
   },
   fb:v=>{
-    const d=+v; S.adj.sets=Math.max(-1,Math.min(1,(S.adj.sets||0)+d));
+    const d=+v, o=opts(), cnt=()=>buildProgram().reduce((a,w)=>a+w.days.reduce((x,dd)=>x+dd.items.reduce((y,it)=>y+(it.timed?0:it.sets),0),0),0);
+    const before=cnt(); S.adj=S.adj||{sets:0}; S.adj.sets=Math.max(-1,Math.min(1,(S.adj.sets||0)+d));
     (S.lastIds||[]).forEach(id=>{ if(S.lifts[id]) S.lifts[id].fb=d<0?-1:d>0?1:0; });
+    const changed=cnt()!==before;
     save(); workout=null; view="program"; render();
     {const c=coach(),nm=c?c.name:"Тренер",f=c&&c.id==="f";
     if(extMsg) selWeek=opts().weeks-3;
-    popup((d>0?`${nm} ${f?"добавила":"добавил"} по подходу и увеличит веса в следующих тренировках.`:d<0?`${nm} ${f?"сняла":"снял"} по подходу, чтобы ты ${f?"успевала":"успевал"} восстанавливаться.`:"Отлично, оставляем нагрузку как есть.")+extMsg); extMsg="";}
+    let m;
+    const fl=o.goal==="flex", un=fl?"кругу":"подходу";
+    if(d>0) m=changed?`${nm} ${f?"добавила":"добавил"} по ${un} в следующих тренировках.${fl?" Тянись чуть глубже, но без боли.":o.prem?" Веса тоже подрастут.":" Если работаешь с весом — возьми чуть тяжелее."}`
+                     :`Нагрузка уже на максимуме для этой программы. Сделай упражнения медленнее и добавь 1–2 повтора${o.prem?" — веса подрастут сами.":" или возьми вес чуть тяжелее."}`;
+    else if(d<0) m=changed?`${nm} ${f?"сняла":"снял"} по ${un}, чтобы ты ${f?"успевала":"успевал"} восстанавливаться.${fl?" Тянись мягче, до лёгкого натяжения.":o.prem?" Веса в следующий раз будут чуть легче.":" Если работаешь с весом — возьми чуть легче."}`
+                     :`Подходов уже минимум. Делай нижнюю границу повторов, отдыхай подольше${o.prem?"":" и бери вес полегче"} — так тело успеет привыкнуть.`;
+    else m="Отлично, оставляем нагрузку как есть.";
+    popup(m+extMsg); extMsg="";}
   },
   editFull:()=>{
     const f=S.full; draft2={};
@@ -2353,7 +2537,7 @@ const A={
     if(+d.days>maxDaysFor(d)) d.days=maxDaysFor(d);
     const keys=["heart","pain","doc"].concat(d.sex==="f"?["preg"]:[]);
     const cautionNow=cautionDraft(d);
-    if(!cautionNow&&(!d.push||!d.squat)) return err("Ответь на вопросы о силе про отжимания и приседания или выбери «Пропущу».");
+    if(!cautionNow&&(S.profile||{}).goal!=="flex"&&(!d.push||!d.squat)) return err("Ответь на вопросы о силе про отжимания и приседания или выбери «Пропущу».");
     const anchors={}; for(const k of ["bench","sq","dl"]){ const v=n(k); if(v){ if(!(v>=10&&v<=400)) return err("Проверь известные веса: от 10 до 400 кг."); anchors[k]=v; } }
     const dbMax=n("dbMax"); if(dbMax&&!(dbMax>=1&&dbMax<=60)) return err("Проверь вес гантели: от 1 до 60 кг.");
     if(keys.some(k=>d["q_"+k]===undefined)) return err("Ответь на вопросы о безопасности.");
@@ -2407,7 +2591,8 @@ function vFeedback(){
 
 function goBack(){
   stopTimer();
-  if(view==="exercise"){ view=workout&&workout._ret?"workout":"library"; if(workout) workout._ret=false; }
+  if(view==="exercise"){ view=workout&&workout._ret?"workout":exRet==="flextest"?"flextest":"library"; if(workout) workout._ret=false; exRet=null; }
+  else if(view==="flextest"){ view=flexRet||"progress"; }
   else if(view==="workout"){ workout=null; view="program"; }
   else if(view==="full"){ view=S.full?"profile":"program"; }
   else if(view==="onboard"){ view=S.profile?"profile":"welcome"; }
@@ -2638,7 +2823,7 @@ function celebrate(st){
     <h2>Тренировка завершена!</h2><p class="hint small mt0">${esc(st.title)}</p>
     <div class="stats"><span>⏱ ${st.min} мин</span><span>✅ ${st.sets} ${plural(st.sets,"подход","подхода","подходов")}</span><span>🔥 ${st.total}-я тренировка</span></div>
     ${c?`<div class="quote">${avatar(c)}<div class="bubble grow"><b>${c.name}</b>${esc(Q.q)}</div></div>`:`<p>${esc(Q.q)}</p>`}
-    <button class="btn" id="dfCelebOk">${st.prem?"Оценить тренировку":"Отлично!"}</button></div>`;
+    <button class="btn" id="dfCelebOk">Оценить тренировку</button></div>`;
   document.body.appendChild(w);
   const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(!reduce) confetti(w);
@@ -2666,6 +2851,701 @@ function initMetrika(){
   if(!S.firstSeen){ S.firstSeen=today(); try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} track("first_open",{"источник":src}); }
 }
 function track(goal,params){ try{ if(YM_ID&&ymReady&&window.ym) ym(YM_ID,"reachGoal",goal,params||{}); }catch(e){} }
+
+/* ---------- Анимации техники: объёмная фигура ----------
+   Поза задаётся в 3D (x — вперёд, y — вниз, z — влево от человека), поэтому одну и ту же позу можно показать
+   сбоку, спереди, сзади или сверху. Колени и локти считаются обратной кинематикой с направлением сгиба.
+   Тело — капсулы и «кольца» корпуса, мышцы — пятна на поверхности, обрезанные по силуэту сегмента.
+   Основные работающие мышцы — коралловые, вспомогательные — светлее. */
+const v3={
+ a:(p,q)=>[p[0]+q[0],p[1]+q[1],p[2]+q[2]], s:(p,q)=>[p[0]-q[0],p[1]-q[1],p[2]-q[2]], m:(p,k)=>[p[0]*k,p[1]*k,p[2]*k],
+ d:(p,q)=>p[0]*q[0]+p[1]*q[1]+p[2]*q[2], x:(p,q)=>[p[1]*q[2]-p[2]*q[1],p[2]*q[0]-p[0]*q[2],p[0]*q[1]-p[1]*q[0]],
+ l:p=>Math.hypot(p[0],p[1],p[2]), n:p=>{const l=Math.hypot(p[0],p[1],p[2])||1;return [p[0]/l,p[1]/l,p[2]/l];},
+ lp:(p,q,t)=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t,p[2]+(q[2]-p[2])*t]
+};
+/* сумма: base + v1*k1 + v2*k2 ... */
+const vs=(...r)=>vc([0,0,0],...r);
+const vc=(b,...r)=>{let o=b.slice();for(let i=0;i<r.length;i+=2)o=v3.a(o,v3.m(r[i],r[i+1]));return o;};
+const orth=(v,ax)=>v3.n(v3.s(v,v3.m(ax,v3.d(v,ax))));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const DG=Math.PI/180;
+/* направление в плоскости x-y по углу (как на экране сбоку: -90 — вверх, 0 — вперёд, 90 — вниз) */
+const dA=(a,z)=>{const c=Math.cos(a*DG),s=Math.sin(a*DG),k=z?Math.cos(z*DG):1;return [c*k,s*k,z?Math.sin(z*DG):0];};
+function rot(v,k,a){ k=v3.n(k); const c=Math.cos(a*DG), s=Math.sin(a*DG), kv=v3.x(k,v), kd=v3.d(k,v);
+  return [v[0]*c+kv[0]*s+k[0]*kd*(1-c), v[1]*c+kv[1]*s+k[1]*kd*(1-c), v[2]*c+kv[2]*s+k[2]*kd*(1-c)]; }
+const ease=t=>.5-.5*Math.cos(t*Math.PI);           // плавный 0→1
+const seg01=(t,a,b)=>Math.max(0,Math.min(1,(t-a)/(b-a)));
+function ik3(R,T,l1,l2,pole){
+  let d=v3.s(T,R), dist=v3.l(d); const u=v3.n(d); dist=Math.max(Math.abs(l1-l2)+.01,Math.min(l1+l2-.01,dist));
+  const a=(l1*l1+dist*dist-l2*l2)/(2*dist), h=Math.sqrt(Math.max(0,l1*l1-a*a)), p=orth(pole,u);
+  const J=vc(R,u,a,p,h), E=v3.a(J,v3.m(v3.n(v3.s(vc(R,u,dist),J)),l2)); return [J,E,p];
+}
+const AL={low:21,up:29,neck:7,head:9.5,thigh:34,shin:33,uarm:26,farm:24,foot:13};
+const FIG={
+ m:{hipJ:8.5,shJ:16,ring:[[11.5,7,9.5],[10,7.5,6.5],[14.5,10,7.5],[16,6.5,6.5]],thigh:[15,10],shin:[10.5,6.5],uarm:[9.5,7.5],farm:[7.5,5.5]},
+ f:{hipJ:9,shJ:13.8,ring:[[13,7,10.5],[9,6.5,6],[12.5,10.5,6.5],[13.8,6,6]],thigh:[15.5,9.5],shin:[10,6],uarm:[8,6.3],farm:[6.5,4.8],bun:1}
+};
+let FIG_SEX="m";
+/* Каркас корпуса: P — центр таза, U — «вверх» по нижней части корпуса, L — влево, U2 — вверх по верхней части (наклон грудного отдела). */
+function frame(P,U,L,U2,nod,tw,roll){
+  U=v3.n(U); L=orth(L||[0,0,1],U); const F=v3.x(L,U);
+  U2=U2?v3.n(U2):U; let L2=orth(L,U2); if(tw) L2=rot(L2,U2,tw); const F2=v3.x(L2,U2), D=FIG[FIG_SEX];
+  const W=vc(P,U,AL.low), S=vc(W,U2,AL.up);
+  let Uh=nod?rot(U2,L2,-nod):U2;                      // nod > 0 — подбородок к груди
+  if(roll) Uh=rot(Uh,F2,roll);                         // наклон головы к плечу
+  return {P,U,L,F,U2,L2,F2,W,S,Uh,
+    hip:i=>vc(P,L,i?-D.hipJ:D.hipJ,U,-2),
+    sh:i=>vc(S,L2,i?-D.shJ:D.shJ,U2,-2.5),
+    head:vc(S,Uh,AL.neck+AL.head+1),
+    at:(f,u,l)=>vc(P,F,f,U,u,L,l),        // точка в системе таза
+    up:(f,u,l)=>vc(W,F2,f,U2,u,L2,l)};    // точка в системе груди (от талии)
+}
+/* Камеры */
+const CAM={
+ side:{p:q=>[q[0],q[1]],d:q=>q[2],dir:[0,0,1],floor:1},
+ front:{p:q=>[q[2],q[1]],d:q=>q[0],dir:[1,0,0],floor:1},
+ back:{p:q=>[-q[2],q[1]],d:q=>-q[0],dir:[-1,0,0],floor:1},
+ top:{p:q=>[q[0],-q[2]],d:q=>-q[1],dir:[0,-1,0],floor:0},
+ side2:{p:q=>[-q[0],q[1]],d:q=>-q[2],dir:[0,0,-1],floor:1}
+};
+const f1=v=>(Math.round(v*10)/10);
+function hull(pts){
+  pts=pts.slice().sort((a,b)=>a[0]-b[0]||a[1]-b[1]); if(pts.length<3) return pts;
+  const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]); const lo=[],hi=[];
+  for(const p of pts){ while(lo.length>=2&&cr(lo[lo.length-2],lo[lo.length-1],p)<=0) lo.pop(); lo.push(p); }
+  for(let i=pts.length-1;i>=0;i--){ const p=pts[i]; while(hi.length>=2&&cr(hi[hi.length-2],hi[hi.length-1],p)<=0) hi.pop(); hi.push(p); }
+  return lo.slice(0,-1).concat(hi.slice(0,-1));
+}
+const pts2=P=>P.map(p=>f1(p[0])+","+f1(p[1])).join(" ");
+function capPoly(a,b,ra,rb){   // 2D капсула → полигон + круги
+  const dx=b[0]-a[0], dy=b[1]-a[1], l=Math.hypot(dx,dy)||1, nx=-dy/l, ny=dx/l;
+  return {poly:[[a[0]+nx*ra,a[1]+ny*ra],[b[0]+nx*rb,b[1]+ny*rb],[b[0]-nx*rb,b[1]-ny*rb],[a[0]-nx*ra,a[1]-ny*ra]],a,b,ra,rb};
+}
+const capIn=c=>`<polygon points="${pts2(c.poly)}"/><circle cx="${f1(c.a[0])}" cy="${f1(c.a[1])}" r="${f1(c.ra)}"/><circle cx="${f1(c.b[0])}" cy="${f1(c.b[1])}" r="${f1(c.rb)}"/>`;
+const capSvg=(c,fill)=>`<g fill="${fill}">${capIn(c)}</g>`;
+/* Мышцы: на конечностях — {seg, at, dir: ant|post|med|lat|all, len, wid}; на корпусе — точки в системе таза/груди */
+const LIMB_M={
+ thigh:[["quads","ant",.52,.46,.95],["hams","post",.5,.44,.9],["adductors","med",.3,.32,.7],["abductors","lat",.2,.22,.6]],
+ shin:[["calves","post",.3,.32,.95],["tibialis","ant",.35,.28,.5]],
+ uarm:[["biceps","ant",.56,.36,.85],["triceps","post",.5,.4,.85],["delts","top",.1,.2,1.15]],
+ farm:[["forearms","ant",.3,.32,.8]]
+};
+const MCOL={on:"var(--mOn)",on2:"var(--mOn2)",off:"var(--mOff)"};
+function render3d(id,t,cam){
+  const A=EXANIM[id], C=CAM[cam||A.views[0]], p=A.pose(t), f=p.f, D=FIG[FIG_SEX];
+  const prim=new Set(A.m[0]||[]), sec=new Set(A.m[1]||[]);
+  const mc=k=>prim.has(k)?MCOL.on:sec.has(k)?MCOL.on2:null;
+  const P2=C.p, DP=C.d, cd=C.dir, items=[]; let cid=0; const RID="r"+((render3d.n=(render3d.n||0)+1)%100000)+"_";
+  const cDepth=DP(v3.lp(f.P,f.S,.5));
+  const far=(dp)=>dp<cDepth-4;
+  const bodyCol=fa=>fa?"var(--bodyD)":"var(--bodyC)";
+  const offCol=fa=>fa?"var(--mOffD)":"var(--mOff)";
+  /* пятно-эллипс: центр c, оси t1*r1 и t2*r2, нормаль n — на ребре пятно «раздувается» по нормали, чтобы остаться видимым */
+  const patch=(c,t1,r1,t2,r2,n,col,clip)=>{ 
+    const v=v3.d(n,cd); if(v<-.25) return "";
+    const k=1.1*(1-Math.min(1,Math.abs(v)));
+    const c2=P2(c), pv=q=>{ const z=P2(v3.a(c,q)); return [z[0]-c2[0],z[1]-c2[1]]; };
+    let A1=pv(v3.m(t1,r1)), A2=pv(v3.m(t2,r2)); const An=pv(v3.m(n,Math.min(r1,r2)*k));
+    /* ось, которая «смотрит» в камеру, схлопывается — вместо неё пятно раздувается по нормали */
+    if(Math.hypot(A1[0],A1[1])<Math.hypot(A2[0],A2[1])) A1=[A1[0]+An[0],A1[1]+An[1]]; else A2=[A2[0]+An[0],A2[1]+An[1]];
+    if(Math.abs(A1[0]*A2[1]-A1[1]*A2[0])<1.2) return "";
+    return `<g clip-path="url(#${RID}${clip})"><circle r="1" fill="${col}" transform="matrix(${f1(A1[0])} ${f1(A1[1])} ${f1(A2[0])} ${f1(A2[1])} ${f1(c2[0])} ${f1(c2[1])})"/></g>`;
+  };
+  const defs=[];
+  const limb=(a,b,ra,rb,name,ant,med,fa,extra)=>{
+    const c=capPoly(P2(a),P2(b),ra,rb), id=cid++; defs.push(`<clipPath id="${RID}${id}">${capIn(c)}</clipPath>`);
+    let s=capSvg(c,bodyCol(fa));
+    const u=v3.n(v3.s(b,a)), L=v3.l(v3.s(b,a)), an=orth(ant,u), md=orth(med,u);
+    const ps=[];
+    (LIMB_M[name]||[]).forEach(([k,dir,at,len,wid])=>{
+      const n=dir==="top"?orth(cd,u):dir==="ant"?an:dir==="post"?v3.m(an,-1):dir==="med"?md:v3.m(md,-1);
+      const r=lerp(ra,rb,at), ctr=vc(v3.lp(a,b,at),n,r*.5), tg=v3.x(u,n);
+      const col=(k==="delts"?mc("delts")||mc("rdelts"):mc(k))||((k==="adductors"||k==="abductors"||k==="tibialis"||k==="forearms")?null:offCol(fa));
+      if(!col) return;
+      ps.push([v3.d(n,cd)+(prim.has(k)?.3:sec.has(k)?.15:0),patch(ctr,u,L*len,tg,r*wid,n,col,id)]);
+    });
+    ps.sort((x,y)=>x[0]-y[0]).forEach(x=>s+=x[1]);
+    items.push({d:DP(v3.lp(a,b,.5))+(extra||0),s});
+  };
+  /* ноги */
+  const legPts=[];
+  (p.legs||[]).forEach((lg,i)=>{
+    const H=f.hip(i), pole=lg.pole||f.F, [K,An,kp]=ik3(H,lg.A,AL.thigh,AL.shin,pole);
+    let fd=lg.toe; if(!fd){ const h=[f.F[0],0,f.F[2]]; fd=v3.l(h)>.5?v3.n(h):f.F; } fd=v3.n(fd);
+    const heel=vc(An,fd,-3), toe=vc(An,fd,AL.foot), md=v3.m(f.L,i?1:-1);
+    const fa=far(DP(v3.lp(H,K,.5)));
+    limb(H,K,D.thigh[0]/2,D.thigh[1]/2,"thigh",kp,md,fa,.01);
+    limb(K,An,D.shin[0]/2,D.shin[1]/2,"shin",kp,md,fa);
+    const fc=capPoly(P2(heel),P2(toe),3.4,2.4); items.push({d:DP(v3.lp(heel,toe,.5)),s:capSvg(fc,bodyCol(fa))});
+    legPts.push(H,K,An,toe,heel);
+  });
+  /* руки */
+  const hands=[];
+  (p.arms||[]).forEach((ar,i)=>{
+    const Sh=f.sh(i), pole=ar.pole||v3.m(f.F2,-1), [E,Hd,ep]=ik3(Sh,ar.H,AL.uarm,AL.farm,pole);
+    const fa=far(DP(v3.lp(Sh,E,.5))), md=v3.m(f.L2,i?1:-1);
+    limb(Sh,E,D.uarm[0]/2,D.uarm[1]/2,"uarm",v3.m(ep,-1),md,fa,.02);
+    limb(E,Hd,D.farm[0]/2,D.farm[1]/2,"farm",v3.m(ep,-1),md,fa,.02);
+    const hp=P2(vc(Hd,v3.n(v3.s(Hd,E)),2));
+    items.push({d:DP(Hd)+.03,s:`<circle cx="${f1(hp[0])}" cy="${f1(hp[1])}" r="3.9" fill="${bodyCol(fa)}"/>`});
+    /* дельта — круглая «шапка» плеча */
+    const dc=mc("delts")||mc("rdelts")||offCol(fa), sp=P2(vc(Sh,v3.n(v3.s(E,Sh)),2.5));
+    items.push({d:DP(Sh)+.04,s:`<circle cx="${f1(sp[0])}" cy="${f1(sp[1])}" r="${f1(D.uarm[0]/2+.9)}" fill="${bodyCol(fa)}"/><circle cx="${f1(sp[0])}" cy="${f1(sp[1])}" r="${f1(D.uarm[0]/2-.2)}" fill="${dc}"/>`});
+    hands.push({H:Hd,E,i,fa});
+  });
+  /* корпус: два «стакана» колец */
+  const ring=(c,U,L,F,[lat,fr,bk],n)=>{ const o=[]; for(let k=0;k<n;k++){ const a=k/n*2*Math.PI, cs=Math.cos(a), sn=Math.sin(a); o.push(P2(vc(c,L,lat*cs,F,(sn>0?fr:bk)*sn))); } return o; };
+  const R=D.ring;
+  const lowPts=[...ring(vc(f.P,f.U,-5),f.U,f.L,f.F,R[0],16),...ring(f.P,f.U,f.L,f.F,R[0],16),...ring(f.W,f.U,f.L,f.F,R[1],16)];
+  const upPts=[...ring(f.W,f.U2,f.L2,f.F2,R[1],16),...ring(vc(f.W,f.U2,15),f.U2,f.L2,f.F2,R[2],16),...ring(vc(f.W,f.U2,AL.up-3),f.U2,f.L2,f.F2,R[3],16),...ring(vc(f.W,f.U2,AL.up+1),f.U2,f.L2,f.F2,[R[3][0]*.55,4,4],12)];
+  const tor=(pts,c)=>{ const h=hull(pts), id=cid++; defs.push(`<clipPath id="${RID}${id}"><polygon points="${pts2(h)}"/></clipPath>`); return {h,id,s:`<polygon points="${pts2(h)}" fill="var(--bodyC)" stroke="var(--bodyC)" stroke-width="3" stroke-linejoin="round"/>`}; };
+  const lo=tor(lowPts), up=tor(upPts);
+  const T=(id,c,t1,r1,t2,r2,n,k)=>{ const col=mc(k)||(k==="obliques"||k==="gmed"||k==="traps"||k==="lowback"?null:"var(--mOff)"); return col?patch(c,t1,r1,t2,r2,n,col,id):""; };
+  let sLo=lo.s, sUp=up.s;
+  [1,-1].forEach(sd=>{
+    // ягодицы, средняя ягодичная, поясница, косые
+    sLo+=T(lo.id,f.at(-1,4,sd*(R[0][0]-1)),f.U,5,f.F,4.5,v3.m(f.L,sd),"gmed");
+    sLo+=T(lo.id,f.at(-R[1][2]+.5,AL.low*.65,sd*3.2),f.U,7.5,f.L,2.6,v3.m(f.F,-1),"lowback");
+    sLo+=T(lo.id,f.at(2.5,AL.low*.62,sd*(R[1][0]-1.5)),f.U,7,f.F,3.6,v3.n(vc(v3.m(f.L,sd),f.F,.6)),"obliques");
+    sLo+=T(lo.id,f.at(R[1][1]-.5,AL.low*.62,sd*2.9),f.U,7.5,f.L,2.6,f.F,"abs");
+    // грудь, верх пресса, широчайшие, трапеции
+    sUp+=T(up.id,f.up(R[2][1]-1.5,AL.up*.66,sd*6.8),f.L2,7.6,f.U2,6.4,v3.n(vc(f.F2,f.L2,sd*.15)),"chest");
+    sUp+=T(up.id,f.up(R[1][1]+1,4.5,sd*2.9),f.U2,6,f.L2,2.6,f.F2,"abs");
+    sUp+=T(up.id,f.up(-R[2][2]+1,AL.up*.45,sd*8),f.U2,9.5,f.L2,4.6,v3.n(vc(v3.m(f.F2,-1),f.L2,sd*.45)),"back");
+    sUp+=T(up.id,f.up(-R[3][2]+1.5,AL.up-2,sd*5),f.L2,5,f.U2,3.4,v3.n(vc(v3.m(f.F2,-1),f.U2,.4)),"traps");
+    sUp+=T(up.id,f.up(-1,AL.up*.35,sd*(R[2][0]-1)),f.U2,6,f.F2,3.6,v3.n(vc(v3.m(f.L2,sd),f.F2,.3)),"obliques");
+  });
+  items.push({d:DP(vc(f.P,f.U,AL.low*.5)),s:sLo});
+  /* ягодицы рисуем поверх бёдер: они накрывают верх ноги сзади */
+  let sG=""; const gc=f.at(-R[0][2]+2,-2,0);
+  [1,-1].forEach(sd=>{ sG+=T(lo.id,f.at(-R[0][2]+2.5,-2,sd*5.8),f.U,8.5,f.L,7,v3.n(vc(v3.m(f.F,-1),f.L,sd*.3)),"glutes"); });
+  if(sG) items.push({d:DP(gc)+14,s:sG});
+  items.push({d:DP(vc(f.W,f.U2,AL.up*.5))+.001,s:sUp});
+  /* шея и голова */
+  const nb=vc(f.S,f.U2,-2), nt=vc(f.S,f.Uh,AL.neck+2), hc=f.head;
+  items.push({d:DP(nt)-.5,s:capSvg(capPoly(P2(nb),P2(nt),5,4.4),"var(--bodyC)")});
+  const hp=P2(hc); let head=`<circle cx="${f1(hp[0])}" cy="${f1(hp[1])}" r="${AL.head}" fill="var(--bodyC)"/>`;
+  if(D.bun){ const bc=vc(hc,f.Uh,5,orth(f.F2,f.Uh),-7.5), bp=P2(bc);
+    items.push({d:DP(bc),s:`<circle cx="${f1(bp[0])}" cy="${f1(bp[1])}" r="4.6" fill="var(--hair)"/>`}); }
+  items.push({d:DP(hc),s:head});
+  /* снаряды */
+  (p.props||[]).forEach(pr=>items.push(...propItems(pr,P2,DP,cd)));
+  (p.hold||[]).forEach(hd=>{ const h=hands[hd.i||0]; if(h) items.push(...propItems(Object.assign({},hd,{at:hd.at||h.H}),P2,DP,cd,h.fa)); });
+  items.sort((a,b)=>a.d-b.d);
+  const floor=C.floor&&!A.nofloor?`<line x1="-400" y1="140.5" x2="600" y2="140.5" stroke="var(--line)" stroke-width="3"/>`:"";
+  return `<defs>${defs.join("")}</defs>${floor}${items.map(i=>i.s).join("")}`;
+}
+/* Снаряды. kind: db (гантель), bb (штанга), box (скамья/опора), bar (перекладина/рукоять), band (резинка), cable (трос), disc */
+function propItems(pr,P2,DP,cd,fa){
+  /* явная глубина d подобрана под вид сбоку; для других ракурсов глубина считается по геометрии */
+  const fixD=pr.d!=null&&cd[2]!==0;
+  const o=[], E=fa?"var(--equipD)":"var(--equip)";
+  const disc=(c,ax,r,th,col)=>{ ax=v3.n(ax); const e1=orth(Math.abs(ax[1])<.9?[0,1,0]:[1,0,0],ax), e2=v3.x(ax,e1);
+    const out=[]; [-th/2,th/2].forEach(s=>{ const cc=vc(c,ax,s), c2=P2(cc), a=P2(vc(cc,e1,r)), b=P2(vc(cc,e2,r));
+      out.push(`<circle r="1" fill="${col}" transform="matrix(${f1(a[0]-c2[0])} ${f1(a[1]-c2[1])} ${f1(b[0]-c2[0])} ${f1(b[1]-c2[1])} ${f1(c2[0])} ${f1(c2[1])})"/>`); });
+    // боковина цилиндра
+    const pts=[]; for(let k=0;k<16;k++){ const an=k/16*2*Math.PI; [-th/2,th/2].forEach(s=>pts.push(P2(vc(c,ax,s,e1,r*Math.cos(an),e2,r*Math.sin(an))))); }
+    return `<polygon points="${pts2(hull(pts))}" fill="${col}"/>`+out.join(""); };
+  const rod=(a,b,w,col)=>capSvg(capPoly(P2(a),P2(b),w/2,w/2),col);
+  if(pr.k==="db"){ const ax=v3.n(pr.ax||[0,0,1]), c=pr.at, L=pr.len||15, r=pr.r||6.5;
+    o.push({d:DP(c)+.06,s:rod(vc(c,ax,-L/2),vc(c,ax,L/2),3,E)+disc(vc(c,ax,-L/2-2),ax,r,5,E)+disc(vc(c,ax,L/2+2),ax,r,5,E)}); }
+  if(pr.k==="kb"){ const c=pr.at; o.push({d:DP(c)+.06,s:disc(vc(c,[0,1,0],7),[0,0,1],8,9,E)+rod(vc(c,[0,0,1],-5),vc(c,[0,0,1],5),3,E)}); }
+  if(pr.k==="bb"){ const ax=v3.n(pr.ax||[0,0,1]), c=pr.at, half=pr.half||58, r=pr.r||19;
+    o.push({d:DP(c)+.06,s:rod(vc(c,ax,-half),vc(c,ax,half),3,E)});
+    const face=Math.abs(v3.d(ax,cd))>.7;
+    [-1,1].forEach(sd=>{ const pc=vc(c,ax,sd*(half-10)); o.push({d:DP(pc)+.07,s:face?`<g opacity=".55">${disc(pc,ax,r,7,E)}</g>`:disc(pc,ax,r,7,E)}); }); }
+  if(pr.k==="box"){ const [a,b]=pr.box, P=[]; for(const x of [a[0],b[0]]) for(const y of [a[1],b[1]]) for(const z of [a[2],b[2]]) P.push(P2([x,y,z]));
+    const c=[(a[0]+b[0])/2,(a[1]+b[1])/2,(a[2]+b[2])/2];
+    const corners=[]; for(const x of [a[0],b[0]]) for(const y of [a[1],b[1]]) for(const z of [a[2],b[2]]) corners.push(DP([x,y,z]));
+    o.push({d:(fixD?pr.d:Math.min(...corners)+2),s:`<polygon points="${pts2(hull(P))}" fill="${pr.col||"var(--hint)"}" fill-opacity="${pr.op||.42}" stroke="${pr.col||"var(--hint)"}" stroke-opacity="${pr.op||.42}" stroke-width="2" stroke-linejoin="round"/>`}); }
+  if(pr.k==="rod"){ o.push({d:(fixD?pr.d:DP(v3.lp(pr.a,pr.b,.5))),s:rod(pr.a,pr.b,pr.w||3.5,pr.col||E)}); }
+  if(pr.k==="band"||pr.k==="cable"){ const P=pr.pts.map(P2);
+    o.push({d:(fixD?pr.d:DP(pr.pts[pr.pts.length-1])-.01),s:`<polyline points="${pts2(P)}" fill="none" stroke="${pr.k==="band"?"var(--band)":"var(--hint)"}" stroke-width="${pr.k==="band"?3:1.6}" stroke-linecap="round" stroke-linejoin="round"/>`}); }
+  if(pr.k==="bottle"){ const ax=v3.n(pr.ax||[1,0,0]), c=pr.at;
+    o.push({d:DP(c)+.06,s:rod(vc(c,ax,-9),vc(c,ax,9),8,"var(--water)")+rod(vc(c,ax,9),vc(c,ax,12),4,"var(--water)")}); }
+  if(pr.k==="disc"){ o.push({d:DP(pr.at),s:disc(pr.at,pr.ax,pr.r,pr.th||4,pr.col||E)}); }
+  return o;
+}
+/* Кадр под упражнение и камеру: границы по всему циклу, поля, пропорции 240×168, пол — внизу. */
+const exBoxCache={};
+function exBox(id,cam){
+  const key=id+"|"+cam+"|"+FIG_SEX; if(exBoxCache[key]) return exBoxCache[key];
+  const A=EXANIM[id], C=CAM[cam]; let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  for(let k=0;k<=12;k++){ const svg=render3d(id,k/12,cam).replace(/<defs>.*?<\/defs>/,"").replace(/<line[^>]*\/>/,"");
+    // грубо: берём все числа из points/cx/cy/matrix-центров
+    for(const m of svg.matchAll(/points="([^"]+)"/g)) m[1].split(" ").forEach(q=>{const [x,y]=q.split(",").map(Number);x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);});
+    for(const m of svg.matchAll(/cx="([-\d.]+)" cy="([-\d.]+)" r="([\d.]+)"/g)){const x=+m[1],y=+m[2],r=+m[3];x0=Math.min(x0,x-r);x1=Math.max(x1,x+r);y0=Math.min(y0,y-r);y1=Math.max(y1,y+r);} }
+  const pad=8; x0-=pad; x1+=pad; y0-=pad;
+  if(C.floor&&!A.nofloor) y1=Math.max(y1,141)+5; else y1+=pad;
+  let w=x1-x0, h=y1-y0; const R=240/168;
+  if(w/h<R){ const nw=h*R; x0-=(nw-w)/2; w=nw; } else { const nh=w/R; y0-=(nh-h)*(C.floor&&!A.nofloor?1:.5); h=nh; }
+  return exBoxCache[key]=`${f1(x0)} ${f1(y0)} ${f1(w)} ${f1(h)}`;
+}
+
+/* Ключевые кадры: keys=[[t,{поле:число|массив}],...] → плавная интерполяция между соседними */
+function kfi(keys,t){
+  let i=0; while(i<keys.length-2&&t>keys[i+1][0]) i++;
+  const [ta,a]=keys[i], [tb,b]=keys[i+1], u=ease(Math.max(0,Math.min(1,(t-ta)/((tb-ta)||1)))), o={};
+  for(const k in a){ const x=a[k], y=b[k]; o[k]=Array.isArray(x)?x.map((v,j)=>lerp(v,y[j],u)):lerp(x,y,u); }
+  return o;
+}
+
+/* ---------- Позы упражнений ----------
+   Каждая запись: P — период (с), views — камеры (первая по умолчанию), m — [основные, вспомогательные] мышцы,
+   cyc — фаза идёт по кругу (ходьба, вело), иначе 0→1→0. pose(t) возвращает каркас f, ноги, руки и снаряды. */
+const Y0=135;
+const UPV=[0,-1,0], DN=[0,1,0], FW=[1,0,0], BK=[-1,0,0], LZ=[0,0,1];
+const toeOut=(i,a)=>[Math.cos((a||10)*DG),0,(i?-1:1)*Math.sin((a||10)*DG)];
+const kneeOut=(i,k)=>v3.n([1,0,(i?-1:1)*(k||.25)]);
+const lp3=v3.lp;
+const sd=i=>i?-1:1;
+const legsStand=(ax,w,o)=>[0,1].map(i=>({A:[ax,Y0,sd(i)*w],toe:toeOut(i,o&&o.toe),pole:kneeOut(i,o&&o.k)}));
+const mk=(P,pitch,o)=>{o=o||{}; return frame(P,dA(pitch),o.L||LZ,o.up2!=null?dA(o.up2):(o.U2||null),o.nod,o.tw,o.roll);};
+const both=fn=>[0,1].map(fn);
+const hang=(f,i,fw)=>({H:vc(f.sh(i),DN,48,FW,fw||2),pole:BK});
+const benchP=(x0,x1,y,w,d)=>[{k:"box",box:[[x0,y,-(w||13)],[x1,y+5,(w||13)]],d:d!=null?d:-40},{k:"box",box:[[x0+3,y+5,-(w||13)+3],[x0+7,140,(w||13)-3]],d:d!=null?d:-40},{k:"box",box:[[x1-7,y+5,-(w||13)+3],[x1-3,140,(w||13)-3]],d:d!=null?d:-40}];
+const handsOnHips=(f)=>both(i=>({H:f.at(1,9,sd(i)*13),pole:v3.n(vc(v3.m(f.L,sd(i)),f.F,-.4))}));
+const dbHold=(i,ax)=>({k:"db",i,ax:ax||LZ});
+
+const EXANIM={
+/* ===== Приседания ===== */
+ sq_bw:{P:2.8,views:["side","front"],m:[["quads","glutes"],["adductors","hams","abs"]],pose:t=>{
+   const f=mk(lp3([0,69,0],[-26,104,0],t),lerp(-88,-50,t));
+   return {f,legs:legsStand(3,10),arms:both(i=>({H:vc(f.sh(i),FW,47,DN,lerp(6,-3,t),LZ,sd(i)*-3),pole:DN}))};}},
+ sq_goblet:{P:2.8,views:["side","front"],m:[["quads","glutes"],["adductors","abs","biceps"]],pose:t=>{
+   const f=mk(lp3([0,69,0],[-24,104,0],t),lerp(-88,-58,t)), c=f.up(17,AL.up-14,0);
+   return {f,legs:legsStand(3,11,{toe:16,k:.35}),arms:both(i=>({H:vc(c,LZ,sd(i)*3.5,DN,4),pole:v3.n([0,1,sd(i)*.5])})),
+     props:[{k:"db",at:vc(c,DN,-1),ax:DN,len:12,r:6.5}]};}},
+ sq_bb:{P:3,views:["side","front"],m:[["quads","glutes"],["adductors","hams","lowback","abs"]],pose:t=>{
+   const f=mk(lp3([0,69,0],[-28,104,0],t),lerp(-87,-48,t)), bar=f.up(-7.5,AL.up-1.5,0);
+   return {f,legs:legsStand(3,12,{toe:14,k:.3}),arms:both(i=>({H:vc(bar,f.L2,sd(i)*25),pole:v3.n(vs(f.U2,-1,f.F2,-.5))})),
+     props:[{k:"bb",at:bar,ax:f.L2,r:14}]};}},
+ sq_box:{P:3.2,views:["side","front"],m:[["quads","glutes"],["hams","abs"]],pose:t=>{
+   const f=mk(lp3([0,69,0],[-27,103,0],t),lerp(-88,-55,t));
+   return {f,legs:legsStand(3,10),arms:both(i=>({H:vc(f.sh(i),FW,46,DN,lerp(5,-4,t),LZ,sd(i)*-3),pole:DN})),
+     props:[{k:"box",box:[[-52,111,-18],[-20,116,18]],d:-30},{k:"box",box:[[-50,116,-16],[-46,140,-12]],d:-30},{k:"box",box:[[-26,116,-16],[-22,140,-12]],d:-30},{k:"box",box:[[-54,82,-17],[-50,111,17]],d:-30}]};}},
+ sq_press:{P:3,views:["side"],m:[["quads","glutes"],["hams","adductors"]],pose:t=>{
+   const P=[0,104,0], f=frame(P,dA(-148),LZ,null,12), sled=dA(-42), d=lerp(64,34,t), plat=vc(P,sled,d,DN,-2), pn=dA(-132);
+   return {f,legs:both(i=>({A:vc(plat,LZ,sd(i)*10),toe:pn,pole:v3.n([0,-1,sd(i)*.2])})),
+     arms:both(i=>({H:vc(f.hip(i),FW,4,DN,4,LZ,sd(i)*8),pole:BK})),
+     props:[{k:"rod",a:vc(plat,pn,-10,sled,5),b:vc(plat,pn,22,sled,5),w:7,col:"var(--equip)",d:-20},
+       {k:"rod",a:vc(P,dA(-148),-6,dA(-58),-10),b:vc(P,dA(-148),56,dA(-58),-10),w:9,col:"var(--hint)",d:-25},
+       {k:"rod",a:vc(P,DN,10,FW,-30),b:vc(P,DN,10,FW,8),w:6,col:"var(--hint)",d:-25},
+       {k:"box",box:[[-20,118,-10],[-6,140,10]],d:-26},
+       {k:"rod",a:vc(P,sled,20,pn,14),b:vc(P,sled,110,pn,14),w:2.5,col:"var(--hint)",d:-27}]};}},
+ leg_ext:{P:2.8,views:["side"],m:[["quads"],[]],pose:t=>{
+   const P=[0,96,0], f=mk(P,-100), K=vc(f.hip(0),FW,34,DN,1), a=lerp(98,4,t), An=vc(K,dA(a),AL.shin);
+   return {f,legs:both(i=>({A:vc(An,LZ,i?-2*FIG[FIG_SEX].hipJ:0),toe:dA(a-90),pole:UPV})),
+     arms:both(i=>({H:vc(f.hip(i),FW,6,DN,8,LZ,sd(i)*9),pole:BK})),
+     props:[{k:"box",box:[[-12,101,-15],[38,107,15]],d:-30},{k:"box",box:[[-20,60,-14],[-12,107,14]],d:-30},{k:"box",box:[[0,107,-4],[10,140,4]],d:-30},
+       {k:"disc",at:vc(An,dA(a+90),-5,DN,-2),ax:LZ,r:5,th:26,col:"var(--hint)"},
+       {k:"rod",a:vc(K,DN,1),b:vc(An,dA(a+90),-5),w:3,col:"var(--hint)",d:-12}]};}},
+
+/* ===== Тяги и мосты ===== */
+ dl:{P:3.2,views:["side","front"],m:[["glutes","hams","lowback"],["quads","traps","back","forearms"]],pose:t=>{
+   const f=mk(lp3([-18,96,0],[13,69,0],t),lerp(-32,-89,t)), H=both(i=>vc(f.sh(i),DN,48.5,LZ,sd(i)*4)), bar=[(H[0][0]+H[1][0])/2,(H[0][1]+H[1][1])/2,0];
+   return {f,legs:legsStand(18,10,{k:.15}),arms:both(i=>({H:H[i],pole:BK})),props:[{k:"bb",at:bar,ax:LZ,r:14}]};}},
+ rdl_db:{P:3,views:["side","back"],m:[["hams","glutes"],["lowback","forearms"]],pose:t=>{
+   const f=mk(lp3([0,69,0],[-20,74,0],t),lerp(-89,-14,t));
+   return {f,legs:legsStand(3,9,{k:.1}),arms:both(i=>({H:vc(f.sh(i),DN,48,FW,lerp(2,6,t)),pole:BK})),hold:[dbHold(0),dbHold(1)]};}},
+ rdl_bb:{P:3,views:["side","back"],m:[["hams","glutes"],["lowback","forearms","traps"]],pose:t=>{
+   const f=mk(lp3([0,69,0],[-20,74,0],t),lerp(-89,-16,t)), H=both(i=>vc(f.sh(i),DN,48,FW,lerp(3,7,t),LZ,sd(i)*5)), bar=[(H[0][0]+H[1][0])/2,(H[0][1]+H[1][1])/2,0];
+   return {f,legs:legsStand(3,10,{k:.1}),arms:both(i=>({H:H[i],pole:BK})),props:[{k:"bb",at:bar,ax:LZ,r:14}]};}},
+ gm_bw:{P:3,views:["side","back"],m:[["hams","glutes"],["lowback"]],pose:t=>{
+   const f=mk(lp3([0,69,0],[-18,73,0],t),lerp(-89,-18,t));
+   return {f,legs:legsStand(3,10,{k:.1}),arms:both(i=>({H:vc(f.head,f.L2,sd(i)*7,f.F2,-6),pole:v3.n(vc(v3.m(f.L2,sd(i)),f.F2,.2))}))};}},
+ bridge:{P:2.8,views:["side"],m:[["glutes"],["hams","lowback"]],pose:t=>{
+   const S0=[-48,127,0], U=dA(lerp(180,153,t)), P=vc(S0,U,-50), f=frame(P,U,LZ);
+   return {f,legs:both(i=>({A:[30,Y0,sd(i)*10],toe:FW,pole:UPV})),arms:both(i=>({H:[-8,137,sd(i)*22],pole:UPV}))};}},
+ bridge_1:{P:2.8,views:["side"],m:[["glutes"],["hams","gmed"]],pose:t=>{
+   const S0=[-48,127,0], U=dA(lerp(180,155,t)), P=vc(S0,U,-50), f=frame(P,U,LZ);
+   return {f,legs:[{A:[30,Y0,10],toe:FW,pole:UPV},{A:vc(f.hip(1),U,-66,f.F,6),toe:v3.n(vc(f.F,U,-.3)),pole:f.F}],arms:both(i=>({H:[-8,137,sd(i)*22],pole:UPV}))};}},
+ hip_thrust:{P:3,views:["side"],m:[["glutes"],["hams","quads"]],pose:t=>{
+   const S0=[-40,98,0], U=dA(lerp(212,180,t)), P=vc(S0,U,-50), f=frame(P,U,LZ), bar=f.at(10,1,0);
+   return {f,legs:both(i=>({A:[40,Y0,sd(i)*11],toe:FW,pole:UPV})),arms:both(i=>({H:vc(bar,LZ,sd(i)*24),pole:v3.n([-.5,1,sd(i)*.4])})),
+     props:[...benchP(-82,-36,102,14,-30),{k:"bb",at:bar,ax:LZ,r:15}]};}},
+ hyper:{P:3,views:["side"],m:[["lowback","glutes"],["hams"]],pose:t=>{
+   const P=[0,98,0], f=mk(P,lerp(78,-4,t));
+   return {f,legs:both(i=>({A:[-63,101,sd(i)*8],toe:DN,pole:DN})),arms:both(i=>({H:f.up(9,AL.up-6,-sd(i)*5),pole:v3.n(vc(v3.m(f.F2,-1),f.L2,sd(i)))})),
+     props:[{k:"box",box:[[-14,104,-14],[6,112,14]],d:-30},{k:"rod",a:[-4,112,0],b:[-30,140,0],w:6,col:"var(--hint)",d:-30},{k:"disc",at:[-64,95,0],ax:LZ,r:4.5,th:26,col:"var(--hint)"},{k:"rod",a:[-64,99,0],b:[-46,140,0],w:5,col:"var(--hint)",d:-30}]};}},
+ leg_curl:{P:2.8,views:["side"],m:[["hams"],["calves"]],pose:t=>{
+   const P=[2,97,0], f=mk(P,-4), K=vc(f.hip(0),BK,34,DN,2), a=lerp(178,262,t), An=vc(K,dA(a),AL.shin);
+   return {f,legs:both(i=>({A:vc(An,LZ,i?-2*FIG[FIG_SEX].hipJ:0),toe:dA(a+90),pole:DN})),arms:both(i=>({H:[f.S[0]+22,106,sd(i)*16],pole:UPV})),
+     props:[...benchP(-36,62,104,14,-30),{k:"disc",at:vc(An,dA(a-90),-5),ax:LZ,r:5,th:26,col:"var(--hint)"}]};}},
+
+/* ===== Ягодицы ===== */
+ side_leg:{P:2.6,views:["side"],m:[["gmed","abductors"],["glutes"]],pose:t=>{
+   const f=frame([0,128,0],BK,DN), h1=f.hip(1);
+   return {f,legs:[{A:vc(f.hip(0),FW,30,LZ,14,DN,3),toe:FW,pole:LZ},{A:vc(h1,dA(lerp(2,-36,t)),66),toe:LZ,pole:LZ}],
+     arms:[{H:[f.sh(0)[0]-40,136,f.sh(0)[2]+6],pole:UPV},{H:[-24,137,16],pole:UPV}]};}},
+ clam:{P:2.6,views:["side"],m:[["gmed"],["glutes","abductors"]],pose:t=>{
+   const f=frame([0,128,0],BK,DN), a=lerp(0,52,t);
+   return {f,legs:[{A:vc(f.hip(0),FW,30,LZ,3,DN,1),toe:FW,pole:LZ},{A:vc(f.hip(1),FW,30,LZ,3,DN,7),toe:FW,pole:v3.n(vc(v3.m(LZ,Math.cos(a*DG)),UPV,Math.sin(a*DG)*1.6))}],
+     arms:[{H:[f.sh(0)[0]-40,136,f.sh(0)[2]+6],pole:UPV},{H:[-22,137,18],pole:UPV}]};}},
+ abd_m:{P:2.6,views:["front"],m:[["gmed","abductors"],["glutes"]],pose:t=>{
+   const f=mk([0,96,0],-95), a=lerp(4,32,t), dir=i=>rot(FW,UPV,sd(i)*a);
+   return {f,legs:both(i=>{ const K=vc(f.hip(i),dir(i),34); return {A:vc(K,DN,32,FW,3),toe:dir(i),pole:dir(i)}; }),
+     arms:both(i=>({H:vc(f.hip(i),DN,6,LZ,sd(i)*8,FW,6),pole:BK})),
+     props:[{k:"box",box:[[-14,101,-17],[30,106,17]],d:-30},{k:"box",box:[[-22,40,-15],[-14,106,15]],d:-31},
+       ...both(i=>{ const K=vc(f.hip(i),dir(i),30); return {k:"disc",at:vc(K,rot(LZ,UPV,sd(i)*a),sd(i)*8),ax:rot(LZ,UPV,sd(i)*a),r:6,th:3,col:"var(--hint)"}; })]};}},
+ kick_band:{P:2.6,views:["side"],m:[["glutes"],["hams","lowback"]],pose:t=>{
+   const f=mk([0,101,0],-12), A0=lp3([-31,136,9],vc(f.hip(0),dA(193),66),t), A1=[-31,136,-9];
+   return {f,legs:[{A:A0,toe:v3.n(lp3([-1,.3,0],[-.3,1,0],t)),pole:v3.n(lp3(DN,UPV,t*t))},{A:A1,toe:v3.n([-1,.3,0]),pole:DN}],
+     arms:both(i=>({H:[50,138,sd(i)*13],pole:BK})),props:[{k:"band",pts:[A0,lp3(A0,A1,.5),A1]}]};}},
+
+/* ===== Выпады ===== */
+ lunge_rev:{P:3.2,views:["side","front"],m:[["quads","glutes"],["adductors","hams"]],pose:t=>{
+   const f=mk(lp3([8,69,0],[-12,101,0],t),lerp(-89,-84,t));
+   return {f,legs:[{A:[12,Y0,8],toe:FW,pole:FW},{A:[lerp(10,-50,t),lerp(Y0,129,t),-8],toe:v3.n(lp3([1,0,0],[.6,.8,0],t)),pole:v3.n(lp3([1,0,0],[.3,1,0],t))}],arms:handsOnHips(f)};}},
+ split:{P:3,views:["side","front"],m:[["quads","glutes"],["adductors","hams"]],pose:t=>{
+   const f=mk(lp3([-4,70,0],[-12,99,0],t),lerp(-87,-80,t));
+   return {f,legs:[{A:[20,Y0,8],toe:FW,pole:FW},{A:[-54,99,-8],toe:v3.n([-1,.25,0]),pole:DN}],arms:both(i=>hang(f,i,3)),props:benchP(-70,-36,104,14,-30)};}},
+ stepup:{P:3.2,views:["side","front"],m:[["quads","glutes"],["hams","calves"]],pose:t=>{
+   const f=mk(lp3([-6,76,0],[22,33,0],t),lerp(-76,-89,t)), tr=[lerp(-8,24,t),lerp(Y0,99,t)-Math.sin(Math.PI*t)*10,-8];
+   return {f,legs:[{A:[28,99,8],toe:FW,pole:FW},{A:tr,toe:FW,pole:FW}],arms:both(i=>hang(f,i,4)),props:[{k:"box",box:[[8,104,-22],[52,140,22]],op:.35,d:-60}]};}},
+
+/* ===== Жимы ===== */
+ bench:{P:2.8,views:["side","front"],m:[["chest","triceps"],["delts"]],pose:t=>{
+   const f=mk([6,95,0],180), bar=lp3([-29,80,0],[-43,48,0],t);
+   return {f,legs:both(i=>({A:[44,Y0,sd(i)*15],toe:FW,pole:v3.n([0,-1,sd(i)*.3])})),arms:both(i=>({H:vc(bar,LZ,sd(i)*26),pole:v3.n([.3,1,sd(i)*.7])})),
+     props:[...benchP(-64,24,104,13,-40),{k:"bb",at:bar,ax:LZ,r:15}]};}},
+ db_bench:{P:2.8,views:["side","front"],m:[["chest","triceps"],["delts"]],pose:t=>{
+   const f=mk([6,95,0],180);
+   return {f,legs:both(i=>({A:[44,Y0,sd(i)*15],toe:FW,pole:v3.n([0,-1,sd(i)*.3])})),arms:both(i=>({H:[lerp(-30,-43,t),lerp(84,49,t),sd(i)*lerp(25,11,t)],pole:v3.n([.3,1,sd(i)*.7])})),
+     hold:[dbHold(0),dbHold(1)],props:benchP(-64,24,104,13,-40)};}},
+ incl_db:{P:2.8,views:["side","front"],m:[["chest","delts"],["triceps"]],pose:t=>{
+   const f=mk([0,100,0],210), S=f.S, top=[S[0]+4,S[1]-45], bot=vc(S,f.F,6,f.U,-5);
+   return {f,legs:both(i=>({A:[40,Y0,sd(i)*15],toe:FW,pole:v3.n([0,-1,sd(i)*.3])})),arms:both(i=>({H:[lerp(bot[0],top[0],t),lerp(bot[1],top[1],t),sd(i)*lerp(25,10,t)],pole:v3.n([.2,1,sd(i)*.7])})),
+     hold:[dbHold(0),dbHold(1)],props:[{k:"rod",a:vc(f.P,f.F,-12,f.U,-6),b:vc(f.P,f.F,-12,f.U,58),w:9,col:"var(--hint)",d:-40},{k:"box",box:[[-14,108,-13],[24,113,13]],d:-40},{k:"box",box:[[0,113,-4],[8,140,4]],d:-40}]};}},
+ m_press:{P:2.6,views:["side","front"],m:[["chest","triceps"],["delts"]],pose:t=>{
+   const f=mk([0,96,0],-92), S=f.S, hx=S[0]+lerp(8,44,t), hz=i=>sd(i)*lerp(24,18,t);
+   return {f,legs:both(i=>({A:[30,Y0,sd(i)*12],toe:FW,pole:FW})),arms:both(i=>({H:[hx,S[1]+10,hz(i)],pole:v3.n([-.4,.7,sd(i)*.8])})),
+     props:[{k:"box",box:[[-22,20,-14],[-13,104,14]],d:-40},{k:"box",box:[[-16,104,-14],[24,110,14]],d:-40},{k:"box",box:[[-2,110,-4],[6,140,4]],d:-40},
+       ...both(i=>({k:"rod",a:[hx,S[1]+3,hz(i)],b:[hx,S[1]+17,hz(i)],w:4,col:"var(--equip)",d:sd(i)*20}))]};}},
+ pec_deck:{P:2.8,views:["top","front"],m:[["chest"],["delts","biceps"]],pose:t=>{
+   const f=mk([0,96,0],-92), a=lerp(-62,6,t), h=i=>vc(f.sh(i),rot(FW,UPV,sd(i)*a),46,DN,2);
+   return {f,legs:both(i=>({A:[30,Y0,sd(i)*12],toe:FW,pole:FW})),arms:both(i=>({H:h(i),pole:v3.n([-1,.3,sd(i)*.3])})),
+     props:[{k:"box",box:[[-22,20,-14],[-13,104,14]],d:-40},{k:"box",box:[[-16,104,-14],[24,110,14]],d:-40},
+       ...both(i=>({k:"rod",a:vc(h(i),DN,-8),b:vc(h(i),DN,10),w:4,col:"var(--equip)",d:5}))]};}},
+ pushup:{P:2.4,views:["side","front"],m:[["chest","triceps"],["delts","abs"]],pose:t=>{
+   const th=lerp(-22,-6,t), A=[-45,133,0], P=vc(A,dA(th),67), f=mk(P,th,{nod:-10});
+   return {f,legs:both(i=>({A:[A[0],A[1],sd(i)*5],toe:v3.n([.5,1,0]),pole:DN})),arms:both(i=>({H:[62,138,sd(i)*19],pole:v3.n([-1,-.6,sd(i)*.45])}))};}},
+ pushup_k:{P:2.4,views:["side","front"],m:[["chest","triceps"],["delts","abs"]],pose:t=>{
+   const th=lerp(-33,-12,t), K=[-10,137,0], P=vc(K,dA(th),34), f=mk(P,th,{nod:-10});
+   return {f,legs:both(i=>({A:[-38,124,sd(i)*5],toe:v3.n([-.4,-1,0]),pole:DN})),arms:both(i=>({H:[62,138,sd(i)*18],pole:v3.n([-1,-.6,sd(i)*.45])}))};}},
+ pushup_inc:{P:2.4,views:["side"],m:[["chest","triceps"],["delts","abs"]],pose:t=>{
+   const th=lerp(-40,-29,t), A=[-50,133,0], P=vc(A,dA(th),67), f=mk(P,th,{nod:-10});
+   return {f,legs:both(i=>({A:[A[0],A[1],sd(i)*5],toe:v3.n([.5,1,0]),pole:DN})),arms:both(i=>({H:[72,92,sd(i)*18],pole:v3.n([-1,-.4,sd(i)*.45])})),
+     props:[{k:"box",box:[[66,94,-34],[116,100,34]],d:-50},{k:"box",box:[[106,100,-30],[111,140,-26]],d:-50}]};}},
+ pushup_close:{P:2.4,views:["side","front"],m:[["triceps"],["chest","delts"]],pose:t=>{
+   const th=lerp(-22,-7,t), A=[-45,133,0], P=vc(A,dA(th),67), f=mk(P,th,{nod:-10});
+   return {f,legs:both(i=>({A:[A[0],A[1],sd(i)*5],toe:v3.n([.5,1,0]),pole:DN})),arms:both(i=>({H:[63,138,sd(i)*10],pole:v3.n([-1,-.5,sd(i)*.08])}))};}},
+ ohp:{P:2.8,views:["side","front"],m:[["delts","triceps"],["traps","abs"]],pose:t=>{
+   const f=mk([0,69,0],-90), S=f.S, bar=[lerp(S[0]+11,S[0]-1,t),lerp(S[1]+1,S[1]-46,t),0];
+   return {f,legs:legsStand(3,11),arms:both(i=>({H:vc(bar,LZ,sd(i)*22),pole:v3.n([lerp(.8,-.2,t),1,sd(i)*lerp(.3,1,t)])})),props:[{k:"bb",at:bar,ax:LZ,r:14}]};}},
+ db_ohp:{P:2.8,views:["front","side"],m:[["delts","triceps"],["traps"]],pose:t=>{
+   const f=mk([0,100,0],-90), S=f.S;
+   return {f,legs:both(i=>({A:[34,Y0,sd(i)*13],toe:FW,pole:FW})),arms:both(i=>({H:[S[0]+3,lerp(S[1]-3,S[1]-46,t),sd(i)*lerp(31,14,t)],pole:v3.n([0,1,sd(i)*.9])})),
+     hold:[dbHold(0),dbHold(1)],props:[...benchP(-22,22,108,14,-30),{k:"rod",a:[-20,108,0],b:[-20,30,0],w:8,col:"var(--hint)",d:-30}]};}},
+ pike:{P:2.6,views:["side"],m:[["delts","triceps"],["traps","chest"]],pose:t=>{
+   const f=mk(lp3([-6,70,0],[16,84,0],t),lerp(43,41,t),{nod:-15});
+   return {f,legs:both(i=>({A:[-22,133,sd(i)*6],toe:v3.n([.5,1,0]),pole:FW})),arms:both(i=>({H:[67,138,sd(i)*18],pole:v3.n([-1,-.4,sd(i)*.5])}))};}},
+
+/* ===== Тяги ===== */
+ row_db:{P:2.6,views:["side"],m:[["back","biceps"],["rdelts","traps"]],pose:t=>{
+   const f=mk([-14,68,0],-11.5), S=f.S;
+   return {f,legs:[{A:[-30,Y0,13],toe:FW,pole:FW},{A:[-44,100,-8],toe:v3.n([-1,.3,0]),pole:DN}],
+     arms:[{H:[lerp(S[0]+2,S[0]-16,t),lerp(110,82,t),16],pole:v3.n([-1,-1,.15])},{H:[38,103,-16],pole:BK}],hold:[dbHold(0,FW)],
+     props:benchP(-56,44,104,13,-40)};}},
+ row_bb:{P:2.6,views:["side","back","front"],m:[["back","biceps"],["rdelts","traps","lowback"]],pose:t=>{
+   const f=mk([-14,73,0],-38), H=both(i=>lp3(vc(f.sh(i),DN,48,FW,2,LZ,sd(i)*5),f.at(10,8,sd(i)*20),t)), bar=[(H[0][0]+H[1][0])/2,(H[0][1]+H[1][1])/2,0];
+   return {f,legs:legsStand(3,10,{k:.2}),arms:both(i=>({H:H[i],pole:v3.n([-1,-.5,sd(i)*.3])})),props:[{k:"bb",at:bar,ax:LZ,r:14}]};}},
+ row_cable:{P:2.8,views:["side"],m:[["back","biceps"],["rdelts","traps"]],pose:t=>{
+   const f=mk([0,104,0],lerp(-72,-96,t)), S=f.S, H=both(i=>lp3(vc(S,FW,46,DN,14,LZ,sd(i)*6),f.at(11,17,sd(i)*7),t)), m=[(H[0][0]+H[1][0])/2,(H[0][1]+H[1][1])/2,0];
+   return {f,legs:both(i=>({A:[56,116,sd(i)*9],toe:v3.n([.3,-1,0]),pole:UPV})),arms:both(i=>({H:H[i],pole:v3.n([-1,.6,sd(i)*.2])})),
+     props:[{k:"box",box:[[-16,113,-12],[14,118,12]],d:-30},{k:"box",box:[[-4,118,-4],[4,140,4]],d:-30},{k:"rod",a:[64,96,0],b:[60,124,0],w:5,col:"var(--hint)",d:-30},
+       {k:"rod",a:H[0],b:H[1],w:3,col:"var(--equip)"},{k:"cable",pts:[m,[76,102,0]]},{k:"box",box:[[72,40,-10],[84,140,10]],d:-50}]};}},
+ row_band:{P:2.8,views:["side"],m:[["back","biceps"],["rdelts","traps"]],pose:t=>{
+   const f=mk([0,128,0],lerp(-82,-96,t)), S=f.S, H=both(i=>lp3(vc(S,FW,44,DN,18,LZ,sd(i)*8),f.at(11,15,sd(i)*9),t));
+   return {f,legs:both(i=>({A:[64,134,sd(i)*8],toe:v3.n([.25,-1,0]),pole:UPV})),arms:both(i=>({H:H[i],pole:v3.n([-1,.6,sd(i)*.25])})),
+     props:[{k:"band",pts:[H[0],[72,128,7],[72,128,-7],H[1]],d:20}]};}},
+ superman:{P:2.8,views:["side"],m:[["lowback","glutes"],["rdelts","hams","traps"]],pose:t=>{
+   const f=mk([0,133,0],0,{U2:dA(lerp(0,-16,t)),nod:lerp(10,-4,t)});
+   return {f,legs:both(i=>({A:[-64,lerp(135,126,t),sd(i)*7],toe:v3.n([-1,.4,0]),pole:DN})),arms:both(i=>({H:vc(f.sh(i),dA(lerp(-2,-14,t)),48,LZ,sd(i)*3),pole:UPV}))};}},
+ table_row:{P:2.8,views:["side"],m:[["back","biceps"],["rdelts","abs"]],pose:t=>{
+   const A=[70,135,0], U=dA(lerp(192,205,t)), P=vc(A,U,67), f=frame(P,U,LZ,null,8);
+   return {f,legs:both(i=>({A:[70,135,sd(i)*9],toe:v3.n([.25,-1,0]),pole:UPV})),arms:both(i=>({H:[-40,62,sd(i)*18],pole:v3.n([0,1,sd(i)*.5])})),
+     props:[{k:"box",box:[[-112,55,-34],[-36,62,34]],d:-60},{k:"box",box:[[-108,62,-32],[-103,140,-27]],d:-60},{k:"box",box:[[-44,62,-32],[-39,140,-27]],d:-60}]};}},
+ pullup:{P:2.8,views:["back","side","front"],nofloor:1,m:[["back","biceps"],["rdelts","traps","forearms"]],pose:t=>{
+   const Sy=lerp(46,11,t), f=mk([lerp(1,-3,t),Sy+50,0],lerp(-92,-100,t));
+   return {f,legs:both(i=>({A:vc(f.hip(i),dA(lerp(98,104,t)),64),toe:v3.n([.4,1,0]),pole:FW})),arms:both(i=>({H:[0,0,sd(i)*26],pole:v3.n([-.2,1,sd(i)*.9])})),
+     props:[{k:"rod",a:[0,0,-46],b:[0,0,46],w:6,col:"var(--equip)"}]};}},
+ latpd:{P:2.8,views:["back","side","front"],m:[["back","biceps"],["rdelts","traps"]],pose:t=>{
+   const f=mk([0,100,0],-100), S=f.S, bar=[lerp(S[0]+6,S[0]+11,t),lerp(S[1]-46,S[1]-1,t),0];
+   return {f,legs:both(i=>({A:[34,Y0,sd(i)*12],toe:FW,pole:FW})),arms:both(i=>({H:vc(bar,LZ,sd(i)*28),pole:v3.n([-.2,1,sd(i)*.9])})),
+     props:[{k:"rod",a:vc(bar,LZ,-38),b:vc(bar,LZ,38),w:3.5,col:"var(--equip)"},{k:"cable",pts:[bar,[S[0]+6,-70,0]]},
+       {k:"box",box:[[-16,108,-14],[22,113,14]],d:-30},{k:"box",box:[[0,113,-4],[8,140,4]],d:-30},{k:"disc",at:[24,94,0],ax:LZ,r:5,th:30,col:"var(--hint)"}]};}},
+ band_pd:{P:2.8,views:["back","side","front"],m:[["back"],["biceps","rdelts","traps"]],pose:t=>{
+   const f=mk([0,101,0],-89), S=f.S, H=both(i=>lp3([S[0]+10,S[1]-44,sd(i)*14],[S[0]+4,S[1]+6,sd(i)*24],t)), an=[S[0]+26,-40,0];
+   return {f,legs:both(i=>({A:[-31,136,sd(i)*9],toe:v3.n([-1,.3,0]),pole:DN})),arms:both(i=>({H:H[i],pole:v3.n([-.2,1,sd(i)*.9])})),
+     props:[{k:"band",pts:[H[0],an,H[1]]}]};}},
+ ytw:{P:6,cyc:1,views:["top","side"],m:[["traps","rdelts"],["back","lowback"]],pose:t=>{
+   const ph=Math.min(2,Math.floor(t*3)), u=t*3-ph, lift=Math.sin(Math.PI*u);
+   const Y=[[34,-34],[0,-49],[14,-24]], q=Y[ph], qp=Y[(ph+2)%3], b=ease(Math.min(1,u/.2)), sh=[lerp(qp[0],q[0],b),lerp(qp[1],q[1],b)];
+   const f=mk([0,133,0],0,{U2:dA(-5*lift),nod:8});
+   return {f,legs:both(i=>({A:[-64,135,sd(i)*7],toe:v3.n([-1,.4,0]),pole:DN})),
+     arms:both(i=>({H:[f.sh(i)[0]+sh[0],lerp(137,122,lift),f.sh(i)[2]-sd(i)*sh[1]],pole:v3.n([-1,-.4,sd(i)*.3])}))};}},
+
+/* ===== Пресс и кор ===== */
+ plank:{P:3.6,views:["side"],m:[["abs","obliques"],["glutes","delts","quads"]],pose:t=>{
+   const th=lerp(-11.4,-10.4,t), A=[-48,133,0], P=vc(A,dA(th),66), f=mk(P,th,{nod:-8});
+   return {f,legs:both(i=>({A:[A[0],A[1],sd(i)*6],toe:v3.n([.5,1,0]),pole:DN})),arms:both(i=>({H:[f.sh(i)[0]+24,138,sd(i)*8],pole:v3.n([-1,1,0])}))};}},
+ side_plank:{P:3,views:["side"],m:[["obliques","gmed"],["abs","delts"]],pose:t=>{
+   const th=lerp(10,19,t), U=dA(180+th), L=dA(90+th), A=[60,133,0], P=vc(A,U,66), f=frame(P,U,L);
+   return {f,legs:[{A:[60,135,2],toe:LZ,pole:LZ},{A:[60,126,-2],toe:LZ,pole:LZ}],
+     arms:[{H:[f.sh(0)[0]-2,138,22],pole:v3.n([0,1,-.3])},{H:vc(f.sh(1),L,-48),pole:BK}]};}},
+ deadbug:{P:4,cyc:1,views:["side"],m:[["abs"],["obliques","quads"]],pose:t=>{
+   const f=mk([0,131,0],180,{nod:10}), s=Math.sin(2*Math.PI*t), e=[Math.max(0,-s),Math.max(0,s)];
+   return {f,legs:both(i=>{ const h=f.hip(i), x=e[1-i]; return {A:lp3(vc(h,FW,33,UPV,34),vc(h,dA(-10),66),x),toe:v3.n(lp3([1,0,0],[.6,-1,0],x)),pole:v3.n(lp3([-1,-1,0],[0,-1,0],x))}; }),
+     arms:both(i=>({H:vc(f.sh(i),dA(-90-78*e[i]),48),pole:FW}))};}},
+ crunch:{P:2.6,views:["side"],m:[["abs"],["obliques"]],pose:t=>{
+   const f=mk([0,131,0],180,{up2:lerp(180,212,t),nod:lerp(5,22,t)});
+   return {f,legs:both(i=>({A:[40,Y0,sd(i)*10],toe:FW,pole:UPV})),arms:both(i=>({H:vc(f.head,f.L2,sd(i)*8.5,f.Uh,-2),pole:v3.n(vc(v3.m(f.L2,sd(i)),f.U2,.4))}))};}},
+ rev_crunch:{P:2.6,views:["side"],m:[["abs"],["obliques"]],pose:t=>{
+   const W=[-21,131,0], U=dA(lerp(180,150,t)), P=vc(W,U,-21), f=frame(P,U,LZ,BK,6);
+   return {f,legs:both(i=>{ const h=f.hip(i); return {A:vc(h,f.F,lerp(34,30,t),f.U,lerp(-33,-14,t)),toe:v3.n(vc(v3.m(f.U,-1),f.F,.4)),pole:v3.n(vc(f.F,f.U,1))}; }),
+     arms:both(i=>({H:[10,137,sd(i)*22],pole:UPV}))};}},
+ leg_raise:{P:3,views:["side","front"],nofloor:1,m:[["abs"],["obliques","forearms"]],pose:t=>{
+   const f=mk([-1,96,0],lerp(-92,-82,t),{nod:4});
+   return {f,legs:both(i=>({A:vc(f.hip(i),dA(lerp(96,4,t)),65),toe:dA(lerp(10,-80,t)),pole:FW})),arms:both(i=>({H:[0,0,sd(i)*22],pole:BK})),
+     props:[{k:"rod",a:[0,0,-40],b:[0,0,40],w:4.5,col:"var(--equip)"}]};}},
+ bird_dog:{P:4.4,cyc:1,views:["side","top"],m:[["lowback","glutes"],["abs","rdelts","hams"]],pose:t=>{
+   const f=mk([0,101,0],-12), s=Math.sin(2*Math.PI*t), e=[Math.max(0,s),Math.max(0,-s)];
+   return {f,legs:both(i=>({A:lp3([-31,136,sd(i)*9],vc(f.hip(i),dA(186),66),e[1-i]),toe:v3.n(lp3([-1,.3,0],[-.4,1,0],e[1-i])),pole:DN})),
+     arms:both(i=>({H:lp3([50,138,sd(i)*13],vc(f.sh(i),dA(-8),48),e[i]),pole:BK}))};}},
+ pallof:{P:3,views:["front","side"],m:[["obliques","abs"],["delts"]],pose:t=>{
+   const f=mk([0,71,0],-90), c=f.up(lerp(10,46,t),AL.up-12,0), an=[c[0]-6,c[1],-80];
+   return {f,legs:legsStand(3,13,{k:.25}),arms:both(i=>({H:vc(c,LZ,sd(i)*2.5),pole:v3.n([-.2,1,sd(i)*.6])})),
+     props:[{k:"band",pts:[c,an]},{k:"box",box:[[-14,-10,-90],[14,140,-82]],d:-60}]};}},
+
+/* ===== Плечи ===== */
+ lat_raise:{P:2.8,views:["front","side"],m:[["delts"],["traps"]],pose:t=>{
+   const f=mk([0,69,0],-90), a=lerp(12,84,t);
+   return {f,legs:legsStand(3,10),arms:both(i=>({H:vc(f.sh(i),v3.n([.2,Math.cos(a*DG),sd(i)*Math.sin(a*DG)]),47),pole:v3.n([-.4,-1,0])})),hold:[dbHold(0,FW),dbHold(1,FW)]};}},
+ bottle_raise:{P:2.8,views:["front","side"],m:[["delts"],["traps"]],pose:t=>{
+   const f=mk([0,69,0],-90), a=lerp(12,84,t);
+   return {f,legs:legsStand(3,10),arms:both(i=>({H:vc(f.sh(i),v3.n([.2,Math.cos(a*DG),sd(i)*Math.sin(a*DG)]),47),pole:v3.n([-.4,-1,0])})),hold:[{k:"bottle",i:0,ax:FW},{k:"bottle",i:1,ax:FW}]};}},
+ face_pull:{P:2.8,views:["side","top"],m:[["rdelts","traps"],["back","biceps"]],pose:t=>{
+   const f=mk([0,69,0],-92), S=f.S, H=both(i=>lp3([S[0]+44,S[1]+2,sd(i)*5],[S[0]+6,S[1]-14,sd(i)*22],t)), an=[S[0]+90,S[1]-6,0], m=[(H[0][0]+H[1][0])/2+6,(H[0][1]+H[1][1])/2,0];
+   return {f,legs:[{A:[14,Y0,9],toe:FW,pole:FW},{A:[-14,Y0,-9],toe:FW,pole:FW}],arms:both(i=>({H:H[i],pole:v3.n([-.4,-1,sd(i)*.9])})),
+     props:[{k:"cable",pts:[an,m]},{k:"rod",a:H[0],b:m,w:3,col:"var(--equip)",d:sd(0)*20},{k:"rod",a:H[1],b:m,w:3,col:"var(--equip)",d:-20},{k:"box",box:[[an[0],-20,-10],[an[0]+12,140,10]],d:-60}]};}},
+ band_pa:{P:2.6,views:["top","front"],m:[["rdelts","traps"],["back"]],pose:t=>{
+   const f=mk([0,69,0],-90), a=lerp(-4,84,t), H=both(i=>vc(f.sh(i),rot(FW,UPV,sd(i)*a),48,DN,2));
+   return {f,legs:legsStand(3,10),arms:both(i=>({H:H[i],pole:DN})),props:[{k:"band",pts:[H[0],H[1]]}]};}},
+ rev_fly:{P:2.8,views:["back","side","front"],m:[["rdelts","traps"],["back"]],pose:t=>{
+   const f=mk([0,104,0],-28,{nod:12}), a=lerp(4,80,t);
+   return {f,legs:both(i=>({A:[30,Y0,sd(i)*12],toe:FW,pole:FW})),arms:both(i=>({H:vc(f.sh(i),v3.n([.15,Math.cos(a*DG),sd(i)*Math.sin(a*DG)]),46),pole:v3.n([-.3,-1,0])})),
+     hold:[dbHold(0,FW),dbHold(1,FW)],props:benchP(-24,10,108,14,-30)};}},
+ wall_slide:{P:3.4,views:["front","side"],m:[["traps","rdelts"],["back"]],pose:t=>{
+   const f=mk([-2,69,0],-90), S=f.S;
+   return {f,legs:legsStand(6,10),arms:both(i=>({H:[S[0]-8,lerp(S[1]-20,S[1]-46,t),sd(i)*lerp(36,22,t)],pole:v3.n([-.3,1,sd(i)*1])})),
+     props:[{k:"box",box:[[-22,-30,-60],[-15,140,60]],d:-60}]};}},
+
+/* ===== Руки ===== */
+ curl_db:{P:2.6,views:["side","front"],m:[["biceps"],["forearms"]],pose:t=>{
+   const f=mk([0,69,0],-90), a=lerp(84,-62,t);
+   return {f,legs:legsStand(3,10),arms:both(i=>({H:vc(f.sh(i),DN,26,FW,3,dA(a),24),pole:BK})),hold:[dbHold(0),dbHold(1)]};}},
+ hammer:{P:2.6,views:["side","front"],m:[["biceps","forearms"],[]],pose:t=>{
+   const f=mk([0,69,0],-90), a=lerp(84,-62,t);
+   return {f,legs:legsStand(3,10),arms:both(i=>({H:vc(f.sh(i),DN,26,FW,3,dA(a),24),pole:BK})),hold:[dbHold(0,dA(a+90)),dbHold(1,dA(a+90))]};}},
+ curl_band:{P:2.6,views:["side","front"],m:[["biceps"],["forearms"]],pose:t=>{
+   const f=mk([0,69,0],-90), a=lerp(84,-62,t), H=both(i=>vc(f.sh(i),DN,26,FW,3,dA(a),24));
+   return {f,legs:legsStand(3,10),arms:both(i=>({H:H[i],pole:BK})),props:[{k:"band",pts:[H[0],[8,139,10]]},{k:"band",pts:[H[1],[8,139,-10]]}]};}},
+ towel_curl:{P:3,views:["side","front"],m:[["biceps"],["forearms","hams"]],pose:t=>{
+   const f=mk([0,69,0],-90), a=lerp(80,-30,t), H=both(i=>vc(f.sh(i),DN,26,FW,4,dA(a),24)), ft=[lerp(28,24,t),lerp(112,96,t),2];
+   return {f,legs:[{A:ft,toe:FW,pole:FW},{A:[2,Y0,-9],toe:FW,pole:FW}],arms:both(i=>({H:H[i],pole:BK})),
+     props:[{k:"band",pts:[H[0],[ft[0]+6,ft[1]+5,2],H[1]],d:10}]};}},
+ pushdown:{P:2.6,views:["side"],m:[["triceps"],["forearms"]],pose:t=>{
+   const f=mk([0,69,0],-86), a=lerp(-20,82,t), H=both(i=>vc(f.sh(i),DN,25,FW,5,dA(a),24)), m=[(H[0][0]+H[1][0])/2,(H[0][1]+H[1][1])/2,0];
+   return {f,legs:legsStand(3,10),arms:both(i=>({H:H[i],pole:BK})),props:[{k:"rod",a:vc(m,LZ,-12),b:vc(m,LZ,12),w:3.5,col:"var(--equip)"},{k:"cable",pts:[m,[f.S[0]+24,-50,0]]},{k:"box",box:[[f.S[0]+26,-60,-12],[f.S[0]+38,140,12]],d:-60}]};}},
+ ext_db:{P:2.8,views:["side","back","front"],m:[["triceps"],["delts"]],pose:t=>{
+   const f=mk([0,69,0],-90), E=both(i=>vc(f.sh(i),UPV,25,FW,4,LZ,-sd(i)*6)), a=lerp(112,-84,t), c=vc([(E[0][0]+E[1][0])/2,(E[0][1]+E[1][1])/2,0],dA(a),22);
+   return {f,legs:legsStand(3,10),arms:both(i=>({H:vc(c,LZ,sd(i)*3),pole:v3.n([1,-.6,sd(i)*.2])})),props:[{k:"db",at:c,ax:dA(a),len:12,r:6.5}]};}},
+ dips_chair:{P:2.6,views:["side","front"],m:[["triceps"],["chest","delts"]],pose:t=>{
+   const f=mk(lp3([-6,98,0],[-1,124,0],t),-92);
+   return {f,legs:both(i=>({A:[54,Y0,sd(i)*10],toe:FW,pole:UPV})),arms:both(i=>({H:[-14,95,sd(i)*18],pole:BK})),
+     props:[{k:"box",box:[[-46,96,-20],[-12,102,20]],d:-30},{k:"box",box:[[-44,102,-18],[-40,140,-14]],d:-30},{k:"box",box:[[-18,102,-18],[-14,140,-14]],d:-30},{k:"box",box:[[-48,52,-18],[-44,96,18]],d:-30}]};}},
+
+/* ===== Кардио ===== */
+ bike:{P:1.3,cyc:1,views:["side"],m:[["quads","glutes"],["calves","hams"]],pose:t=>{
+   const f=mk([-16,72,0],-62,{nod:-10}), C=[14,118], ph=2*Math.PI*t, ped=i=>[C[0]+13*Math.cos(ph+Math.PI*i),C[1]+13*Math.sin(ph+Math.PI*i),sd(i)*9];
+   return {f,legs:both(i=>({A:vc(ped(i),DN,-3),toe:FW,pole:FW})),arms:both(i=>({H:[36,56,sd(i)*16],pole:v3.n([-.3,1,sd(i)*.3])})),
+     props:[{k:"rod",a:[-18,82,0],b:[-14,116,0],w:5,col:"var(--hint)",d:-30},{k:"rod",a:[-26,80,0],b:[-6,80,0],w:6,col:"var(--hint)",d:-30},{k:"rod",a:[-14,112,0],b:[14,118,0],w:5,col:"var(--hint)",d:-30},
+       {k:"rod",a:[14,118,0],b:[34,58,0],w:5,col:"var(--hint)",d:-30},{k:"rod",a:[34,58,-18],b:[34,58,18],w:4,col:"var(--hint)",d:-30},{k:"disc",at:[14,118,0],ax:LZ,r:16,th:6,col:"var(--hint)"},
+       {k:"rod",a:[-30,138,0],b:[44,138,0],w:4,col:"var(--hint)",d:-30},{k:"rod",a:ped(0),b:ped(1),w:3,col:"var(--equip)",d:-1}]};}},
+ incline:{P:1.3,cyc:1,views:["side"],m:[["glutes","calves"],["quads","hams"]],pose:t=>{
+   const ph=2*Math.PI*t, gy=x=>130-x*.18, f=mk([0,64,0],-84,{nod:-4});
+   const leg=i=>{ const c=Math.cos(ph+Math.PI*i), s=Math.sin(ph+Math.PI*i), x=17*c, lift=Math.max(0,s)*9; return {A:[x,gy(x)-lift,sd(i)*8],toe:v3.n([1,-.18,0]),pole:FW}; };
+   return {f,legs:[leg(0),leg(1)],arms:both(i=>({H:vc(f.sh(i),dA(90-24*Math.cos(ph+Math.PI*(1-i))),24,FW,8,DN,18),pole:BK})),
+     props:[{k:"rod",a:[-60,gy(-60)+9,0],b:[62,gy(62)+9,0],w:7,col:"var(--hint)",d:-30},{k:"rod",a:[62,gy(62)+9,0],b:[66,30,0],w:5,col:"var(--hint)",d:-30},{k:"rod",a:[48,52,-24],b:[66,40,-24],w:4,col:"var(--hint)",d:-40}]};}},
+ jacks:{P:1.1,cyc:1,views:["front"],m:[["calves","delts"],["glutes","abductors"]],pose:t=>{
+   const s=.5-.5*Math.cos(2*Math.PI*t), hop=Math.abs(Math.sin(2*Math.PI*t))*7, a=lerp(12,168,s);
+   const f=mk([0,69-hop,0],-90);
+   return {f,legs:both(i=>({A:[2,Y0-hop,sd(i)*lerp(9,30,s)],toe:toeOut(i,20),pole:kneeOut(i,.4)})),arms:both(i=>({H:vc(f.sh(i),v3.n([0,Math.cos(a*DG),sd(i)*Math.sin(a*DG)]),47),pole:FW}))};}},
+ burpee:{P:3.2,cyc:1,views:["side"],m:[["quads","chest"],["glutes","delts","triceps","abs"]],pose:t=>{
+   const st={P:[0,69],th:-90,A:[3,135],H:[0,1,0],toe:0}, sq={P:[-8,110],th:-22,A:[3,135],H:[1,0,0],toe:0},
+     pl={P:[2,108],th:-22,A:[-60,133],H:[1,0,0],toe:1}, jp={P:[0,58],th:-90,A:[3,124],H:[0,0,1],toe:0};
+   const k=kfi([[0,st],[.2,sq],[.38,pl],[.55,pl],[.7,sq],[.85,jp],[1,st]],t), f=mk([k.P[0],k.P[1],0],k.th);
+   const wsum=k.H[0]+k.H[1]+k.H[2]||1;
+   return {f,legs:both(i=>({A:[k.A[0],k.A[1],sd(i)*8],toe:v3.n(lp3(FW,[.5,1,0],k.toe)),pole:FW})),
+     arms:both(i=>{ const fl=[50,138,sd(i)*17], hg=vc(f.sh(i),DN,47,FW,2), up=vc(f.sh(i),UPV,47);
+       return {H:vc([0,0,0],fl,k.H[0]/wsum,hg,k.H[1]/wsum,up,k.H[2]/wsum),pole:BK}; })};}},
+ march:{P:1.4,cyc:1,views:["side","front"],m:[["quads","abs"],["glutes","calves"]],pose:t=>{
+   const ph=2*Math.PI*t, l=[Math.max(0,Math.sin(ph)),Math.max(0,-Math.sin(ph))], f=mk([0,69,0],-90);
+   return {f,legs:both(i=>({A:[lerp(3,30,l[i]),lerp(Y0,104,l[i]),sd(i)*9],toe:FW,pole:FW})),
+     arms:both(i=>({H:vc(f.sh(i),DN,24,FW,lerp(12,26,l[1-i]),UPV,lerp(0,12,l[1-i])),pole:BK}))};}},
+ ellipse:{P:1.5,cyc:1,views:["side"],m:[["quads","glutes"],["hams","back","delts"]],pose:t=>{
+   const ph=2*Math.PI*t, ped=i=>[18*Math.cos(ph+Math.PI*i),120+6*Math.sin(ph+Math.PI*i),sd(i)*9], f=mk([-4,56+Math.sin(2*ph),0],-86);
+   const hd=i=>[34+12*Math.cos(ph+Math.PI*(1-i)),36,sd(i)*16];
+   return {f,legs:both(i=>({A:vc(ped(i),DN,-4),toe:FW,pole:FW})),arms:both(i=>({H:hd(i),pole:v3.n([-.4,1,sd(i)*.3])})),
+     props:[...both(i=>({k:"rod",a:vc(ped(i),FW,-14),b:vc(ped(i),FW,12),w:4,col:"var(--equip)",d:sd(i)*9-1})),...both(i=>({k:"rod",a:hd(i),b:[46,118,sd(i)*16],w:3.5,col:"var(--hint)",d:sd(i)*16-1})),
+       {k:"rod",a:[-50,136,0],b:[60,136,0],w:6,col:"var(--hint)",d:-30},{k:"rod",a:[52,136,0],b:[56,60,0],w:6,col:"var(--hint)",d:-30}]};}},
+ rower:{P:2.6,cyc:1,views:["side"],m:[["back","quads"],["glutes","biceps","hams","rdelts"]],pose:t=>{
+   const ca={P:[18,118],th:-70,H:[81,86]}, lg={P:[-16,118],th:-70,H:[47,86]}, fin={P:[-16,118],th:-112,H:[-20,84]}, ar={P:[-16,118],th:-112,H:[11,88]};
+   const k=kfi([[0,ca],[.22,lg],[.4,fin],[.55,ar],[.72,lg],[1,ca]],t), f=mk([k.P[0],k.P[1],0],k.th);
+   return {f,legs:both(i=>({A:[50,121,sd(i)*8],toe:v3.n([.4,-1,0]),pole:UPV})),arms:both(i=>({H:[k.H[0],k.H[1],sd(i)*10],pole:v3.n([-1,.6,sd(i)*.3])})),
+     props:[{k:"box",box:[[k.P[0]-12,126,-10],[k.P[0]+10,131,10]],d:-20},{k:"rod",a:[-50,134,0],b:[104,134,0],w:5,col:"var(--hint)",d:-30},{k:"rod",a:[54,108,0],b:[60,132,0],w:5,col:"var(--hint)",d:-30},
+       {k:"disc",at:[112,100,0],ax:LZ,r:16,th:14,col:"var(--hint)"},{k:"rod",a:[k.H[0],k.H[1],-14],b:[k.H[0],k.H[1],14],w:3.5,col:"var(--equip)"},{k:"cable",pts:[[k.H[0],k.H[1],0],[108,98,0]]}]};}},
+ shadow:{P:1.6,cyc:1,views:["front","side"],m:[["delts","obliques"],["triceps","chest","calves"]],pose:t=>{
+   const p1=Math.max(0,Math.sin(2*Math.PI*t)), p2=Math.max(0,-Math.sin(2*Math.PI*t)), tw=lerp(0,-26,p2)+lerp(0,12,p1);
+   const f=mk([0,72-1.5*Math.abs(Math.sin(4*Math.PI*t)),0],-88,{tw,nod:6});
+   const guard=i=>vc(f.head,f.F2,12,f.U2,-10,f.L2,sd(i)*6), punch=i=>vc(f.sh(i),f.F2,48,f.L2,-sd(i)*8);
+   return {f,legs:[{A:[16,133,9],toe:toeOut(0,20),pole:FW},{A:[-18,133,-11],toe:toeOut(1,30),pole:FW}],
+     arms:[{H:lp3(guard(0),punch(0),p1),pole:v3.n([0,1,.6])},{H:lp3(guard(1),punch(1),p2),pole:v3.n([0,1,-.6])}]};}},
+
+/* ===== Мобильность ===== */
+ cat_cow:{P:4,views:["side"],m:[["lowback","abs"],["back"]],pose:t=>{
+   const U=dA(lerp(-28,6,t)), U2=dA(lerp(4,-26,t)), S=[48.9,90.6,0], P=vc(S,U,-21,U2,-29), f=frame(P,U,LZ,U2,lerp(30,-22,t));
+   return {f,legs:both(i=>({A:[-31,136,sd(i)*9],toe:v3.n([-1,.3,0]),pole:DN})),arms:both(i=>({H:[50,138,sd(i)*14],pole:BK}))};}},
+ open_book:{P:4.2,views:["top","front"],m:[["chest","obliques"],["back"]],pose:t=>{
+   const a=lerp(0,170,t), f=frame([0,128,0],FW,DN,null,0,-a*.55), F=f.F;
+   return {f,legs:both(i=>({A:vc(f.hip(i),F,30,FW,-30),toe:BK,pole:F})),
+     arms:[{H:vc(f.sh(0),F,46,DN,4),pole:UPV},{H:vc(f.sh(1),rot([0,0,-1],FW,-a),47),pole:FW}]};}},
+ hip_flex:{P:4,views:["side","front"],m:[["quads"],["abs","glutes"]],pose:t=>{
+   const f=mk(lp3([0,104,0],[7,106,0],t),lerp(-90,-93,t));
+   return {f,legs:[{A:[-46,136,9],toe:v3.n([-1,.25,0]),pole:DN},{A:[36,Y0,-9],toe:FW,pole:FW}],arms:handsOnHips(f)};}},
+ child:{P:4.5,views:["side","top"],m:[["lowback","back"],["glutes"]],pose:t=>{
+   const f=mk([-2,lerp(118,116,t),0],8,{U2:dA(lerp(10,6,t)),nod:6});
+   return {f,legs:both(i=>({A:[-8,137,sd(i)*13],toe:v3.n([-1,.25,0]),pole:FW})),arms:both(i=>({H:[96,137,sd(i)*15],pole:UPV}))};}},
+
+/* ===== Растяжка ===== */
+ st_ham:{P:4,views:["side","front"],m:[["hams"],["calves","lowback"]],pose:t=>{
+   const f=mk([0,128,0],lerp(-86,-44,t),{nod:lerp(0,14,t)});
+   return {f,legs:[{A:[64,134,8],toe:v3.n([.2,-1,0]),pole:UPV},{A:[22,135,3],toe:v3.n([.3,0,1]),pole:v3.n([.3,-.3,-1])}],
+     arms:both(i=>({H:[lerp(32,58,t),lerp(116,128,t),8+sd(i)*4],pole:v3.n([0,1,sd(i)*.5])}))};}},
+ st_quad:{P:4,views:["top"],m:[["quads"],["abs"]],pose:t=>{
+   const f=frame([0,128,0],BK,UPV), K=vc(f.hip(0),FW,34), a=lerp(125,160,t), An=vc(K,rot(BK,DN,-a+180),33);
+   return {f,legs:[{A:An,toe:BK,pole:FW},{A:vc(f.hip(1),FW,65),toe:v3.n([1,0,-.3]),pole:v3.n([0,0,-1])}],
+     arms:[{H:An,pole:v3.n([0,0,1])},{H:vc(f.head,UPV,9,BK,2),pole:BK}]};}},
+ st_glute:{P:4,views:["side"],m:[["glutes"],["gmed","hams"]],pose:t=>{
+   const f=mk([0,131,0],180,{nod:4}), h1=f.hip(1), th=dA(lerp(-60,-92,t)), K1=vc(h1,th,34), A1=vc(K1,FW,33);
+   return {f,legs:[{A:vc(K1,FW,4,UPV,4,LZ,4),toe:v3.n([.4,-1,.2]),pole:v3.n([0,-.3,1])},{A:A1,toe:FW,pole:v3.n([-1,-1,0])}],
+     arms:both(i=>({H:vc(h1,th,20,LZ,sd(i)*6,DN,4),pole:v3.n([0,1,sd(i)*.6])}))};}},
+ st_chest:{P:4,views:["front","side"],m:[["chest"],["delts"]],pose:t=>{
+   const f=mk([lerp(0,14,t),69,0],-90), sy=f.sh(0)[1];
+   return {f,legs:[{A:[lerp(20,32,t),Y0,8],toe:FW,pole:FW},{A:[-14,Y0,-9],toe:FW,pole:FW}],arms:both(i=>({H:[20,sy-24,sd(i)*40],pole:v3.n([-.2,1,sd(i)*.8])})),
+     props:[...both(i=>({k:"box",box:[[18,-30,sd(i)*46-3],[24,140,sd(i)*46+3]],d:20})),{k:"box",box:[[18,-36,-49],[24,-30,49]],d:20}]};}},
+ st_side:{P:4,views:["front","back"],m:[["obliques","back"],[]],pose:t=>{
+   const a=lerp(0,28,t), f=mk([0,69,0],-90,{U2:rot(UPV,FW,a*.9),roll:a*.4});
+   return {f,legs:legsStand(3,14),arms:[{H:vc(f.sh(0),v3.n(vc(f.U2,f.L2,-.35*lerp(.4,1,t))),48),pole:BK},{H:f.at(1,9,-13),pole:v3.n([0,0,-1])}]};}},
+ st_shoulder:{P:4,views:["front"],m:[["rdelts"],["traps","back"]],pose:t=>{
+   const f=mk([0,69,0],-90), S=f.S, H0=[S[0]+lerp(26,16,t),S[1]+4,lerp(-20,-32,t)], tgt=lp3(f.sh(0),H0,.48);
+   return {f,legs:legsStand(3,10),arms:[{H:H0,pole:v3.n([0,1,.4])},{H:vc(tgt,FW,5),pole:v3.n([0,1,-.6])}]};}},
+ st_tri:{P:4,views:["back","side","front"],m:[["triceps"],["back"]],pose:t=>{
+   const f=mk([0,69,0],-90), E=vc(f.sh(0),UPV,25,LZ,lerp(-4,-10,t),BK,2), H0=vc(E,v3.n([-.3,1,-.2]),23);
+   return {f,legs:legsStand(3,10),arms:[{H:H0,pole:v3.n([.2,-1,0])},{H:vc(E,DN,-2,FW,2),pole:v3.n([0,1,-.6])}]};}},
+ st_calf:{P:4,views:["side","back"],m:[["calves"],["hams"]],pose:t=>{
+   const f=mk(lp3([-6,72,0],[2,76,0],t),-72);
+   return {f,legs:[{A:[30,Y0,8],toe:FW,pole:FW},{A:[-32,Y0,-8],toe:FW,pole:FW}],arms:both(i=>({H:[58,f.sh(i)[1]+4,sd(i)*17],pole:v3.n([-.4,1,sd(i)*.4])})),
+     props:[{k:"box",box:[[60,-30,-50],[67,140,50]],d:-60}]};}},
+ st_butterfly:{P:4,views:["front"],m:[["adductors"],["glutes"]],pose:t=>{
+   const f=mk([0,128,0],-90,{nod:4}), up=lerp(-.9,-.25,t);
+   return {f,legs:both(i=>({A:[24,135,sd(i)*2.5],toe:v3.n([0,.3,-sd(i)]),pole:v3.n([.1,up,sd(i)])})),arms:both(i=>({H:[25,129,sd(i)*6],pole:v3.n([0,1,sd(i)*.7])}))};}},
+ st_knees:{P:4,views:["side"],m:[["lowback","glutes"],[]],pose:t=>{
+   const f=mk([0,131,0],180,{nod:4}), a=lerp(-126,-138,t);
+   return {f,legs:both(i=>{ const K=vc(f.hip(i),dA(a),34); return {A:vc(K,dA(a+150),33),toe:FW,pole:v3.n([-1,-1,0])}; }),
+     arms:both(i=>({H:vc(f.hip(i),dA(a),30,UPV,4),pole:v3.n([0,1,sd(i)*.6])}))};}},
+ st_fold:{P:4,views:["side","back"],m:[["hams"],["calves","lowback"]],pose:t=>{
+   const f=mk(lp3([-6,70,0],[-9,71,0],t),lerp(18,32,t),{up2:lerp(62,82,t),nod:22});
+   return {f,legs:legsStand(3,7,{k:.08}),arms:both(i=>({H:vc(f.sh(i),DN,46,FW,lerp(4,8,t)),pole:BK}))};}},
+ st_down_dog:{P:4,views:["side","back"],m:[["hams","calves"],["back","delts"]],pose:t=>{
+   const f=mk([-6,lerp(70,67,t),0],lerp(43,46,t),{nod:-12});
+   return {f,legs:both(i=>({A:[-22,135,sd(i)*6],toe:FW,pole:FW})),arms:both(i=>({H:[67,138,sd(i)*18],pole:BK}))};}},
+ st_half_split:{P:4,views:["side"],m:[["hams"],["calves"]],pose:t=>{
+   const f=mk([-12,104,0],lerp(-75,-36,t),{nod:lerp(0,18,t)});
+   return {f,legs:[{A:[52,134,8],toe:v3.n([.3,-1,0]),pole:UPV},{A:[-45,136,-8],toe:v3.n([-1,.25,0]),pole:DN}],
+     arms:both(i=>({H:[lerp(10,32,t),lerp(122,128,t),8+sd(i)*7],pole:v3.n([-.2,1,sd(i)*.6])}))};}},
+ st_pigeon:{P:4,views:["side"],m:[["glutes"],["gmed","quads"]],pose:t=>{
+   const f=mk([0,118,0],lerp(-40,-8,t),{nod:lerp(0,15,t)});
+   return {f,legs:[{A:[24,136,-12],toe:v3.n([0,.2,-1]),pole:v3.n([1,0,.8])},{A:[-64,136,-9],toe:v3.n([-1,.3,0]),pole:DN}],
+     arms:both(i=>({H:[lerp(44,72,t),138,sd(i)*16],pole:BK}))};}},
+ st_wide:{P:4,views:["front","side"],m:[["adductors","hams"],[]],pose:t=>{
+   const f=mk([0,128,0],lerp(-86,-42,t),{nod:lerp(0,12,t)});
+   return {f,legs:both(i=>({A:[46,134,sd(i)*40],toe:v3.n([0,-1,sd(i)*.2]),pole:UPV})),arms:both(i=>({H:[lerp(16,50,t),lerp(122,137,t),sd(i)*lerp(16,12,t)],pole:v3.n([0,1,sd(i)*.5])}))};}},
+ st_side_lunge:{P:4,views:["front"],m:[["adductors"],["quads","glutes"]],pose:t=>{
+   const f=mk([-6,lerp(70,94,t),lerp(0,23,t)],lerp(-90,-64,t));
+   return {f,legs:[{A:[4,135,34],toe:toeOut(0,25),pole:kneeOut(0,.6)},{A:[4,135,-34],toe:toeOut(1,15),pole:FW}],
+     arms:both(i=>({H:f.up(16,AL.up-10,sd(i)*2.5),pole:v3.n([0,1,sd(i)*.7])}))};}},
+ st_frog:{P:4,views:["back","side"],m:[["adductors"],["glutes"]],pose:t=>{
+   const P=[lerp(0,-12,t),lerp(106,112,t),0], S=[44,111,0], U=v3.n(v3.s(S,P)), f=frame(P,U,LZ,null,10);
+   return {f,legs:both(i=>({A:[-30,136,sd(i)*30],toe:v3.n([-.5,.2,sd(i)]),pole:v3.n([0,1,sd(i)*1.2])})),arms:both(i=>({H:[S[0]+24,138,sd(i)*10],pole:v3.n([-1,1,0])}))};}},
+ st_cobra:{P:4,views:["side","front"],m:[["abs"],["quads","chest"]],pose:t=>{
+   const f=mk([0,133,0],lerp(0,-6,t),{U2:dA(lerp(-6,-52,t)),nod:lerp(10,-18,t)});
+   return {f,legs:both(i=>({A:[-64,136,sd(i)*6],toe:v3.n([-1,.4,0]),pole:DN})),arms:both(i=>({H:[36,138,sd(i)*17],pole:BK}))};}},
+ st_thread:{P:4.2,views:["front","side"],m:[["traps","rdelts"],["back"]],pose:t=>{
+   const f=mk([0,101,0],-12,{U2:dA(lerp(-12,6,t)),tw:lerp(0,-42,t),nod:lerp(0,20,t)});
+   return {f,legs:both(i=>({A:[-31,136,sd(i)*9],toe:v3.n([-1,.3,0]),pole:DN})),
+     arms:[{H:lp3([50,138,14],[46,137,-40],t),pole:lp3(BK,UPV,t)},{H:[50,138,-14],pole:BK}]};}},
+ st_twist:{P:4,views:["top","front"],m:[["obliques","lowback"],["glutes"]],pose:t=>{
+   const f=mk([0,131,0],180,{nod:4}), k=t;
+   return {f,legs:both(i=>({A:[30,lerp(135,132,k),lerp(sd(i)*4,22+sd(i)*4,k)],toe:FW,pole:v3.n(lp3([0,-1,0],[0,.15,1],k))})),
+     arms:both(i=>({H:[f.sh(i)[0]+2,137,sd(i)*64],pole:UPV}))};}},
+ st_neck:{P:4,views:["back","front"],m:[["traps"],[]],pose:t=>{
+   const a=lerp(0,32,t), f=mk([0,69,0],-90,{roll:-a});
+   return {f,legs:legsStand(3,10),arms:[{H:vc(f.head,f.L2,-4,f.Uh,8),pole:v3.n([0,-.2,1])},{H:vc(f.sh(1),DN,48),pole:BK}]};}}
+};
+
+/* Интерфейс анимации: переключатель ракурса, легенда, пауза по нажатию. Фигура — по полу из анкеты. */
+const VIEW_LBL={side:"Сбоку",front:"Спереди",back:"Сзади",top:"Сверху"};
+let exAnimRun=null; const exViewSel={};
+function figSex(){ const x=(S.full&&S.full.sex)||(S.profile&&S.profile.sex); return x==="f"?"f":"m"; }
+function exCam(id){ const A=EXANIM[id]; return A.views.includes(exViewSel[id])?exViewSel[id]:A.views[0]; }
+function exAnimHtml(id){
+  const A=EXANIM[id]; if(!A) return "";
+  FIG_SEX=figSex(); const cam=exCam(id), sw=c=>`<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${c};vertical-align:-1px;margin-right:4px"></span>`;
+  const tabs=A.views.length>1?`<div class="seg" style="grid-template-columns:repeat(${A.views.length},1fr);margin:0 0 6px">${A.views.map(v=>`<button data-a="exView" data-v="${v}" aria-pressed="${v===cam}">${VIEW_LBL[v]}</button>`).join("")}</div>`:"";
+  return `<div class="card" style="padding:8px 8px 6px">${tabs}<svg id="exAnim" data-id="${id}" viewBox="${exBox(id,cam)}" style="width:100%;height:auto;display:block;cursor:pointer" role="img" aria-label="Анимация техники: ${VIEW_LBL[cam].toLowerCase()}">${render3d(id,0,cam)}</svg>
+   <div class="row between small hint" style="padding:2px 6px 0;flex-wrap:wrap;gap:4px 10px"><span>Нажми, чтобы поставить на паузу</span><span>${sw("var(--mOn)")}основные${A.m[1]&&A.m[1].length?` &nbsp;${sw("var(--mOn2)")}помогают`:""}</span></div></div>`;
+}
+A.exView=(v)=>{ const el=document.getElementById("exAnim"); if(!el) return; const id=el.dataset.id; exViewSel[id]=v;
+  el.setAttribute("viewBox",exBox(id,v)); el.setAttribute("aria-label","Анимация техники: "+VIEW_LBL[v].toLowerCase());
+  document.querySelectorAll('[data-a="exView"]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===v)));
+  if(exAnimRun) exAnimRun.cam=v; else el.innerHTML=render3d(id,EXANIM[id].cyc?0:1,v); haptic("light"); };
+function startExAnim(){
+  const el=document.getElementById("exAnim"); if(!el) return;
+  const id=el.dataset.id, A=EXANIM[id], reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  FIG_SEX=figSex();
+  if(reduce){ exAnimRun=null; el.innerHTML=render3d(id,A.cyc?0:1,exCam(id)); return; }
+  const run={paused:false,t0:performance.now(),off:0,cam:exCam(id)}; exAnimRun=run;
+  el.onclick=()=>{ run.paused=!run.paused; if(!run.paused) run.t0=performance.now()-run.off; };
+  let last=0;
+  (function step(now){
+    if(exAnimRun!==run||!document.body.contains(el)) return;
+    if(!run.paused&&now-last>33){ last=now; run.off=now-run.t0; const ph=(run.off/1000)/A.P;
+      el.innerHTML=render3d(id,A.cyc?ph%1:.5-.5*Math.cos(ph*2*Math.PI),run.cam); }
+    requestAnimationFrame(step);
+  })(performance.now());
+}
 
 /* ---------- Таймер отдыха ---------- */
 function startTimer(sec){
@@ -2732,7 +3612,7 @@ const GUIDE=[
   "С подпиской у каждого упражнения есть рабочий вес. Если повторов выходит больше нормы — прибавь, меньше — убавь. Впиши вес, с которым реально работал: в следующий раз он учтётся.",
   "Неудобно или занят тренажёр — «Заменить упражнение».",
   "В конце — заминка и растяжка: каждое упражнение нажимается и открывает технику.",
-  "Нажми «Завершить тренировку» и оцени её: легко, нормально или тяжело. От оценки зависят подходы и веса в следующих тренировках."]],
+  "Нажми «Завершить тренировку» и оцени её: легко, нормально или тяжело. От оценки зависит число подходов в следующих тренировках, а с подпиской — ещё и рабочие веса."]],
  ["🥗","Питание",[
   "Доступно с подпиской. Сначала короткий опросник: сколько раз ешь, тип питания, исключения и бюджет.",
   "«Меню»: выбери приём пищи — ниже блюда с граммовками под твою оставшуюся норму. Нажми на блюдо, чтобы увидеть рецепт.",
@@ -2742,7 +3622,8 @@ const GUIDE=[
  ["📈","Прогресс",[
   "Взвешивайся раз в неделю утром натощак и записывай вес. Талию и другие замеры — раз в 1–2 недели.",
   "Карточка «Цель по весу» показывает, сколько недель осталось. Прогноз пересчитывается по питанию и взвешиваниям.",
-  "Раз в неделю тренер подводит итоги и подсказывает, что поправить. «Твои результаты» показывают рост рабочих весов и изменение талии."]],
+  "Раз в неделю тренер подводит итоги и подсказывает, что поправить. «Твои результаты» показывают рост рабочих весов и изменение талии.",
+  "Цель «Растяжка»: в «Прогрессе» есть тест гибкости из 4 упражнений. Проходи его раз в 4 недели — по нему меняются уровень упражнений, время удержаний, длительность курса и зона, которой нужно больше внимания."]],
  ["📚","Упражнения",[
   "Библиотека разбита по группам мышц, фильтр «Зал / Дом» показывает подходящие упражнения.",
   "В бесплатной версии техника упражнений твоей программы открывается на вкладке «Программа», а вся библиотека — по подписке."]],
@@ -2784,11 +3665,41 @@ function applyTheme(){
   const bg=getComputedStyle(r).getPropertyValue("--bg").trim();
   try{ tg.setHeaderColor(bg); }catch(e){} try{ tg.setBackgroundColor(bg); }catch(e){} try{ tg.setBottomBarColor&&tg.setBottomBarColor(getComputedStyle(r).getPropertyValue("--card").trim()); }catch(e){}
 }
+/* ---------- Значок на экране «Домой» ----------
+   Telegram с Bot API 8.0 умеет ставить ярлык мини-приложения на экран телефона: addToHomeScreen()
+   и checkHomeScreenStatus() → added / missed / unknown / unsupported. На компьютере и в веб-версии не работает,
+   на iPhone последний шаг делается в Safari («Поделиться» → «На экран „Домой“»). */
+let homeSt=null;
+function homeCheck(){
+  if(!inTg){ homeSt="notg"; return; }
+  if(!(tg.isVersionAtLeast&&tg.isVersionAtLeast("8.0"))||typeof tg.addToHomeScreen!=="function"){ homeSt="old"; return; }
+  homeSt="unknown";
+  try{ tg.checkHomeScreenStatus(st=>{ homeSt=st||"unknown"; if(view==="profile") render(); }); }catch(e){}
+}
+function homeHtml(){
+  const plat=inTg?String(tg.platform||""):"", desk=/tdesktop|macos|web/.test(plat), ios=plat==="ios";
+  const box=(ico,title,body,btn)=>`<div class="card"><div class="row"><span style="font-size:22px">${ico}</span><div class="grow"><b>${title}</b><div class="hint small">${body}</div></div></div>${btn||""}</div>`;
+  if(homeSt==="added") return box("✅","DuoFit на экране «Домой»","Открывай приложение одним нажатием, без поиска чата.");
+  if(!inTg&&!TEST_MODE) return "";
+  if(homeSt==="unsupported"||desk) return box("📱","Значок на экране «Домой»","Добавить значок можно только в Telegram на телефоне — Android или iPhone. На компьютере и в веб-версии Telegram такой функции нет.");
+  if(homeSt==="old") return box("📱","Значок на экране «Домой»","Обнови Telegram до последней версии: в старых версиях этой функции нет. Потом открой DuoFit снова.");
+  return box("📱","Добавить DuoFit на экран «Домой»",ios?"Откроется Safari: нажми «Поделиться» внизу, затем «На экран „Домой“» и «Добавить».":"Значок появится рядом с другими приложениями — тренировка в одно касание.",
+    `<button class="btn sm" data-a="homeAdd" style="margin-top:10px">Добавить значок</button>`);
+}
+A.homeAdd=()=>{
+  track("home_add_click");
+  if(!inTg||typeof tg.addToHomeScreen!=="function"){ popup("Открой DuoFit в Telegram на телефоне — там появится кнопка добавления значка."); return; }
+  try{ tg.addToHomeScreen(); }catch(e){ popup("Не получилось открыть добавление. Обнови Telegram и попробуй ещё раз или нажми «⋯» в правом верхнем углу → «Добавить на экран „Домой“»."); }
+};
+
 /* ---------- Старт ---------- */
 (function init(){
   if(inTg){
     tg.ready(); tg.expand();
     applyTheme(); try{ tg.onEvent("themeChanged",applyTheme); }catch(e){}
+    try{ tg.onEvent("homeScreenAdded",()=>{ homeSt="added"; track("home_added"); haptic("success"); if(view==="profile") render(); });
+      tg.onEvent("homeScreenChecked",e=>{ if(e&&e.status){ homeSt=e.status; if(view==="profile") render(); } }); }catch(e){}
+    homeCheck();
     tg.BackButton.onClick(goBack);
     cloudRestore();
     syncStatus();
