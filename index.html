@@ -123,6 +123,9 @@ p{margin:6px 0}
 .num{width:28px;height:28px;border-radius:9px;background:var(--card2);display:grid;place-items:center;font-weight:700;font-size:13px;flex:none}
 .sets{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .set{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-family:inherit;font-weight:700;font-size:14px;line-height:1;cursor:pointer}
+.sets.big{gap:10px;margin-top:10px}.sets.big .set{width:52px;height:52px;border-radius:14px;font-size:18px}
+.hrbox{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.ex.exdone b{color:var(--hint)}.okc{color:var(--ok);font-weight:600}
 .set.on{background:var(--ok);border-color:var(--ok);color:var(--ok-text)}
 .link{background:none;border:0;color:var(--max);font-family:inherit;font-weight:600;font-size:13px;line-height:1;padding:6px 0;cursor:pointer}
 .timer{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom));width:min(488px,calc(100% - 32px));background:var(--text);color:var(--bg);border-radius:16px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;z-index:6}
@@ -407,14 +410,22 @@ const EX = [
  {id:"st_twist",n:"Скрутка лёжа",slot:"stretch",alt:["fl_spine","fl_side"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на сторону",m:"Косые мышцы, поясница, ягодицы",how:["Ляг на спину, руки в стороны, колени согнуты и вместе","Опусти колени в одну сторону, лопатки остаются на полу","Голову поверни в противоположную сторону","Дыши медленно; возвращай колени через центр, без рывков"]},
  {id:"st_neck",n:"Растяжка шеи",slot:"stretch",alt:["fl_neck"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 20 с на сторону",m:"Верх трапеций, мышцы шеи",how:["Сядь прямо, плечи опущены","Наклони голову ухом к плечу","Для лёгкого усиления положи ладонь на голову, не тяни","Двигайся медленно, без вращений головой"]},
 ];
+/* Упражнения разминки: slot "warm" не попадает в подбор программы, только в разминку и библиотеку */
+EX.push(
+ {id:"w_joints",n:"Суставная разминка",slot:"warm",place:"b",eq:"none",avoid:[],lvl:1,m:"Плечевые, тазобедренные и голеностопные суставы — подготовка к нагрузке",how:["Встань прямо, стопы на ширине плеч","Сделай медленные круги прямыми руками вперёд, потом назад — по 10","Руки на пояс: круги тазом в каждую сторону — по 10","Поставь носок на пол и покрути стопой — по 10 на каждую","Движения плавные, без рывков и боли"]},
+ {id:"w_armswing",n:"Разведение рук в стороны",slot:"warm",place:"b",eq:"none",avoid:[],lvl:1,m:"Задние дельты, мышцы между лопатками, грудь",how:["Руки перед собой на уровне плеч","Разведи их в стороны, сводя лопатки","Медленно верни перед собой","С резинкой нагрузка выше: держи её натянутой всё время"]},
+ {id:"w_wallpush",n:"Отжимания от стены",slot:"warm",place:"b",eq:"none",avoid:[],lvl:1,m:"Грудь, трицепс, передние дельты",how:["Встань в шаге от стены, ладони на стене на уровне плеч, чуть шире их","Тело прямое от головы до пяток","Согни руки, приближая грудь к стене, и оттолкнись обратно","Чем дальше стопы от стены, тем тяжелее"]},
+ {id:"w_legswing",n:"Махи ногами у опоры",slot:"warm",place:"b",eq:"none",avoid:[],lvl:1,m:"Задняя и передняя поверхность бедра, ягодицы, сгибатели бедра",how:["Встань боком к опоре и держись за неё рукой","Свободной ногой делай плавные махи вперёд-назад","Затем повернись лицом к опоре и делай махи в стороны","Амплитуду увеличивай постепенно, корпус не раскачивай"]},
+ {id:"w_kickstand",n:"Отведение ноги назад стоя",slot:"warm",place:"b",eq:"none",avoid:[],lvl:1,m:"Ягодицы, задняя поверхность бедра",how:["Встань лицом к стене, руки на стене","Отведи прямую ногу назад, сжимая ягодицу","Поясницу не прогибай: движение только в тазобедренном суставе","Медленно верни ногу"]}
+);
 const EXI = Object.fromEntries(EX.map(e=>[e.id,e]));
 /* Разделы библиотеки по мышцам. Упражнение попадает во все группы, которые заметно нагружает. Генератор программ этим не пользуется. */
-const MGROUPS={chest:"Грудь",back:"Спина",shoulders:"Плечи",arms:"Руки",legs:"Ноги",glutes:"Ягодицы",core:"Пресс и кор",posture:"Осанка и мобильность",stretch:"Растяжка",cardio:"Кардио"};
+const MGROUPS={warm:"Разминка",chest:"Грудь",back:"Спина",shoulders:"Плечи",arms:"Руки",legs:"Ноги",glutes:"Ягодицы",core:"Пресс и кор",posture:"Осанка и мобильность",stretch:"Растяжка",cardio:"Кардио"};
 const MUSC={
- sq_bb:"legs glutes", sq_goblet:"legs glutes core", sq_press:"legs glutes", sq_bw:"legs glutes", sq_box:"legs glutes", leg_ext:"legs",
- dl:"legs glutes back", rdl_db:"legs glutes", rdl_bb:"legs glutes", gm_bw:"legs glutes", leg_curl:"legs", bridge:"glutes legs", hyper:"back glutes",
+ sq_bb:"legs glutes", sq_goblet:"legs glutes core", sq_press:"legs glutes", sq_bw:"legs glutes warm", sq_box:"legs glutes", leg_ext:"legs",
+ dl:"legs glutes back", rdl_db:"legs glutes", rdl_bb:"legs glutes", gm_bw:"legs glutes", leg_curl:"legs", bridge:"glutes legs warm", hyper:"back glutes",
  side_leg:"glutes", clam:"glutes", hip_thrust:"glutes", abd_m:"glutes", bridge_1:"glutes", kick_band:"glutes",
- lunge_rev:"legs glutes", split:"legs glutes", stepup:"legs glutes",
+ lunge_rev:"legs glutes warm", split:"legs glutes", stepup:"legs glutes",
  bench:"chest arms shoulders", db_bench:"chest arms", incl_db:"chest shoulders arms", m_press:"chest arms", pec_deck:"chest",
  pushup:"chest arms core", pushup_k:"chest arms", pushup_inc:"chest arms",
  ohp:"shoulders arms", db_ohp:"shoulders arms", pike:"shoulders arms", lat_raise:"shoulders", bottle_raise:"shoulders",
@@ -423,13 +434,13 @@ const MUSC={
  pullup:"back arms", latpd:"back arms", band_pd:"back", ytw:"back shoulders posture",
  plank:"core", side_plank:"core", deadbug:"core", crunch:"core", leg_raise:"core", rev_crunch:"core", pallof:"core", bird_dog:"core back posture",
  curl_db:"arms", curl_band:"arms", towel_curl:"arms", hammer:"arms", pushup_close:"arms chest", pushdown:"arms", ext_db:"arms", dips_chair:"arms",
- bike:"cardio", incline:"cardio", ellipse:"cardio", rower:"cardio back", jacks:"cardio", burpee:"cardio", march:"cardio", shadow:"cardio",
- cat_cow:"posture", open_book:"posture", hip_flex:"posture stretch", child:"posture stretch",
+ bike:"cardio warm", incline:"cardio", ellipse:"cardio", rower:"cardio back", jacks:"cardio", burpee:"cardio", march:"cardio warm", shadow:"cardio",
+ cat_cow:"posture warm", open_book:"posture", hip_flex:"posture stretch", child:"posture stretch",
  st_ham:"stretch", st_quad:"stretch", st_fold:"stretch legs", st_down_dog:"stretch legs shoulders", st_half_split:"stretch legs", st_pigeon:"stretch glutes",
  st_wide:"stretch legs", st_side_lunge:"stretch legs", st_frog:"stretch legs", st_cobra:"stretch posture", st_thread:"stretch posture", st_twist:"stretch posture", st_glute:"stretch", st_chest:"stretch", st_side:"stretch", st_shoulder:"stretch", st_tri:"stretch", st_calf:"stretch", st_butterfly:"stretch", st_knees:"stretch", st_neck:"stretch posture"
 };
-const MG_ICON={chest:"🏋️",back:"🧗",shoulders:"🙆",arms:"💪",legs:"🦵",glutes:"🔥",core:"🎯",posture:"🧘",stretch:"🤸",cardio:"❤️"};
-const SLOT_MG={squat:"legs",hinge:"legs",glute:"glutes",lunge:"legs",push_h:"chest",push_v:"shoulders",pull_h:"back",pull_v:"back",core:"core",lat:"shoulders",rear:"posture",bi:"arms",tri:"arms",cardio:"cardio",mob:"posture",stretch:"stretch"};
+const MG_ICON={warm:"🏃",chest:"🏋️",back:"🧗",shoulders:"🙆",arms:"💪",legs:"🦵",glutes:"🔥",core:"🎯",posture:"🧘",stretch:"🤸",cardio:"❤️"};
+const SLOT_MG={warm:"warm",squat:"legs",hinge:"legs",glute:"glutes",lunge:"legs",push_h:"chest",push_v:"shoulders",pull_h:"back",pull_v:"back",core:"core",lat:"shoulders",rear:"posture",bi:"arms",tri:"arms",cardio:"cardio",mob:"posture",stretch:"stretch"};
 const mgOf=e=>(MUSC[e.id]||SLOT_MG[e.slot]).split(" ");
 const SLOT = {squat:"Приседания",hinge:"Наклоны и мосты",glute:"Ягодицы",lunge:"Выпады",push_h:"Жимы (грудь)",push_v:"Жимы (плечи)",pull_h:"Тяги (спина)",pull_v:"Вертикальные тяги",core:"Кор и пресс",lat:"Дельты",rear:"Задние дельты и осанка",stretch:"Растяжка",bi:"Бицепс",tri:"Трицепс",cardio:"Кардио",mob:"Мобильность"};
 const FALLBACK = {lunge:"glute",push_v:"lat",pull_v:"pull_h",glute:"hinge",bi:"pull_h",tri:"push_h",lat:"pull_h",cardio:"core",rear:"pull_h",mob:"core"};
@@ -1023,16 +1034,17 @@ function weekInfo(w,o){
 }
 function warmup(code,o){
   if(o.goal==="flex"){
-    const w=[o.place==="gym"?"Велотренажёр или ходьба на дорожке — 3 мин":"Ходьба на месте — 3 мин","Круговые движения шеей, плечами, тазом, коленями и стопами — по 8","Махи ногами вперёд-назад и в стороны у опоры — по 10","Кошка-корова — 6 медленных повторов"];
+    const w=[o.place==="gym"?{id:"bike",t:"Велотренажёр или ходьба на дорожке — 3 мин"}:{id:"march",t:"Ходьба на месте — 3 мин"},{id:"w_joints",t:"Круговые движения шеей, плечами, тазом, коленями и стопами — по 8"},{id:"w_legswing",t:"Махи ногами вперёд-назад и в стороны у опоры — по 10"},{id:"cat_cow",t:"Кошка-корова — 6 медленных повторов"}];
     const c=["Расслабление лёжа на спине — 1 мин","Глубокое медленное дыхание — 1 мин"];
     if(o.senior) c.push("Стойка на одной ноге у опоры — по 30 с на каждую");
     return {min:o.senior?8:5,items:w,cool:c,coolMin:o.senior?3:2};
   }
   const upper=["U","P","Q"].includes(code), lower=["L","G"].includes(code);
   const min=o.senior?10:o.lowImpact?8:6;
-  const w=[o.place==="gym"?"Велотренажёр или ходьба на дорожке — 3 мин":"Ходьба на месте — 3 мин","Круговые движения плечами, тазом и в голеностопах — по 10"];
-  if(!lower) w.push("Разведение рук в стороны с резинкой или без — 15","Отжимания от стены — 10");
-  if(!upper) w.push("Приседания с весом тела в неполную амплитуду — 10","Ягодичный мост — 10",o.noKneeLoad?"Отведение ноги назад стоя — по 10":"Выпады назад без веса — по 5 на ногу");
+  // у пунктов с id в тренировке есть ссылка на технику
+  const w=[o.place==="gym"?{id:"bike",t:"Велотренажёр или ходьба на дорожке — 3 мин"}:{id:"march",t:"Ходьба на месте — 3 мин"},{id:"w_joints",t:"Круговые движения плечами, тазом и в голеностопах — по 10"}];
+  if(!lower) w.push({id:"w_armswing",t:"Разведение рук в стороны с резинкой или без — 15"},{id:"w_wallpush",t:"Отжимания от стены — 10"});
+  if(!upper) w.push({id:"sq_bw",t:"Приседания с весом тела в неполную амплитуду — 10"},{id:"bridge",t:"Ягодичный мост — 10"},o.noKneeLoad?{id:"w_kickstand",t:"Отведение ноги назад стоя — по 10"}:{id:"lunge_rev",t:"Выпады назад без веса — по 5 на ногу"});
   if(o.place==="gym") w.push(o.goal==="strength"&&!o.noHeavy?"Разминочные подходы в первом базовом упражнении: 5 повторов с 50% и 3 повтора с 75% рабочего веса":"Первый подход базового упражнения — с половиной рабочего веса");
   const st=(upper?["st_chest","st_side","st_shoulder","st_tri"]:lower?["st_quad","st_ham","st_glute","hip_flex","st_calf"]:["st_quad","st_ham","st_glute","st_chest","st_side"])
     .filter(id=>!EXI[id].avoid.some(a=>o.lims.includes(a)));
@@ -2099,12 +2111,12 @@ function render(){
   const main=["program","food","library","progress","profile"].includes(view);
   $("#tabs").hidden=!main;
   if(view==="paywall"&&lastTracked!=="paywall") track("paywall_open"); lastTracked=view;
-  { const bt={program:"program",workout:"program",paywall:"program",paying:"program",welcome:"program",guide:"program",food:"food",foodsetup:"food",progress:"progress",flextest:"progress",admin:"profile",library:"library",exercise:"library",profile:"profile",full:"profile",onboard:"profile"}[view]||"program";
+  { const bt={program:"program",workout:"program",exdo:"program",paywall:"program",paying:"program",welcome:"program",guide:"program",food:"food",foodsetup:"food",progress:"progress",flextest:"progress",admin:"profile",library:"library",exercise:"library",profile:"profile",full:"profile",onboard:"profile"}[view]||"program";
     const bg=document.getElementById("bgpat"); if(bg&&bg.dataset.tab!==bt) bg.dataset.tab=bt; }
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.v===view));
-  app.innerHTML=({welcome:vWelcome,onboard:vOnboard,program:vProgram,library:vLibrary,progress:vProgress,profile:vProfile,workout:vWorkout,guide:vGuide,paywall:vPaywall,paying:vPaying,full:vFull,exercise:vExercise,food:vFood,foodsetup:vFoodSetup,flextest:vFlexTest,admin:vAdmin}[view]||vProgram)();
+  app.innerHTML=({welcome:vWelcome,onboard:vOnboard,program:vProgram,library:vLibrary,progress:vProgress,profile:vProfile,workout:vWorkout,guide:vGuide,paywall:vPaywall,paying:vPaying,full:vFull,exercise:vExercise,exdo:vExDo,food:vFood,foodsetup:vFoodSetup,flextest:vFlexTest,admin:vAdmin}[view]||vProgram)();
   if(inTg){ if(main||view==="welcome") tg.BackButton.hide(); else tg.BackButton.show(); }
-  if(view==="exercise") startExAnim();
+  if(view==="exercise"||view==="exdo") startExAnim();
   if(view==="admin") admBind();
   window.scrollTo(0,0);
 }
@@ -2236,29 +2248,84 @@ function vWorkout(){
   const c=coach();
   let h=`<span class="badge">НЕДЕЛЯ ${workout.w} · ДЕНЬ ${workout.d+1}</span><h1 style="margin-top:8px">${day.title}</h1>
   ${c?`<div class="row" style="margin:8px 0">${avatar(c)}<div class="bubble grow"><b>${c.name}</b>${c.id==="m"?"Поехали. Сначала разминка, потом работаем по плану.":"Начинаем с разминки, потом спокойно по плану. Техника важнее веса."}</div></div>`:""}
-  <p class="hint mt0">${day.items.some(x=>x.flex)?"Отмечай круги: после каждого — 15 секунд, чтобы сменить позу или сторону. Тянись до лёгкого натяжения, без боли и пружинящих движений.":"Отмечай подходы: после каждого запустится таймер отдыха."}${prem&&day.items.some(x=>recWeight(x,workout.w))?" Начни с рекомендованного веса: если повторов выходит больше верхней границы, прибавь, если меньше нижней, убавь. Запиши вес, с которым реально работал, и в следующий раз мы его учтём.":day.items.some(x=>EXI[x.id].eq!=="none"&&!x.timed)?" Вес подбирай так, чтобы в конце подхода оставалось 1–2 повтора в запасе.":""}</p>
+  <p class="hint mt0">Нажми «Приступить» у упражнения: там отметки подходов, таймер отдыха и техника с анимацией. ${day.items.some(x=>x.flex)?"Между кругами растяжки — 15 секунд, чтобы сменить позу или сторону. Тянись до лёгкого натяжения, без боли и пружинящих движений.":""}${prem&&day.items.some(x=>recWeight(x,workout.w))?" Начни с рекомендованного веса: если повторов выходит больше верхней границы, прибавь, если меньше нижней, убавь. Запиши вес, с которым реально работал, и в следующий раз мы его учтём.":day.items.some(x=>EXI[x.id].eq!=="none"&&!x.timed)?" Вес подбирай так, чтобы в конце подхода оставалось 1–2 повтора в запасе.":""}</p>
   ${opts().twoMeals?`<div class="card small" style="background:var(--card2)">🍽 Ты ешь 2 раза в день. Если с последнего приёма прошло больше 4 часов, за 30–60 минут до тренировки съешь что-то лёгкое: банан, кефир или йогурт. После тренировки — полноценный приём с белком.</div>`:""}
-  <div class="card"><h3>Разминка · ${day.warm.min} мин</h3><ul class="list small">${day.warm.items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+  <div class="card"><h3>Разминка · ${day.warm.min} мин</h3><ul class="list small">${day.warm.items.map(x=>typeof x==="string"?`<li>${esc(x)}</li>`:`<li><button class="link" style="padding:0;text-align:left;line-height:1.45;vertical-align:top;font-size:inherit" data-a="exInfo" data-v="${x.id}">${esc(x.t)}</button></li>`).join("")}</ul></div>
   <div class="card">`;
   day.items.forEach((it,i)=>{
-    const e=EXI[it.id], n=workout.sets[i]||0, rec=recWeight(it,workout.w);
+    const e=EXI[it.id], n=workout.sets[i]||0, rec=recWeight(it,workout.w), done=n>=it.sets;
     if(rec&&workout.kg[i]===undefined) workout.kg[i]=String(rec.kg);
-    const kgOn=prem&&!it.timed&&(rec||e.eq!=="none");
-    h+=`<div class="ex"><div class="num">${i+1}</div><div class="grow">
-      <div class="row between"><b>${esc(e.n)}</b><button class="link" data-a="exInfo" data-v="${e.id}">Техника</button></div>
+    h+=`<div class="ex${done?" exdone":""}"><div class="num">${done?"✓":i+1}</div><div class="grow">
+      <b>${esc(e.n)}</b>
       <div class="hint small">Работают: ${esc(e.m.charAt(0).toLowerCase()+e.m.slice(1))}</div>
-      <div class="hint small">${it.timed?it.reps:`${it.sets} × ${it.reps}`}${it.rest?` · отдых ${it.rest} с`:""}</div>
-      ${rec?`<div class="small" style="margin-top:4px">Вес: <b>${rec.text}</b> <span class="hint">· ${rec.why}</span>${rec.capped?`<div class="hint">Это самые тяжёлые гантели из твоей анкеты: делай верхнюю границу повторов и опускай вес медленнее.</div>`:""}${rec.t==="mc"&&rec.why.startsWith("стартовый")?`<div class="hint">Шкала у разных тренажёров отличается: первый подход сделай пробным.</div>`:""}</div>`:""}
-      <div class="sets">${Array.from({length:it.sets},(_,s)=>`<button class="set${s<n?" on":""}" data-a="setDone" data-i="${i}" data-s="${s}">${it.timed?"✓":s+1}</button>`).join("")}</div>
-      ${prem&&!it.timed?`<div class="row" style="margin-top:8px">${kgOn?`<input inputmode="decimal" placeholder="${rec&&(rec.t==="db")?"кг в руке":"вес, кг"}" value="${esc(workout.kg[i]||"")}" data-kg="${i}" style="width:110px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-family:inherit;font-size:inherit">`:""}
-        <button class="link" data-a="swap" data-i="${i}">Заменить упражнение</button></div>`:""}
+      <div class="hint small">${it.timed?it.reps:`${it.sets} × ${it.reps}`}${it.rest?` · отдых ${it.rest} с`:""}${prem&&workout.kg[i]&&!it.timed?` · ${esc(workout.kg[i])} кг`:""}</div>
+      <div class="row between" style="margin-top:8px;align-items:center"><span class="small ${done?"okc":"hint"}">${done?"Готово":n?`Сделано ${n} из ${it.sets}`:""}</span>
+        <button class="btn sm${done?" sec":""}" style="margin:0" data-a="exGo" data-v="${i}">${done?"Открыть":n?"Продолжить":"Приступить"}</button></div>
     </div></div>`;
   });
-  h+=`</div><div class="card"><h3>Заминка и растяжка · ${day.warm.coolMin||5} мин</h3><p class="hint small mt0">Тянись плавно, до лёгкого натяжения, без боли и пружинящих движений.</p><ul class="list small">${day.warm.cool.map(x=>typeof x==="string"?`<li>${esc(x)}</li>`:`<li><button class="link" style="padding:2px 0;text-align:left;line-height:1.4" data-a="exInfo" data-v="${x.id}">${esc(x.t)}</button></li>`).join("")}</ul></div>
+  h+=`</div><div class="card"><h3>Заминка и растяжка · ${day.warm.coolMin||5} мин</h3><p class="hint small mt0">Тянись плавно, до лёгкого натяжения, без боли и пружинящих движений.</p><ul class="list small">${day.warm.cool.map(x=>typeof x==="string"?`<li>${esc(x)}</li>`:`<li><button class="link" style="padding:0;text-align:left;line-height:1.45;vertical-align:top;font-size:inherit" data-a="exInfo" data-v="${x.id}">${esc(x.t)}</button></li>`).join("")}</ul></div>
   <button class="btn" data-a="finishWorkout">Завершить тренировку</button>
   ${!prem?`<p class="hint small center">Расчёт рабочих весов, замены упражнений и журнал весов доступны по подписке.</p>`:""}`;
   return h;
 }
+
+/* Экран выполнения упражнения: подходы, таймер отдыха, вес, замена и вся техника */
+function vExDo(){
+  const weeks=buildProgram(), day=weeks[workout.w-1].days[workout.d], i=workout.cur, it=day.items[i]; if(!it){ view="workout"; return vWorkout(); }
+  const e=EXI[it.id], n=workout.sets[i]||0, prem=!!(S.premium&&S.full), rec=recWeight(it,workout.w), kgOn=prem&&!it.timed&&(rec||e.eq!=="none");
+  if(rec&&workout.kg[i]===undefined) workout.kg[i]=String(rec.kg);
+  const total=day.items.length, nextI=nextEx(day,i), open=exOpen(e.id);
+  return `<span class="badge">УПРАЖНЕНИЕ ${i+1} ИЗ ${total}</span><h1 style="margin-top:8px">${esc(e.n)}</h1>
+  <p class="hint mt0">${it.timed?it.reps:`${it.sets} × ${it.reps}`}${it.rest?` · отдых ${it.rest} с`:""}</p>
+  <div class="card">
+    ${rec?`<div class="small" style="margin-bottom:6px">Вес: <b>${rec.text}</b> <span class="hint">· ${rec.why}</span>${rec.capped?`<div class="hint">Это самые тяжёлые гантели из твоей анкеты: делай верхнюю границу повторов и опускай вес медленнее.</div>`:""}${rec.t==="mc"&&rec.why.startsWith("стартовый")?`<div class="hint">Шкала у разных тренажёров отличается: первый подход сделай пробным.</div>`:""}</div>`:""}
+    <h3 style="margin:0">${it.flex?"Отмечай круги":it.timed?"Отметь, когда сделаешь":"Какой подход сделан"}</h3>
+    <div class="sets big">${Array.from({length:it.sets},(_,s)=>`<button class="set${s<n?" on":""}" data-a="setDone" data-i="${i}" data-s="${s}">${it.timed?"✓":s+1}</button>`).join("")}</div>
+    <p class="small hint" id="exdoCnt" style="margin:8px 0 0">${n>=it.sets?"Все подходы сделаны 💪":`Сделано ${n} из ${it.sets}. После отметки подхода запустится таймер отдыха.`}</p>
+    <div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap">
+      ${it.rest?`<button class="btn sec sm" style="margin:0" id="restBtn" data-a="restGo" data-v="${restFor(it,i)}">⏱ Отдых ${restFor(it,i)} с</button>`:""}
+      ${kgOn?`<input inputmode="decimal" placeholder="${rec&&(rec.t==="db")?"кг в руке":"вес, кг"}" value="${esc(workout.kg[i]||"")}" data-kg="${i}" aria-label="Рабочий вес" style="width:110px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-family:inherit;font-size:inherit"<span class="hint small">кг</span>`:""}
+      ${prem&&!it.timed?`<button class="link" data-a="swap" data-i="${i}">Заменить упражнение</button>`:""}
+    </div>
+    ${it.flex?"":`<div class="hrbox"><div class="row" style="gap:8px;align-items:center;flex-wrap:wrap"><b class="small">❤️ Пульс ${EXI[it.id].slot==="cardio"?"во время упражнения":"сразу после подхода"}</b><span class="hint small">по желанию</span></div>
+      <div class="row" style="gap:8px;align-items:center;margin-top:6px"><input inputmode="numeric" data-hr="${i}" placeholder="уд/мин" value="${esc(String((workout.hr||{})[i]||""))}" aria-label="Пульс, ударов в минуту" style="width:110px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-family:inherit;font-size:inherit"><span class="hint small">уд/мин</span></div>
+      <div class="small" id="hrOut" style="margin-top:6px">${hrHtml(it,i)}</div></div>`}
+  </div>
+  <div class="acts" style="margin:4px 0 14px"><button class="btn sec sm2" data-a="exList">К списку</button>${nextI>=0?`<button class="btn sm2" data-a="exGo" data-v="${nextI}">Следующее →</button>`:`<button class="btn sm2" data-a="exList">Все упражнения ✓</button>`}</div>
+  <h2 style="margin-top:4px">Техника</h2>
+  ${open?`${exAnimHtml(e.id)}
+  <div class="card"><h3>Какие мышцы работают</h3><p class="mt0">${esc(e.m)}</p></div>
+  <div class="card"><h3>Как выполнять</h3><ul class="list">${e.how.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+  ${e.avoid.length?`<div class="card warn small">Если беспокоят ${e.avoid.map(a=>LIMS[a].toLowerCase()).join(" или ")}, лучше заменить это упражнение.</div>`:""}
+  <div class="card small hint">Почувствовал острую боль — остановись. Если боль не проходит, обратись к врачу.</div>`
+  :`<div class="card small">Работают: ${esc(e.m.charAt(0).toLowerCase()+e.m.slice(1))}. Анимация и подробная техника этого упражнения — в подписке.</div>`}`;
+}
+/* ---------- Пульс и отдых ----------
+   Максимальный пульс — по формуле Танаки (208 − 0,7 × возраст); без анкеты берём 185.
+   Чем выше пульс после подхода относительно максимума, тем дольше отдых. Следующий подход —
+   когда пульс опустится примерно до 60% от максимума (в щадящем режиме и после 50 лет — до 55%). */
+function hrMax(){ const a=S.premium&&S.full&&S.full.age; return a?Math.round(208-0.7*a):185; }
+function hrInfo(it,hr){
+  hr=+hr; if(!(hr>=40&&hr<=230)) return null;
+  const o=opts(), mx=hrMax(), p=hr/mx, base=it.rest||60, cardio=EXI[it.id].slot==="cardio";
+  const soft=o.caution||o.senior, target=Math.round(mx*(soft?0.55:0.6)/5)*5;
+  const add=p>=0.9?90:p>=0.85?60:p>=0.75?30:p>=0.65?0:-15;
+  const rest=Math.round(Math.max(base>=90?60:30,Math.min(base*2,base+add))/15)*15;
+  let level=p>=0.9?"очень высокий":p>=0.8?"высокий":p>=0.65?"рабочий":"невысокий";
+  let warn="";
+  if(p>=0.92||hr>=200) warn="Пульс очень высокий. Отдохни дольше и сбавь темп или вес. Если кружится голова, не хватает воздуха или давит в груди — останови тренировку.";
+  else if(o.caution&&p>0.7) warn=`В щадящем режиме держи пульс ниже ${Math.round(mx*0.7)} уд/мин: сбавь темп или вес.`;
+  let zone="";
+  if(cardio) zone=p<0.6?"Лёгкая зона: можно чуть ускориться.":p<0.75?"Зона выносливости и жиросжигания: держи этот темп.":p<0.85?"Тяжёлая аэробная зона: ненадолго можно, но для длинной кардио-сессии сбавь темп.":"Слишком интенсивно для кардио: сбавь темп.";
+  return {hr,mx,pct:Math.round(p*100),rest,target,level,warn,zone,cardio};
+}
+function hrHtml(it,i){
+  const x=hrInfo(it,(workout.hr||{})[i]); if(!x) return `<span class="hint">Сосчитай удары за 15 секунд и умножь на 4 или посмотри на часах. Подскажем, сколько отдыхать.</span>`;
+  const mm=t=>`${Math.floor(t/60)}:${String(t%60).padStart(2,"0")}`;
+  return `${x.cardio?`<b>${x.pct}% от максимума</b> (~${x.mx} уд/мин). ${x.zone}`:`Пульс ${x.level}: ${x.pct}% от максимума (~${x.mx} уд/мин). Рекомендуемый отдых — <b>${mm(x.rest)}</b>. ${x.hr<=x.target+5?"Пульс уже восстановился — следующий подход можно делать, как отдышишься.":`Следующий подход начинай, когда пульс опустится примерно до <b>${x.target}</b>.`}`}${S.premium&&S.full&&S.full.age?"":`<div class="hint" style="margin-top:4px">Максимум посчитан примерно: без возраста из индивидуальной анкеты.</div>`}${x.warn?`<div style="color:var(--warn);margin-top:4px">${x.warn}</div>`:""}`;
+}
+function restFor(it,i){ const x=hrInfo(it,(workout.hr||{})[i]); return x&&!x.cardio?x.rest:it.rest; }
+function nextEx(day,i){ for(let k=1;k<day.items.length;k++){ const j=(i+k)%day.items.length; if((workout.sets[j]||0)<day.items[j].sets) return j; } return -1; }
 
 function vExercise(){
   const e=EXI[openEx]; if(!e) return "";
@@ -2279,7 +2346,7 @@ function exOpen(id){
   if(S.premium) return true;
   if(!S.profile) return false;
   const k=JSON.stringify([S.profile,S.full,S.swaps,(S.flex||[]).slice(-1)]);
-  if(openMemo.k!==k){ const set=new Set(); buildProgram().forEach(w=>w.days.forEach(d=>{ d.items.forEach(it=>set.add(it.id)); (d.warm&&d.warm.cool||[]).forEach(x=>{ if(x&&x.id) set.add(x.id); }); })); openMemo={k,set}; }
+  if(openMemo.k!==k){ const set=new Set(); buildProgram().forEach(w=>w.days.forEach(d=>{ d.items.forEach(it=>set.add(it.id)); (d.warm&&d.warm.cool||[]).concat(d.warm&&d.warm.items||[]).forEach(x=>{ if(x&&x.id) set.add(x.id); }); })); openMemo={k,set}; }
   return openMemo.set.has(id);
 }
 function lockSheet(id){
@@ -2620,15 +2687,21 @@ const A={
     if(o.prem&&before&&before.weeks&&o.weeks!==before.weeks) m+=` Длительность программы теперь ${o.weeks} ${plural(o.weeks,"неделя","недели","недель")}.`;
     view=flexRet==="flextest"?"progress":flexRet||"progress"; selWeek=0; haptic("success"); render(); popup(m);
   },
-  startDay:v=>{track(S.history.length?"workout_start":"first_workout_start");workout={w:selWeek,d:+v,sets:{},kg:{},start:Date.now()};view="workout";render();},
-  exInfo:v=>{ if(!exOpen(v)){ lockSheet(v); return; } openEx=v;workout&&view==="workout"?(workout._ret=true):null;exRet=view;view="exercise";render();},
+  startDay:v=>{track(S.history.length?"workout_start":"first_workout_start");workout={w:selWeek,d:+v,sets:{},kg:{},hr:{},start:Date.now()};view="workout";render();},
+  exInfo:v=>{ if(!exOpen(v)){ lockSheet(v); return; } openEx=v;workout&&(view==="workout"||view==="exdo")?(workout._ret=view):null;exRet=view;view="exercise";render();},
   setDone:(v,el)=>{
     const i=+el.dataset.i, s=+el.dataset.s, cur=workout.sets[i]||0;
     workout.sets[i]= s<cur ? s : s+1;
-    const weeks=buildProgram(), it=weeks[workout.w-1].days[workout.d].items[i];
-    haptic("light"); render(); restoreScroll();
-    if(s>=cur && it.rest) startTimer(it.rest);
+    const weeks=buildProgram(), it=weeks[workout.w-1].days[workout.d].items[i], n=workout.sets[i];
+    haptic("light");
+    // на экране упражнения обновляем только кнопки — анимация техники не перезапускается
+    document.querySelectorAll(`.set[data-i="${i}"]`).forEach(b=>b.classList.toggle("on",+b.dataset.s<n));
+    const c=document.getElementById("exdoCnt"); if(c) c.textContent=n>=it.sets?"Все подходы сделаны 💪":`Сделано ${n} из ${it.sets}. После отметки подхода запустится таймер отдыха.`;
+    if(s>=cur && it.rest) startTimer(restFor(it,i));
   },
+  exGo:v=>{ workout.cur=+v; view="exdo"; render(); },
+  exList:()=>{ view="workout"; render(); },
+  restGo:v=>{ startTimer(+v); haptic("light"); },
   swap:(v,el)=>{
     const i=+el.dataset.i, weeks=buildProgram(), day=weeks[workout.w-1].days[workout.d], it=day.items[i], o=opts();
     const otherFams=new Set(day.items.filter((x,j)=>j!==i).map(x=>fam(EXI[x.id])));
@@ -2638,14 +2711,14 @@ const A={
     if(pool.length<2){ popup("Для этого упражнения нет равноценной замены с твоим инвентарём."); return; }
     const next=pool[(idx+1)%pool.length];
     weeks.forEach(w=>w.days.forEach(d=>d.items.forEach(x=>{ if(x.key===it.key) S.swaps[x.key]=next.id; })));
-    S.swaps[it.key]=next.id; delete workout.kg[i]; save(); haptic("light"); render(); restoreScroll();
+    S.swaps[it.key]=next.id; delete workout.kg[i]; save(); haptic("light"); render(); if(view!=="exdo") restoreScroll();
   },
   finishWorkout:()=>{
     const o=opts(), weeks=buildProgram(), day=weeks[workout.w-1].days[workout.d];
     const min=Math.max(1,Math.round((Date.now()-workout.start)/60000));
     const kg=Object.entries(workout.kg).filter(([i,v])=>v).map(([i,v])=>`${EXI[day.items[i].id].n.split(" ")[0]} ${v} кг`).slice(0,2).join(", ");
     S.done[`${o.prem?"p":"f"}${workout.w}-${workout.d}`]=today();
-    S.history.push({d:today(),w:workout.w,title:day.title,min,kg,ex:day.items.map((it,i)=>({id:it.id,s:workout.sets[i]||0,kg:workout.kg[i]||null}))});
+    S.history.push({d:today(),w:workout.w,title:day.title,min,kg,ex:day.items.map((it,i)=>({id:it.id,s:workout.sets[i]||0,kg:workout.kg[i]||null,hr:(workout.hr||{})[i]||null}))});
     // журнал рабочих весов: на что опираться в следующий раз (разгрузочная неделя не сбивает базу)
     S.lifts=S.lifts||{}; S.lastIds=[];
     if(o.prem&&(workout.w-1)%4!==3) day.items.forEach((it,i)=>{
@@ -2829,8 +2902,9 @@ function vFeedback(){
 }
 
 function goBack(){
+  if(view==="exdo"){ view="workout"; render(); return; }
   stopTimer();
-  if(view==="exercise"){ view=workout&&workout._ret?"workout":exRet==="flextest"?"flextest":"library"; if(workout) workout._ret=false; exRet=null; }
+  if(view==="exercise"){ view=workout&&workout._ret?(workout._ret==="exdo"?"exdo":"workout"):exRet==="flextest"?"flextest":"library"; if(workout) workout._ret=false; exRet=null; }
   else if(view==="flextest"){ view=flexRet||"progress"; }
   else if(view==="admin"){ view="profile"; }
   else if(view==="workout"){ workout=null; view="program"; }
@@ -3351,6 +3425,26 @@ const dbHold=(i,ax)=>({k:"db",i,ax:ax||LZ});
 
 const EXANIM={
   _body:{P:4,views:["front","back"],m:[[],[]],pose:t=>{ const f=mk([0,69,0],-90); return {f,legs:legsStand(3,10),arms:both(i=>({H:vc(f.sh(i),DN,47,LZ,sd(i)*9),pole:BK}))}; }},
+/* ===== Разминка ===== */
+ w_joints:{P:2.4,cyc:1,views:["front","side"],m:[["delts"],["traps","back"]],pose:t=>{
+   const ph=2*Math.PI*t, f=mk([0,69,0],-90);
+   return {f,legs:legsStand(3,10),arms:both(i=>{ const a=ph+Math.PI*0; return {H:vc(f.sh(i),v3.n([Math.sin(a)*.95,-Math.cos(a)*.95+.05,sd(i)*.32]),46),pole:v3.n([-Math.cos(a)*.5-.2,-Math.sin(a)*.5,sd(i)*.4])}; })};}},
+ w_armswing:{P:2.2,views:["front","top"],m:[["rdelts","traps"],["chest"]],pose:t=>{
+   const f=mk([0,69,0],-90), a=lerp(-6,80,t), H=both(i=>vc(f.sh(i),rot(FW,UPV,sd(i)*a),48,DN,2));
+   return {f,legs:legsStand(3,10),arms:both(i=>({H:H[i],pole:DN}))};}},
+ w_wallpush:{P:2.4,views:["side"],m:[["chest","triceps"],["delts","abs"]],pose:t=>{
+   const th=lerp(-74,-62,t), A=[-24,133,0], P=vc(A,dA(th),65), f=mk(P,th,{nod:-6});
+   return {f,legs:both(i=>({A:[A[0],A[1],sd(i)*7],toe:FW,pole:FW})),arms:both(i=>({H:[44,30,sd(i)*20],pole:v3.n([-.6,.8,sd(i)*.9])})),
+     props:[{k:"box",box:[[46,-40,-60],[52,140,60]],d:-60}]};}},
+ w_legswing:{P:1.8,cyc:1,views:["side"],m:[["hams","quads"],["glutes","abs"]],pose:t=>{
+   const ph=2*Math.PI*t, f=mk([0,69,0],-90), a=90-38*Math.sin(ph);
+   return {f,legs:[{A:[3,Y0,9],toe:FW,pole:FW},{A:vc(f.hip(1),dA(a),66),toe:v3.n([1,.15*Math.sin(ph),0]),pole:FW}],
+     arms:[{H:vc(f.sh(0),DN,22,LZ,30,FW,6),pole:v3.n([0,0,1])},{H:vc(f.sh(1),DN,40,FW,lerp(-14,16,(1+Math.sin(ph))/2)),pole:BK}],
+     props:[{k:"box",box:[[-8,40,40],[4,140,46]],d:40}]};}},
+ w_kickstand:{P:2.4,views:["side"],m:[["glutes"],["hams","lowback"]],pose:t=>{
+   const f=mk([-2,70,0],lerp(-84,-76,t)), a=lerp(92,138,t);
+   return {f,legs:[{A:[3,Y0,9],toe:FW,pole:FW},{A:vc(f.hip(1),dA(a),66),toe:v3.n([1,.3,0]),pole:FW}],
+     arms:both(i=>({H:[44,40,sd(i)*16],pole:v3.n([-.4,.8,sd(i)*.8])})),props:[{k:"box",box:[[46,-40,-60],[52,140,60]],d:-60}]};}},
 /* ===== Приседания ===== */
  sq_bw:{P:2.8,views:["side","front"],m:[["quads","glutes"],["adductors","hams","abs"]],pose:t=>{
    const f=mk(lp3([0,69,0],[-26,104,0],t),lerp(-88,-50,t));
@@ -3830,6 +3924,9 @@ document.addEventListener("input",e=>{
   if(t.dataset.f){ draft2[t.dataset.f]=t.type==="checkbox"?t.checked:t.value; }
   if(t.dataset.edi!==undefined && fEd){ const j=+t.dataset.edi, it=fEd.ing[j]; if(it){ let v=parseFloat(t.value.replace(",","."));
       v=isFinite(v)&&v>0?Math.min(v,it[0]==="eggs"?20:3000):0; it[1]=it[0]==="eggs"?Math.round(v*2)/2*EGG_G:Math.round(v); const sm=document.getElementById("fedsum"); if(sm) sm.innerHTML=edSum(fEd.ing); const hd=document.getElementById("fedhead"); if(hd){ const t=nutr(fEd.ing.filter(x=>x[1]>0)); hd.innerHTML=`<b>${Math.round(t.kcal)} ккал</b>белок ${Math.round(t.p)} г`; } } }
+  if(t.dataset.hr!==undefined && workout){ const i=+t.dataset.hr, v=t.value.replace(/[^\d]/g,"").slice(0,3); workout.hr=workout.hr||{}; workout.hr[i]=v;
+    const it=buildProgram()[workout.w-1].days[workout.d].items[i], out=document.getElementById("hrOut"); if(out&&it) out.innerHTML=hrHtml(it,i);
+    const rb=document.getElementById("restBtn"); if(rb&&it){ const r=restFor(it,i); rb.dataset.v=r; rb.textContent=`⏱ Отдых ${r} с`; } }
   if(t.dataset.kg!==undefined && workout){ workout.kg[t.dataset.kg]=t.value.replace(",",".").replace(/[^\d.]/g,"").slice(0,6); }
 });
 document.addEventListener("change",e=>{ const t=e.target; if(t.dataset.f&&t.type==="checkbox") draft2[t.dataset.f]=t.checked;
@@ -3851,9 +3948,11 @@ const GUIDE=[
   "Длительность программы рассчитана под твою цель. Если к концу цель не достигнута, программа продолжится новыми циклами.",
   "Нажми на карточку дня, чтобы открыть тренировку. Сделанные дни помечаются «Готово»."]],
  ["🏋️","Во время тренировки",[
-  "Начни с разминки — она в начале тренировки.",
-  "Сделал подход — нажми на его номер. Запустится таймер отдыха; его можно пропустить.",
-  "«Техника» у упражнения — как правильно выполнять и какие мышцы работают.",
+  "Начни с разминки — она в начале тренировки. Нажми на название упражнения разминки, чтобы посмотреть технику.",
+  "Нажми «Приступить» у упражнения — откроется его экран: номера подходов, таймер отдыха, рабочий вес и техника с анимацией.",
+  "Сделал подход — нажми на его номер. Запустится таймер отдыха; его можно пропустить или запустить заново кнопкой «⏱ Отдых».",
+  "Есть возможность замерить пульс — впиши его сразу после подхода (по желанию). Подскажем, сколько отдыхать и до какого пульса восстановиться перед следующим подходом, а таймер отдыха подстроится. На кардио покажем, в какой ты зоне.",
+  "«Следующее →» переводит к следующему несделанному упражнению, «К списку» — обратно ко всей тренировке. В списке видно, сколько подходов уже сделано.",
   "С подпиской у каждого упражнения есть рабочий вес. Если повторов выходит больше нормы — прибавь, меньше — убавь. Впиши вес, с которым реально работал: в следующий раз он учтётся.",
   "Неудобно или занят тренажёр — «Заменить упражнение».",
   "В конце — заминка и растяжка: каждое упражнение нажимается и открывает технику.",
