@@ -125,6 +125,7 @@ p{margin:6px 0}
 .set{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-family:inherit;font-weight:700;font-size:14px;line-height:1;cursor:pointer}
 .sets.big{gap:10px;margin-top:10px}.sets.big .set{width:52px;height:52px;border-radius:14px;font-size:18px}
 .hrbox{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.ctoast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom));width:min(488px,calc(100% - 32px));z-index:44;display:flex;gap:10px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 8px 30px rgba(0,0,0,.25);font-size:14px;animation:fadeIn .2s ease}.ctoast button{background:none;border:0;color:var(--hint);font-size:16px;cursor:pointer;padding:2px 4px}
 .ex.exdone b{color:var(--hint)}.okc{color:var(--ok);font-weight:600}
 .set.on{background:var(--ok);border-color:var(--ok);color:var(--ok-text)}
 .link{background:none;border:0;color:var(--max);font-family:inherit;font-weight:600;font-size:13px;line-height:1;padding:6px 0;cursor:pointer}
@@ -667,7 +668,7 @@ const TIPS_GOAL={
  custom:["Своя программа — это твой выбор зон, а прогрессия та же: прибавляй вес, когда все подходы даются чисто.",
   "Тренируешь верх и низ в разные дни? Так мышцы успевают восстановиться, а ты можешь заниматься чаще.",
   "Хочешь поменять зоны или дни — Профиль → Базовая анкета. Программа пересоберётся сразу.",
-  "Не забывай про мышцы, которые не выбрал: хотя бы изредка добавляй их, чтобы тело развивалось гармонично."],
+  "Не забывай про мышцы, которые не выбраны: хотя бы изредка добавляй их, чтобы тело развивалось гармонично."],
  back:["Сидишь долго? Каждые 45–60 минут вставай и пройдись хотя бы пару минут.",
   "Сильные ягодицы и пресс разгружают поясницу. Поэтому они есть в каждой тренировке.",
   "Поднимай тяжёлое с пола, приседая, а не наклоняясь на прямых ногах.",
@@ -691,6 +692,26 @@ function tipText(c){
   const a=tipList(c), day=Math.floor((new Date(t+"T12:00:00")-new Date("2025-01-01T12:00:00"))/864e5);
   return a[((day%a.length)+a.length)%a.length];
 }
+/* ---------- Тон тренера: с юмором (по умолчанию) или спокойный ----------
+   Шутим над ситуацией или над собой, но не над человеком, не про тело, вес и еду и не тогда, когда что-то не получилось. */
+const funOn=()=>S.tone!=="calm";
+const FUN={
+ fast:{m:["{n} подходов за {min} мин? Либо ты Флэш, либо кто-то просто тыкал кнопки 😏 Давай по-честному: отмечай подходы по ходу тренировки — так я точнее подстрою программу.",
+          "Рекорд скорости: {min} мин вместо ~{plan}! Подозреваю, штанга даже не успела тебя заметить 😄 Отмечай подходы по ходу и отдыхай по таймеру — так я точнее посчитаю следующий шаг."],
+       f:["{n} подходов за {min} мин? Ты либо супергероиня, либо просто нажала все кнопки разом 😏 Отмечай подходы по ходу — так я точнее подстрою программу 💛",
+          "{min} мин вместо ~{plan}? Даже я так быстро не считаю 😄 Давай отмечать подходы по ходу тренировки и отдыхать по таймеру."]},
+ idle:{m:["Ты там не уснул? Таймер отдыха давно закончился, штанга скучает 😄","Отдых затянулся. Я, конечно, ИИ и могу ждать вечно, а вот мышцы остывают 🙂 Следующий подход?"],
+       f:["Ты там не уснула? Отдых давно закончился, гантели скучают 😄","Отдых затянулся 🙂 Мышцы остывают — давай следующий подход, я в тебя верю!"]},
+ hard:{m:["Вот это было мощно! В следующий раз чуть полегче 💪","Чувствую, ты выложился по полной. Уважаю, но давай без героизма."],
+       f:["Ух, это было мощно! Давай в следующий раз чуть бережнее 💛","Ты выложилась по полной — я горжусь, но давай без героизма 💛"]},
+ easy:{m:["Принято. Вызов брошен — посмотрим, кто кого 😏","Легко, говоришь? Записал. Ты сам напросился 😄"],
+       f:["Ах так? Тогда держи ещё 😉","Легко? Запомнила. Ты сама попросила 😄"]},
+ pulse:{m:["Сердце сейчас пишет мне жалобу 😅"],f:["Твоё сердце просит пощады 😅"]},
+ walk:{m:["Это прогулка, а не кардио 😄 Чуть быстрее."],f:["Это скорее прогулка 😄 Добавь немного темпа."]},
+ early:{m:["Тренировка до рассвета? Ты либо жаворонок, либо герой. Уважаю 💪"],f:["Тренировка ни свет ни заря? Ты невероятная ☀️"]},
+ late:{m:["Тренировка на ночь глядя? Уважаю. Только после неё — сразу спать, договорились?"],f:["Поздняя тренировка — это сила воли 🌙 После неё отдых и сон, хорошо?"]}
+};
+function funLine(k,d){ const c=coach(); if(!c||!funOn()) return ""; const L=FUN[k][c.id]; let t=L[Math.floor(Math.random()*L.length)]; Object.entries(d||{}).forEach(([a,b])=>t=t.split("{"+a+"}").join(b)); return t; }
 function coach(){ const sx=(S.full&&S.full.sex)||(S.profile&&S.profile.sex); return COACH[sx]||null; }
 const avatar=c=>`<div class="av ${c.cls}">${c.av}</div>`;
 const coachName=()=>{const c=coach();return c?c.name:"Макс и Ева";};
@@ -988,6 +1009,7 @@ function incW(t,g,kg){ if(t==="bb") return g==="lower"||g==="hinge"?5:2.5; if(t=
 function midReps(reps){ const m=String(reps).match(/(\d+)–(\d+)/); return m?Math.round((+m[1]+ +m[2])/2):10; }
 function loadText(kg,t){ const v=String(kg).replace(".",","); return t==="bb"?`штанга ${v} кг (с грифом)`:t==="db"?`гантели по ${v} кг`:t==="db1"?`гантель ${v} кг`:`${v} кг на тренажёре`; }
 /* Рекомендуемый вес для упражнения в конкретной неделе. null — вес не нужен или нет подписки. */
+function fuelLow(){ const F=fuelState(); return !!(F&&F.mode==="low"); }
 function recWeight(it,week){
   const o=opts(), f=S.full; if(!o.prem||!f||it.timed) return null;
   const L=LOAD[it.id]; if(!L) return null;
@@ -998,6 +1020,7 @@ function recWeight(it,week){
     kg=last.kg;
     if(deload){ kg=kg*0.9; why="разгрузка: −10% от прошлого раза"; }
     else if(last.fb===-1){ kg=kg*0.95; why="в прошлый раз было тяжело: чуть меньше"; }
+    else if(last.full&&fuelLow()){ why="питание ниже нормы: держим вес, без прибавки"; }
     else if(last.full&&last.fb===1){ kg=kg+2*incW(L.t,L.g,kg); why="в прошлый раз было легко: прибавляем больше"; }
     else if(last.full){ kg=kg+incW(L.t,L.g,kg); why="все подходы выполнены: прибавляем"; }
     else why="как в прошлый раз: добери все подходы";
@@ -1057,7 +1080,7 @@ function warmup(code,o){
   return {min,items:w,cool:c,coolMin};
 }
 function buildProgram(){
-  const o=opts(), cdays=o.goal==="custom"?customDays(o):null;
+  const o=opts(), cdays=o.goal==="custom"?customDays(o):null, fuel=fuelState();
   const split=cdays?cdays.map(x=>x.code):o.goal==="flex"?(FL_SPLITS[o.days]||FL_SPLITS[3]):(SPLITS[o.days]||SPLITS[3]), weeks=[];
   for(let w=1;w<=o.weeks;w++){
     const wi=weekInfo(w,o), days=[], cyc=Math.floor((w-1)/4), seen={};
@@ -1087,8 +1110,14 @@ function buildProgram(){
         if(o.goal==="flex"&&!sc.timed) sets=2+(S.adj.sets||0);      // в растяжке силовое упражнение — только для контроля
         sets=Math.max(sc.timed?1:2,Math.min(5,sets));
         if(sc.timed) sets=1;
+        if(fuel&&fuel.mode==="low"&&!sc.timed&&!e.iso&&e.slot!=="core"&&o.goal!=="flex") sets=Math.max(2,sets-1);   // ест сильно меньше нормы — меньше объём
         items.push({id:e.id,slot:e.slot,ps:e.alt&&e.alt.includes(slot)?slot:e.slot,key,sets,reps:sc.reps,rest:sc.rest,timed:!!sc.timed,min:sc.min});
       });
+      if(fuel&&fuel.mode==="high"){   // ест заметно больше нормы при похудении — +10 минут спокойного кардио
+        const cid=o.place==="gym"?"incline":"march", ex=items.find(x=>x.id===cid);
+        if(ex){ const m=(parseInt(ex.reps)||10)+10; ex.reps=`${m} мин ровного темпа`; }
+        else items.push({id:cid,slot:"cardio",ps:"cardio",key:`${code}${d}|fuel`,sets:1,reps:"10 мин ровного темпа: можешь говорить, но не петь",rest:0,timed:true,fuel:true});
+      }
       const warm=warmup(code,o); fitTime(items,warm,o);
       days.push({code,title:tpl.t,items,warm,wd:cdays?cdays[d].wd:null});
     });
@@ -1192,11 +1221,47 @@ const kgTxt=x=>String(Math.round(x*10)/10).replace(".",",");
 function bodySorted(){return S.body.slice().sort((x,y)=>x.d.localeCompare(y.d));}
 function curWeight(){const b=bodySorted();return b.length?b[b.length-1].w:S.full.weight;}
 /* Среднее питание за n дней до endKey (не включая его). Дни с записями меньше половины нормы не считаем: скорее всего, еду отметили не всю. */
+/* День считается записанным полностью, если съедено хотя бы полнормы или отмечены все приёмы пищи:
+   тогда честное «ел мало» не путается с «забыл записать». */
+function dayComplete(e,t,c){ if(t>=c.kcal*0.5) return true; const n=slots().length; for(let i=0;i<n;i++) if(!e.some(x=>x.t==="meal"&&x.slot===i)) return false; return true; }
+/* ---------- Питание → тренировки ----------
+   По последним 7 дням (без сегодняшнего): если в большинстве полных дней еды заметно меньше нормы (на 25%,
+   при наборе — на 15%), временно убираем подход в базовых упражнениях и не прибавляем веса: так сохраняются
+   мышцы и силы, а человек не срывается. Если при похудении/рекомпозиции заметно больше нормы (на 15%) —
+   добавляем 10 минут спокойного кардио. Как только питание в норме, всё возвращается само. */
+let fuelMemo={k:null,v:null};
+function fuelState(){
+  if(!(S.premium&&S.full)||foodMode()!=="plan") return null;
+  const t=today(), days=[]; for(let i=1;i<=7;i++){ const e=(S.flog||{})[addDays(t,-i)]; days.push(e&&e.length?e.reduce((s,x)=>s+(x.k||0),0)+"/"+e.length:""); }
+  const k=t+"|"+days.join(",")+"|"+JSON.stringify([S.full,S.profile&&S.profile.goal,S.food&&S.food.meals]);
+  if(fuelMemo.k===k) return fuelMemo.v;
+  const c=calc(), goal=opts().goal; let full=0, low=0, high=0, sum=0;
+  for(let i=1;i<=7;i++){ const e=(S.flog||{})[addDays(t,-i)]; if(!e||!e.length) continue; const kc=e.reduce((s,x)=>s+(x.k||0),0); if(!dayComplete(e,kc,c)) continue;
+    full++; sum+=kc; if(kc<c.kcal*(goal==="gain"?0.85:0.75)) low++; if(kc>c.kcal*1.15) high++; }
+  let v=null;
+  if(full>=3&&low>=3&&low>=full*0.6) v={mode:"low",days:low,of:full,avg:Math.round(sum/full),norm:c.kcal,goal};
+  else if((goal==="lose"||goal==="recomp")&&full>=3&&high>=3&&high>=full*0.6) v={mode:"high",days:high,of:full,avg:Math.round(sum/full),norm:c.kcal,goal};
+  fuelMemo={k,v}; return v;
+}
+function fuelText(F){
+  const fe=S.full&&S.full.sex==="f", ate=fe?"ела":"ел", cf=(coach()||{}).id==="f", la=cf?"ла":"л";
+  if(F.mode==="low") return F.goal==="gain"
+    ? `Последние дни ты ${ate} заметно меньше нормы: в среднем ${F.avg} ккал при норме ${F.norm}. Для набора мышцам не из чего расти, поэтому я временно убра${la} по подходу в базовых упражнениях и не прибавляю веса — так ты будешь восстанавливаться. Добавь перекус с белком, и как только питание вернётся к норме, нагрузка вернётся сама.`
+    : `Последние дни ты ${ate} заметно меньше нормы: в среднем ${F.avg} ккал при норме ${F.norm}. Быстрее от этого не будет: при большом дефиците уходят мышцы и силы. Я временно убра${la} по подходу в базовых упражнениях и не прибавляю веса, чтобы тренировки оставались посильными. Вернись к норме — и нагрузка вернётся сама.`;
+  return `Последние дни питание выше нормы: в среднем ${F.avg} ккал при норме ${F.norm}. Ничего страшного. Я добави${la} в тренировки 10 минут спокойного кардио, чтобы ты оставал${fe?"ась":"ся"} на пути к цели. Это не наказание: просто держи темп, при котором можно разговаривать. Главное — вернуться к норме, без резких ограничений. Как только питание выровняется, кардио уберу.`;
+}
+function fuelHtml(){
+  const F=fuelState(); if(!F) return "";
+  const seen=S.fuelSeen||{}; if(seen.mode===F.mode&&seen.d&&daysBetween(seen.d,today())<3) return "";
+  const c=coach();
+  return `<div class="card"><div class="row" style="align-items:flex-start">${c?avatar(c):duo}<div class="bubble grow"><b>${c?c.name:"Тренер"}: тренировки под питание</b><br>${fuelText(F)}</div></div>
+   <button class="btn sm sec" data-a="fuelOk" data-v="${F.mode}">Понятно</button></div>`;
+}
 function intakeStats(endKey,n){
   const c=calc(); let sum=0,cnt=0,any=0;
   for(let i=1;i<=n;i++){
     const e=(S.flog||{})[addDays(endKey,-i)]; if(!e||!e.length) continue; any++;
-    const t=e.reduce((s,x)=>s+(x.k||0),0); if(t<c.kcal*0.5) continue; sum+=t; cnt++;
+    const t=e.reduce((s,x)=>s+(x.k||0),0); if(!dayComplete(e,t,c)) continue; sum+=t; cnt++;
   }
   return {avg:cnt?Math.round(sum/cnt):null,days:cnt,any};
 }
@@ -1221,7 +1286,7 @@ function forecast(){
   // сдвиг срока: питание за 14 дней, каждый день «не в ту сторону» от нормы добавляет время
   let lostKg=0;
   for(let i=1;i<=14;i++){ const e=(S.flog||{})[addDays(today(),-i)]; if(!e||!e.length) continue;
-    const k=e.reduce((s,x)=>s+(x.k||0),0); if(k<c.kcal*0.5) continue;
+    const k=e.reduce((s,x)=>s+(x.k||0),0); if(!dayComplete(e,k,c)) continue;
     const bad=goal==="lose"?k-c.kcal:c.kcal-k; if(bad>0) lostKg+=bad/7700; }
   const delayDays=Math.round(lostKg/base*7);
   const st=intakeStats(today(),7), diff=st.days>=3?st.avg-c.kcal:0, bad=goal==="lose"?diff:-diff;
@@ -1275,7 +1340,7 @@ function resultsHtml(){
 /* Сообщение после смены цели в базовой анкете: что поменялось в программе и питании. */
 function goalChangeText(prev){
   const o=opts(), c=coach(), nm=c?c.name:"Тренер", fe=c&&c.id==="f";
-  let t=`Цель: «${GOALS[o.goalAsked]}». ${nm} ${fe?"пересобрала":"пересобрал"} программу`;
+  let t=`Цель: «${GOALS[o.goalAsked]}». ${c?`Я ${fe?"пересобрала":"пересобрал"}`:"Тренер пересобрал"} программу`;
   if(o.goal!==o.goalAsked) t+=`, но по индексу массы тела сейчас полезнее «${GOALS[o.goal]}», поэтому программа и питание собраны под неё`;
   t+=".";
   if(prev.c&&S.premium&&S.full&&foodMode()!=="ed"){
@@ -1330,7 +1395,7 @@ function weeklyHtml(){
 let flexDraft={}, flexRet="progress", exRet=null;
 function vFlexTest(){
   const c=coach(), av=c?avatar(c):duo, ready=FLEX_T.every(x=>flexDraft[x.k]);
-  return `<h1>Тест гибкости</h1><div class="card"><div class="row" style="align-items:flex-start">${av}<div class="bubble grow">4 простых теста, 3–4 минуты. Сначала разомнись: 2–3 минуты ходьбы и круговые движения. Тянись до лёгкого натяжения, без рывков и боли. По результатам ${c?c.name:"тренер"} подстроит программу.</div></div></div>
+  return `<h1>Тест гибкости</h1><div class="card"><div class="row" style="align-items:flex-start">${av}<div class="bubble grow">4 простых теста, 3–4 минуты. Сначала разомнись: 2–3 минуты ходьбы и круговые движения. Тянись до лёгкого натяжения, без рывков и боли. По результатам ${c?"я подстрою":"тренер подстроит"} программу.</div></div></div>
   ${FLEX_T.map((x,i)=>`<div class="card"><h3>${i+1}. ${x.t}</h3><p class="small hint mt0">${x.how}</p>
     ${EXANIM[x.ex]&&exOpenAny(x.ex)?`<button class="link small" data-a="exInfo" data-v="${x.ex}">Как выглядит упражнение</button>`:""}
     ${x.o.map((t,j)=>`<button class="opt${flexDraft[x.k]===j+1?" on":""}" data-a="flexPick" data-v="${x.k}|${j+1}"><b>${j+1}. ${t}</b></button>`).join("")}</div>`).join("")}
@@ -1364,7 +1429,7 @@ function cycleHtml(weeks,o){
   if(!o.prem||selWeek!==weeks.length) return "";
   const F=forecast()||{}, c=coach(), nm=c?c.name:"Тренер";
   const why=o.goal==="flex"?(flexDue()?"Пройди тест гибкости: по нему подстроим следующий цикл.":"Гибкость растёт — продолжаем."):F.weeks?`До цели ${kgTxt(F.target||0)} кг ещё около ${F.weeks} ${plural(F.weeks,"недели","недель","недель")}, поэтому продолжаем.`:F.reached?"Цель достигнута, теперь закрепляем результат.":"Продолжаем прогрессировать.";
-  return `<div class="card"><div class="row" style="align-items:flex-start">${c?avatar(c):duo}<div class="bubble grow"><b>Что дальше</b><br>${why} Когда закончишь эту неделю, ${nm} добавит новый цикл на 4 недели: часть упражнений обновится, веса — от твоих результатов.</div></div>
+  return `<div class="card"><div class="row" style="align-items:flex-start">${c?avatar(c):duo}<div class="bubble grow"><b>Что дальше</b><br>${why} Когда закончишь эту неделю, ${c?"я добавлю":"добавим"} новый цикл на 4 недели: часть упражнений обновится, веса — от твоих результатов.</div></div>
    <button class="btn sm sec" data-a="addCycle">Добавить цикл сейчас</button></div>`;
 }
 /* Бесплатная версия: видна только текущая неделя (и прошедшие). Следующая открывается по календарю — через 7 дней
@@ -1993,7 +2058,7 @@ function vFood(){
   if(foodTab==="shop") return h+vShop();
   if(foodTab==="rules") return h+vFoodRules();
   const pl=slots(); if(foodSlot>=pl.length) foodSlot=0;
-  h+=coachFoodLine()+sumHtml()+logHtml();
+  h+=coachFoodLine()+fuelHtml()+sumHtml()+logHtml();
   h+=`<div class="card" style="padding:4px 14px"><button class="ghead" data-a="fhow" aria-expanded="${!!fHowOpen}"><span class="gi">❓</span><b>Как записывать еду</b><span class="chev">›</span></button>${fHowOpen?foodHowHtml():""}</div>`;
   h+=`<div class="fslots" style="grid-template-columns:repeat(${pl.length},1fr)">${pl.map((x,i)=>`<button data-a="fslot" data-v="${i}" aria-pressed="${foodSlot===i}" class="${slotFilled(i)?"done":""}">${slotName(i)}${slotFilled(i)?" ✓":""}</button>`).join("")}</div>`;
   const i=foodSlot, type=pl[i][0], bud=slotBudget(i), left=calc().kcal-eatenToday().kcal, pool=foodPool(type);
@@ -2213,7 +2278,7 @@ function vProgram(){
   let h=`<div class="row between"><div><span class="badge${o.prem?" pro":""}">${o.prem?"ПОДПИСКА":"БЕСПЛАТНО"}</span>
   <h1 style="margin-top:8px">${o.prem?"Твоя программа":"Программа на 2 недели"}</h1>
   <p class="hint mt0"><button class="link" data-a="guide" style="float:right;padding:0;margin-left:8px">❓ Помощь</button>${GOALS[o.goal]} · ${PLACES[o.place]} · ${o.days} трен. в неделю${o.prem?` · ${o.weeks} ${plural(o.weeks,"неделя","недели","недель")}`:""}</p></div></div>
-  ${o.prem?weeklyHtml():""}<div class="card">${tip()}</div>
+  ${o.prem?weeklyHtml()+fuelHtml():""}<div class="card">${tip()}</div>
   ${S.guideSeen?"":`<div class="card small row" style="align-items:center"><span style="font-size:20px">📖</span><span class="grow">Первый раз в DuoFit? <button class="link" data-a="guide">Как пользоваться приложением</button></span><button class="xbtn" data-a="guideHint" aria-label="Скрыть">✕</button></div>`}`;
   h+=flexPromptHtml(o);
   if(o.caution) h+=`<div class="card warn"><b>Щадящий режим.</b><p class="small">По твоим ответам нагрузку стоит согласовать с врачом. Пока мы снизили интенсивность и убрали прыжки.</p></div>`;
@@ -2247,8 +2312,8 @@ function vWorkout(){
   const weeks=buildProgram(), day=weeks[workout.w-1].days[workout.d], prem=!!(S.premium&&S.full);
   const c=coach();
   let h=`<span class="badge">НЕДЕЛЯ ${workout.w} · ДЕНЬ ${workout.d+1}</span><h1 style="margin-top:8px">${day.title}</h1>
-  ${c?`<div class="row" style="margin:8px 0">${avatar(c)}<div class="bubble grow"><b>${c.name}</b>${c.id==="m"?"Поехали. Сначала разминка, потом работаем по плану.":"Начинаем с разминки, потом спокойно по плану. Техника важнее веса."}</div></div>`:""}
-  <p class="hint mt0">Нажми «Приступить» у упражнения: там отметки подходов, таймер отдыха и техника с анимацией. ${day.items.some(x=>x.flex)?"Между кругами растяжки — 15 секунд, чтобы сменить позу или сторону. Тянись до лёгкого натяжения, без боли и пружинящих движений.":""}${prem&&day.items.some(x=>recWeight(x,workout.w))?" Начни с рекомендованного веса: если повторов выходит больше верхней границы, прибавь, если меньше нижней, убавь. Запиши вес, с которым реально работал, и в следующий раз мы его учтём.":day.items.some(x=>EXI[x.id].eq!=="none"&&!x.timed)?" Вес подбирай так, чтобы в конце подхода оставалось 1–2 повтора в запасе.":""}</p>
+  ${c?`<div class="row" style="margin:8px 0">${avatar(c)}<div class="bubble grow"><b>${c.name}</b>${workout.hello||(c.id==="m"?"Поехали. Сначала разминка, потом работаем по плану.":"Начинаем с разминки, потом спокойно по плану. Техника важнее веса.")}</div></div>`:""}
+  <p class="hint mt0">Нажми «Приступить» у упражнения: там отметки подходов, таймер отдыха и техника с анимацией. ${day.items.some(x=>x.flex)?"Между кругами растяжки — 15 секунд, чтобы сменить позу или сторону. Тянись до лёгкого натяжения, без боли и пружинящих движений.":""}${prem&&day.items.some(x=>recWeight(x,workout.w))?" Начни с рекомендованного веса: если повторов выходит больше верхней границы, прибавь, если меньше нижней, убавь. Запиши вес, с которым реально "+((S.full&&S.full.sex)==="f"?"работала":"работал")+", и в следующий раз мы его учтём.":day.items.some(x=>EXI[x.id].eq!=="none"&&!x.timed)?" Вес подбирай так, чтобы в конце подхода оставалось 1–2 повтора в запасе.":""}</p>
   ${opts().twoMeals?`<div class="card small" style="background:var(--card2)">🍽 Ты ешь 2 раза в день. Если с последнего приёма прошло больше 4 часов, за 30–60 минут до тренировки съешь что-то лёгкое: банан, кефир или йогурт. После тренировки — полноценный приём с белком.</div>`:""}
   <div class="card"><h3>Разминка · ${day.warm.min} мин</h3><ul class="list small">${day.warm.items.map(x=>typeof x==="string"?`<li>${esc(x)}</li>`:`<li><button class="link" style="padding:0;text-align:left;line-height:1.45;vertical-align:top;font-size:inherit" data-a="exInfo" data-v="${x.id}">${esc(x.t)}</button></li>`).join("")}</ul></div>
   <div class="card">`;
@@ -2297,7 +2362,7 @@ function vExDo(){
   <div class="card"><h3>Какие мышцы работают</h3><p class="mt0">${esc(e.m)}</p></div>
   <div class="card"><h3>Как выполнять</h3><ul class="list">${e.how.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
   ${e.avoid.length?`<div class="card warn small">Если беспокоят ${e.avoid.map(a=>LIMS[a].toLowerCase()).join(" или ")}, лучше заменить это упражнение.</div>`:""}
-  <div class="card small hint">Почувствовал острую боль — остановись. Если боль не проходит, обратись к врачу.</div>`
+  <div class="card small hint">${((S.full&&S.full.sex)||(S.profile&&S.profile.sex))==="f"?"Почувствовала":"Почувствовал"} острую боль — остановись. Если боль не проходит, обратись к врачу.</div>`
   :`<div class="card small">Работают: ${esc(e.m.charAt(0).toLowerCase()+e.m.slice(1))}. Анимация и подробная техника этого упражнения — в подписке.</div>`}`;
 }
 /* ---------- Пульс и отдых ----------
@@ -2313,10 +2378,10 @@ function hrInfo(it,hr){
   const rest=Math.round(Math.max(base>=90?60:30,Math.min(base*2,base+add))/15)*15;
   let level=p>=0.9?"очень высокий":p>=0.8?"высокий":p>=0.65?"рабочий":"невысокий";
   let warn="";
-  if(p>=0.92||hr>=200) warn="Пульс очень высокий. Отдохни дольше и сбавь темп или вес. Если кружится голова, не хватает воздуха или давит в груди — останови тренировку.";
+  if(p>=0.92||hr>=200) warn=(funLine("pulse")?funLine("pulse")+" ":"")+"Пульс очень высокий. Отдохни дольше и сбавь темп или вес. Если кружится голова, не хватает воздуха или давит в груди — останови тренировку.";
   else if(o.caution&&p>0.7) warn=`В щадящем режиме держи пульс ниже ${Math.round(mx*0.7)} уд/мин: сбавь темп или вес.`;
   let zone="";
-  if(cardio) zone=p<0.6?"Лёгкая зона: можно чуть ускориться.":p<0.75?"Зона выносливости и жиросжигания: держи этот темп.":p<0.85?"Тяжёлая аэробная зона: ненадолго можно, но для длинной кардио-сессии сбавь темп.":"Слишком интенсивно для кардио: сбавь темп.";
+  if(cardio) zone=p<0.6?(funLine("walk")||"Лёгкая зона: можно чуть ускориться."):p<0.75?"Зона выносливости и жиросжигания: держи этот темп.":p<0.85?"Тяжёлая аэробная зона: ненадолго можно, но для длинной кардио-сессии сбавь темп.":"Слишком интенсивно для кардио: сбавь темп.";
   return {hr,mx,pct:Math.round(p*100),rest,target,level,warn,zone,cardio};
 }
 function hrHtml(it,i){
@@ -2336,7 +2401,7 @@ function vExercise(){
   <div class="card"><h3>Какие мышцы работают</h3><p class="mt0">${esc(e.m)}</p></div>
   <div class="card"><h3>Как выполнять</h3><ul class="list">${e.how.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
   ${e.avoid.length?`<div class="card warn small">Если беспокоят ${e.avoid.map(a=>LIMS[a].toLowerCase()).join(" или ")}, лучше заменить это упражнение. В подписке замена происходит автоматически по анкете.</div>`:""}
-  <div class="card small hint">Почувствовал острую боль — остановись. Если боль не проходит, обратись к врачу.</div>
+  <div class="card small hint">${((S.full&&S.full.sex)||(S.profile&&S.profile.sex))==="f"?"Почувствовала":"Почувствовал"} острую боль — остановись. Если боль не проходит, обратись к врачу.</div>
   <button class="btn sec" data-a="back">Назад</button>`;
 }
 
@@ -2465,6 +2530,7 @@ function vProfile(){
   <div class="card small"><p><span class="badge ai">ИИ</span> Макс и Ева — виртуальные персонажи DuoFit, не реальные люди.</p>
   <p class="hint">Программы составлены по общим принципам тренировок и не являются медицинской рекомендацией. При заболеваниях, травмах, беременности проконсультируйся с врачом.</p>
   <p class="hint">Твои данные хранятся на этом устройстве и в облачном хранилище Telegram.</p></div>
+  <div class="card"><label class="check" style="margin:0"><input type="checkbox" data-tone-toggle ${S.tone==="calm"?"":"checked"}><span>Тренер с юмором<br><span class="hint small">шутит над ситуацией и над собой, но никогда — над тобой, телом или едой. Выключи, если нравится спокойный тон</span></span></label></div>
   <div class="card"><label class="check" style="margin:0"><input type="checkbox" data-anim-toggle ${S.noAnim?"":"checked"}><span>Анимированный фон<br><span class="hint small">узор медленно плывёт, как обои в Telegram</span></span></label></div>
   ${giftHtml()}
   ${isTester()&&!TEST_MODE?`<div class="card small" style="border-style:dashed"><b>🧪 Режим тестировщика</b><p class="hint mt0">Видно только тебе. Тестовая подписка: ${S.testPrem?"включена":"выключена"}.</p>
@@ -2478,7 +2544,7 @@ function vPaywall(){
   <div class="card promo"><h3>Что входит</h3><ul class="feat">${fxItems(PAY_ITEMS).map(a=>`<li><i>${a[0]}</i><div><b>${a[1]}</b><span>${a[2]}</span></div></li>`).join("")}</ul></div>
   <div class="card promo"><h3>Программа подстраивается под тебя</h3><ul class="feat">${fxItems(ADAPT).map(a=>`<li><i>${a[0]}</i><div><b>${a[1]}</b><span>${gx(a[2])}</span></div></li>`).join("")}</ul></div>
   ${planOpt("m1")}${planOpt("m3")}
-  <p class="hint small center">Оплата по СБП или картой через ЮKassa. Без автосписаний: продлеваешь сам, когда захочешь.</p>
+  <p class="hint small center">Оплата по СБП или картой через ЮKassa. Без автосписаний: продлеваешь, когда захочешь.</p>
   ${NEED_EMAIL&&!TEST_MODE?`<div class="field"><label>Email для чека</label><input id="payEmail" type="email" inputmode="email" placeholder="you@mail.ru" value="${esc(S.email||"")}"></div>`:""}
   <p id="payErr" class="small" style="color:var(--warn)"></p>
   <button class="btn" data-a="subscribe" id="payBtn">${S.premium?"Продлить подписку":"Оформить подписку"}</button>
@@ -2495,18 +2561,18 @@ const ADAPT=[
  ["🔁","План растёт вместе с результатом","Длительность считается под твою цель. Не успел{а} — программа продолжится новыми циклами с обновлёнными упражнениями. Изменился вес — режим питания и тренировок переключится сам."]
 ];
 const PROMO={
- program:{t:"Индивидуальная программа",lead:["соберёт","соберут","программу под твоё тело и цель, а дальше будет подстраивать её каждую неделю."],f:[
+ program:{t:"Индивидуальная программа",lead:["соберёт","соберут","программу под твоё тело и цель, а дальше будет подстраивать её каждую неделю.","Я соберу программу под твоё тело и цель, а дальше буду подстраивать её каждую неделю."],f:[
   ["🎯","Под тебя, а не «для всех»","Пол, возраст, рост, вес, уровень, 2–5 тренировок в неделю, зал или дом."],
   ["⏱️","Честный срок","Программа на столько недель, сколько реально нужно для твоей цели: от 8 недель до года."],
   ["⚖️","Рабочий вес в каждом упражнении","Расчёт по анкете и тестам силы, без угадывания."],
   ["🛡️","Бережём суставы","Учитываем колени, спину, плечи и здоровье: опасные упражнения заменяются на щадящие."],
   ["🔄","Замена в одно касание","Не нравится упражнение или занят тренажёр — подберём равноценное."]]},
- food:{t:"Питание под твою цель",lead:["рассчитает","рассчитают","норму калорий и БЖУ и подберёт блюда, которые реально готовят дома."],f:[
+ food:{t:"Питание под твою цель",lead:["рассчитает","рассчитают","норму калорий и БЖУ и подберёт блюда, которые реально готовят дома.","Я рассчитаю норму калорий и БЖУ и подберу блюда, которые реально готовят дома."],f:[
   ["🔢","Твоя норма КБЖУ","По формуле Миффлина — Сан Жеора с учётом цели, веса и тренировок."],
   ["🍳",`${RECIPES.length} ${plural(RECIPES.length,"блюдо","блюда","блюд")} с пошаговыми рецептами`,"Граммовки подогнаны под остаток калорий на день, а не «одна порция на всех»."],
   ["✅","Учёт съеденного за пару касаний","Отмечаешь блюдо или добавляешь свою еду — счётчик показывает, сколько осталось."],
   ["🛒","Список покупок","На неделю, по отделам магазина, с учётом твоего бюджета и исключений."]]},
- progress:{t:"Прогресс, который видно",lead:["будет","будут","следить за твоими результатами и вовремя подсказывать, что поменять."],f:[
+ progress:{t:"Прогресс, который видно",lead:["будет","будут","следить за твоими результатами и вовремя подсказывать, что поменять.","Я буду следить за твоими результатами и вовремя подсказывать, что поменять."],f:[
   ["📊","Дневник веса и замеров","Талия, бёдра, грудь и вес с графиком."],
   ["🏁","Прогноз до цели","Сколько недель осталось и к какой дате дойдёшь, с учётом питания и взвешиваний."],
   ["💪","Рост рабочих весов","Видно, на сколько килограммов ты стал{а} сильнее с первой тренировки."],
@@ -2538,7 +2604,7 @@ function premiumPromo(ctx){
     <p class="small">Осталось заполнить индивидуальную анкету: рост, вес, возраст и пара вопросов о здоровье. После этого ${c?c.name:"тренер"} соберёт всё под тебя.</p>
     <button class="btn" data-a="editFull">Заполнить анкету</button></div>`;
   const m3=PLANS.m3, m1=PLANS.m1, from=Math.min(Math.round(m3.price/3),m1.price);
-  const lead=c?`<div class="row" style="align-items:flex-start;margin-top:10px">${avatar(c)}<div class="bubble grow">${c.name} ${P.lead[0]} ${P.lead[2]}</div></div>`
+  const lead=c?`<div class="row" style="align-items:flex-start;margin-top:10px">${avatar(c)}<div class="bubble grow"><b>${c.name}</b><br>${P.lead[3]}</div></div>`
     :`<p class="small">Макс и Ева ${P.lead[1]} ${P.lead[2]}</p>`;
   return `<div class="card lock promo"><span class="badge pro">ПОДПИСКА</span><h2>${P.t}</h2>${lead}
     <ul class="feat">${fxItems(P.f).map(li).join("")}</ul>
@@ -2557,7 +2623,7 @@ function vPaying(){
   <h1 style="margin-top:12px">Ждём оплату</h1>
   <p class="hint">Страница оплаты открылась в браузере. После оплаты вернитесь в Telegram, подписка включится автоматически.</p></div>
   <p id="payErr" class="small center" style="color:var(--warn)"></p>
-  <button class="btn" data-a="checkPay">Я оплатил, проверить</button>
+  <button class="btn" data-a="checkPay">Оплата прошла — проверить</button>
   <button class="btn sec" data-a="reopenPay">Открыть оплату снова</button>
   <button class="btn sec" data-a="back">Назад</button>`;
 }
@@ -2573,7 +2639,7 @@ function strengthBlock(d){
   const p=S.profile||{}, gym=p.place==="gym", bar=gym||(p.eq||[]).includes("bar"), db=!gym&&(p.eq||[]).includes("db");
   const num=(id,label,ph)=>`<div class="field"><label>${label}</label><input inputmode="decimal" data-f="${id}" value="${esc(d[id]??"")}" placeholder="${ph||""}"></div>`;
   const help=k=>d["help_"+k]?`<div class="card small" style="margin:6px 0"><b>Как проверить</b><ol class="list">${TEST_HELP[k].map(x=>`<li>${x}</li>`).join("")}</ol>
-    <p class="hint">Проверяй в день отдыха, не после тренировки. Почувствовал боль, головокружение или нехватку воздуха — остановись. Ответ можно указать и позже: Профиль → Индивидуальная анкета.</p></div>`:"";
+    <p class="hint">Проверяй в день отдыха, не после тренировки. ${(d&&d.sex)==="f"?"Почувствовала":"Почувствовал"} боль, головокружение или нехватку воздуха — остановись. Ответ можно указать и позже: Профиль → Индивидуальная анкета.</p></div>`:"";
   const q=(k,title,opts)=>`<p class="small" style="margin:14px 0 4px"><b>${title}</b></p>
     <div class="chips">${opts.map(([v,l])=>chip(k,v,l,d[k]===v)).join("")}${chip(k,"skip","Пропущу",d[k]==="skip")}</div>
     <button class="link" data-a="help" data-v="${k}">${d["help_"+k]?"Скрыть инструкцию":"Не знаю, как проверить?"}</button>${help(k)}`;
@@ -2584,7 +2650,7 @@ function strengthBlock(d){
   ${q("push","Сколько отжиманий от пола подряд сделаешь с ровной спиной?",[["0","0"],["1-5","1–5"],["6-15","6–15"],["16-30","16–30"],["30+","больше 30"]])}
   ${q("squat","Сколько приседаний без веса подряд сделаешь?",[["0-10","до 10"],["11-25","11–25"],["26-40","26–40"],["40+","больше 40"]])}
   ${bar?q("pull","Сколько раз подтянешься на турнике?",[["0","0"],["1-3","1–3"],["4-8","4–8"],["9+","9 и больше"]]):""}
-  ${gym&&p.level>=2?`<p class="small" style="margin:16px 0 4px"><b>Знаешь свои рабочие веса?</b></p><p class="hint small mt0">Вес штанги, с которым ты уже делаешь 8–10 повторов. Заполни только то, в чём уверен. Специально проверять не нужно: без страховки это риск травмы. Если не знаешь, оставь пустым, и первая тренировка станет пробной.</p>
+  ${gym&&p.level>=2?`<p class="small" style="margin:16px 0 4px"><b>Знаешь свои рабочие веса?</b></p><p class="hint small mt0">Вес штанги, с которым ты уже делаешь 8–10 повторов. Заполни только то, в чём не сомневаешься. Специально проверять не нужно: без страховки это риск травмы. Если не знаешь, оставь пустым, и первая тренировка станет пробной.</p>
   <div class="grid2">${num("bench","Жим лёжа, кг","—")}${num("sq","Присед, кг","—")}${num("dl","Становая тяга, кг","—")}</div>`:""}
   ${dbField}`;
 }
@@ -2682,12 +2748,12 @@ const A={
     save(); track("flex_test",{"средний балл":Math.round(flexAvg(flexLast())*10)/10});
     const c=coach(), nm=c?c.name:"Тренер", fe=c&&c.id==="f", lv=flexLevelOf(), w=flexWeak(), o=opts();
     let m=prev?`Результат сохранён. В среднем ${String(Math.round(flexAvg(flexLast())*10)/10).replace(".",",")} из 5${flexAvg(flexLast())>flexAvg(prev)?` — это на ${String(Math.round((flexAvg(flexLast())-flexAvg(prev))*10)/10).replace(".",",")} больше, чем в прошлый раз. Отличный прогресс!`:flexAvg(flexLast())<flexAvg(prev)?". Немного меньше, чем в прошлый раз: так бывает после усталости или в холоде. Не переживай, продолжаем.":". Гибкость держится."}`:`Результат сохранён. В среднем ${String(Math.round(flexAvg(flexLast())*10)/10).replace(".",",")} из 5.`;
-    m+=`\n\n${nm} ${fe?"обновила":"обновил"} программу: уровень — ${LEVELS[lv].toLowerCase()}${before&&before.lvl!==lv?` (был ${LEVELS[before.lvl].toLowerCase()})`:""}`;
+    m+=`\n\nЯ ${fe?"обновила":"обновил"} программу: уровень — ${LEVELS[lv].toLowerCase()}${before&&before.lvl!==lv?` (был ${LEVELS[before.lvl].toLowerCase()})`:""}`;
     m+=w?`, дополнительное упражнение каждый день — ${w.zone}.`:", все зоны в хорошей форме — развиваем равномерно.";
     if(o.prem&&before&&before.weeks&&o.weeks!==before.weeks) m+=` Длительность программы теперь ${o.weeks} ${plural(o.weeks,"неделя","недели","недель")}.`;
     view=flexRet==="flextest"?"progress":flexRet||"progress"; selWeek=0; haptic("success"); render(); popup(m);
   },
-  startDay:v=>{track(S.history.length?"workout_start":"first_workout_start");workout={w:selWeek,d:+v,sets:{},kg:{},hr:{},start:Date.now()};view="workout";render();},
+  startDay:v=>{track(S.history.length?"workout_start":"first_workout_start");workout={w:selWeek,d:+v,sets:{},kg:{},hr:{},start:Date.now()}; { const h=new Date().getHours(); workout.hello=h>=4&&h<7?funLine("early"):h>=22||h<4?funLine("late"):""; }view="workout";render();},
   exInfo:v=>{ if(!exOpen(v)){ lockSheet(v); return; } openEx=v;workout&&(view==="workout"||view==="exdo")?(workout._ret=view):null;exRet=view;view="exercise";render();},
   setDone:(v,el)=>{
     const i=+el.dataset.i, s=+el.dataset.s, cur=workout.sets[i]||0;
@@ -2714,6 +2780,15 @@ const A={
     S.swaps[it.key]=next.id; delete workout.kg[i]; save(); haptic("light"); render(); if(view!=="exdo") restoreScroll();
   },
   finishWorkout:()=>{
+    const day=buildProgram()[workout.w-1].days[workout.d], done=day.items.reduce((a,it,i)=>a+Math.min(it.sets,workout.sets[i]||0),0);
+    if(!done) return zeroBox(day);
+    finishNow();
+  },
+  zBack:()=>{ const w=document.getElementById("dfCeleb"); if(w) w.remove(); },
+  zAll:()=>{ const w=document.getElementById("dfCeleb"); if(w) w.remove(); const day=buildProgram()[workout.w-1].days[workout.d]; day.items.forEach((it,i)=>workout.sets[i]=it.sets); finishNow(); },
+  zSkip:()=>{ const w=document.getElementById("dfCeleb"); if(w) w.remove(); stopTimer(); workout=null; view="program"; render();
+    popup("Тренировка не засчитана: в ней не отмечено ни одного подхода. Она осталась в плане — можно сделать её в любой день."); },
+  _finish:()=>{
     const o=opts(), weeks=buildProgram(), day=weeks[workout.w-1].days[workout.d];
     const min=Math.max(1,Math.round((Date.now()-workout.start)/60000));
     const kg=Object.entries(workout.kg).filter(([i,v])=>v).map(([i,v])=>`${EXI[day.items[i].id].n.split(" ")[0]} ${v} кг`).slice(0,2).join(", ");
@@ -2729,14 +2804,18 @@ const A={
     extMsg="";
     if(o.prem&&workout.w===o.weeks&&weeks[o.weeks-1].days.every((x,i)=>S.done[`p${o.weeks}-${i}`])){
       S.extra=(S.extra||0)+1; const F=forecast()||{}, c=coach(), nm=c?c.name:"Тренер", fe=c&&c.id==="f";
-      extMsg=`\n\n${nm} ${fe?"собрала":"собрал"} новый цикл на 4 недели${F.weeks?`: до цели ${kgTxt(F.target||0)} кг ещё около ${F.weeks} ${plural(F.weeks,"недели","недель","недель")}`:F.reached?": цель достигнута, теперь закрепляем результат":""}. Часть упражнений обновлена, веса — от твоих результатов.`;
+      extMsg=`\n\nЯ ${fe?"собрала":"собрал"} новый цикл на 4 недели${F.weeks?`: до цели ${kgTxt(F.target||0)} кг ещё около ${F.weeks} ${plural(F.weeks,"недели","недель","недель")}`:F.reached?": цель достигнута, теперь закрепляем результат":""}. Часть упражнений обновлена, веса — от твоих результатов.`;
     }
     stopTimer(); save(); haptic("success");
-    const cst={title:day.title,min,sets:day.items.reduce((a,it,i)=>a+Math.min(it.sets,workout.sets[i]||0),0),total:S.history.length,prem:o.prem,
+    const setsDone=day.items.reduce((a,it,i)=>a+Math.min(it.sets,workout.sets[i]||0),0), setsAll=day.items.reduce((a,it)=>a+it.sets,0);
+    const cst={title:day.title,min,sets:setsDone,all:setsAll,r:setsAll?setsDone/setsAll:0,plan:minutes(day),total:S.history.length,prem:o.prem,
       weekDone:weeks[workout.w-1].days.every((x,i)=>S.done[`${o.prem?"p":"f"}${workout.w}-${i}`])&&weeks[workout.w-1].days.length>1};
     track("workout_done",{"номер":cst.total}); if(cst.total===1) track("first_workout_done");
-    view="feedback"; $("#app").innerHTML=vFeedback(); $("#tabs").hidden=true; celebrate(cst);
+    lastDone=cst; view="feedback"; $("#app").innerHTML=vFeedback(cst); $("#tabs").hidden=true; celebrate(cst);
   },
+  fbTime:()=>{ save(); workout=null; view="program"; render();
+    const c=coach(), nm=c?c.name:"Тренер";
+    popup(`Понятно, нагрузку не меняем. Если времени мало, начинай с упражнений в начале списка — они главные, а последние можно сократить. Удобнее тренироваться реже, но дольше? Число тренировок в неделю меняется в индивидуальной анкете — я подстрою под него программу.`+extMsg); extMsg=""; },
   fb:v=>{
     const d=+v, o=opts(), cnt=()=>buildProgram().reduce((a,w)=>a+w.days.reduce((x,dd)=>x+dd.items.reduce((y,it)=>y+(it.timed?0:it.sets),0),0),0);
     const before=cnt(); S.adj=S.adj||{sets:0}; S.adj.sets=Math.max(-1,Math.min(1,(S.adj.sets||0)+d));
@@ -2747,11 +2826,12 @@ const A={
     if(extMsg) selWeek=opts().weeks-3;
     let m;
     const fl=o.goal==="flex", un=fl?"кругу":"подходу";
-    if(d>0) m=changed?`${nm} ${f?"добавила":"добавил"} по ${un} в следующих тренировках.${fl?" Тянись чуть глубже, но без боли.":o.prem?" Веса тоже подрастут.":" Если работаешь с весом — возьми чуть тяжелее."}`
+    if(d>0) m=changed?`Я ${f?"добавила":"добавил"} по ${un} в следующих тренировках.${fl?" Тянись чуть глубже, но без боли.":o.prem?" Веса тоже подрастут.":" Если работаешь с весом — возьми чуть тяжелее."}`
                      :`Нагрузка уже на максимуме для этой программы. Сделай упражнения медленнее и добавь 1–2 повтора${o.prem?" — веса подрастут сами.":" или возьми вес чуть тяжелее."}`;
-    else if(d<0) m=changed?`${nm} ${f?"сняла":"снял"} по ${un}, чтобы ты ${f?"успевала":"успевал"} восстанавливаться.${fl?" Тянись мягче, до лёгкого натяжения.":o.prem?" Веса в следующий раз будут чуть легче.":" Если работаешь с весом — возьми чуть легче."}`
+    else if(d<0) m=changed?`Я ${f?"сняла":"снял"} по ${un}, чтобы ты ${f?"успевала":"успевал"} восстанавливаться.${fl?" Тянись мягче, до лёгкого натяжения.":o.prem?" Веса в следующий раз будут чуть легче.":" Если работаешь с весом — возьми чуть легче."}`
                      :`Подходов уже минимум. Делай нижнюю границу повторов, отдыхай подольше${o.prem?"":" и бери вес полегче"} — так тело успеет привыкнуть.`;
     else m="Отлично, оставляем нагрузку как есть.";
+    const j=d<0?funLine("hard"):d>0?funLine("easy"):""; if(j) m=j+" "+m;
     popup(m+extMsg); extMsg="";}
   },
   editFull:()=>{
@@ -2875,6 +2955,7 @@ const A={
   libgrp:v=>{ if(!S.premium){ groupSheet(v); return; } libOpen[v]=!libOpen[v]; render(); },
   resetSwaps:()=>{S.swaps={};save();render();},
   wkok:v=>{ S.wkSeen=v; save(); render(); },
+  fuelOk:v=>{ S.fuelSeen={mode:v,d:today()}; save(); render(); },
   testSub:()=>{ if(isTester()) testSubscribe(); },
   giftGo:()=>{ track("gift_try"); activateGift(); },
   giftOpen:()=>{ view="profile"; render(); const el=document.getElementById("giftCard"); if(el){ el.scrollIntoView({block:"center"}); const i=document.getElementById("giftCode"); if(i) i.focus(); } },
@@ -2893,9 +2974,32 @@ const A={
   skipTimer:()=>stopTimer()
 };
 
-function vFeedback(){
+/* Итог тренировки зависит от того, сколько подходов отмечено: хвалим за дело, а не за нажатие кнопки. */
+let lastDone=null;
+function finishNow(){ A._finish(); }
+function zeroBox(day){
+  const old=document.getElementById("dfCeleb"); if(old) old.remove();
+  const c=coach(), fe=(S.full&&S.full.sex||S.profile&&S.profile.sex)==="f";
+  const w=document.createElement("div"); w.id="dfCeleb"; w.className="celebrate";
+  w.innerHTML=`<div class="cc" role="dialog" aria-label="Подходы не отмечены"><div class="big">🤔</div>
+    <h2>Не отмечено ни одного подхода</h2><p class="hint small mt0">${esc(day.title)}</p>
+    ${c?`<div class="quote">${avatar(c)}<div class="bubble grow"><b>${c.name}</b>Без отметок я не пойму, как прошла тренировка, и не смогу подстроить следующие. Если ты ${fe?"занималась":"занимался"}, просто не ${fe?"отмечала":"отмечал"} — нажми первую кнопку.</div></div>`:""}
+    <button class="btn" data-a="zAll">Я всё ${fe?"сделала":"сделал"}, отметить все подходы</button>
+    <button class="btn sec" data-a="zBack">Вернуться к тренировке</button>
+    <button class="btn sec" data-a="zSkip">Завершить без зачёта</button></div>`;
+  document.body.appendChild(w);
+}
+function doneLevel(st){ return st.r>=0.9?"full":st.r>=0.5?"most":"part"; }
+function vFeedback(st){
+  st=st||lastDone||{r:1};
+  const L=doneLevel(st);
+  if(L==="part") return `<div class="card center">${coachAv()}
+  <h1 style="margin-top:12px">Тренировка засчитана частично</h1><p class="hint">Сделано ${st.sets} из ${st.all} ${plural(st.all,"подхода","подходов","подходов")}. Что помешало закончить? Подстроим следующие тренировки.</p></div>
+  <button class="btn sec" data-a="fb" data-v="-1">Было слишком тяжело</button>
+  <button class="btn sec" data-a="fbTime">Не хватило времени</button>
+  <button class="btn sec" data-a="fb" data-v="0">Другая причина</button>`;
   return `<div class="card center">${coachAv()}
-  <h1 style="margin-top:12px">Тренировка готова!</h1><p class="hint">Как ощущалась нагрузка? Подстроим следующие тренировки.</p></div>
+  <h1 style="margin-top:12px">${L==="full"?"Тренировка готова!":"Тренировка почти вся!"}</h1><p class="hint">${L==="full"?"":`Сделано ${st.sets} из ${st.all} ${plural(st.all,"подхода","подходов","подходов")}. `}Как ощущалась нагрузка? Подстроим следующие тренировки.</p></div>
   <button class="btn sec" data-a="fb" data-v="1">Слишком легко</button>
   <button class="btn sec" data-a="fb" data-v="0">Нормально</button>
   <button class="btn sec" data-a="fb" data-v="-1">Слишком тяжело</button>`;
@@ -3004,7 +3108,7 @@ async function syncStatus(manual){
     S.premium=!!st.active||test||gift; if(!test&&!gift) S.premUntil=st.until; if(st.active) S.premSrc="pay"; save();
     if(view==="paywall"&&!payBusy) render();
     if(S.premium&&(!was||view==="paying")){ afterPremium(); return; }
-    if(manual&&!S.premium){ const e=$("#payErr"); if(e) e.textContent="Оплата пока не поступила. Если ты уже оплатил, подожди минуту и проверь снова."; }
+    if(manual&&!S.premium){ const e=$("#payErr"); if(e) e.textContent="Оплата пока не поступила. Если оплата уже прошла, подожди минуту и проверь снова."; }
     if(was!==S.premium) render();
   }catch(e){ if(manual){ const el=$("#payErr"); if(el) el.textContent=e.message; } }
 }
@@ -3044,7 +3148,7 @@ function syncPayload(){
     place:o.place,prem:full,ed,start:S.start||null,last:hist.length?hist[hist.length-1].d:null,next:nx,
     wk:{done:hist.filter(h=>h.d>=wk).length,plan:o.days,key:wk},freeDone:!o.prem&&!nx,wt,fc,
     goal:(S.profile&&S.profile.goal)||null,lvl:(S.profile&&S.profile.level)||0,total:hist.length,src:S.src||startParam()||"",
-    psrc:S.premium?(S.premSrc==="pay"?"paid":S.premSrc||"paid"):null,full:!!S.full};
+    psrc:S.premium?(S.premSrc==="pay"?"paid":S.premSrc||"paid"):null,full:!!S.full,fuel:(()=>{ const F=!ed&&full?fuelState():null; return F?F.mode:null; })(),tone:S.tone==="calm"?"calm":"fun"};
 }
 let syncT=null, lastSync="", lastSyncAt=0;
 function scheduleSync(){ if(TEST_MODE||!inTg||!S.profile) return; clearTimeout(syncT); syncT=setTimeout(doSync,2500); }
@@ -3133,16 +3237,22 @@ function confetti(host){
 }
 function celebrate(st){
   const old=document.getElementById("dfCeleb"); if(old) old.remove();
-  const c=coach(), Q=doneQuote(st.total,st.weekDone);
+  const L=doneLevel(st), fe=(S.full&&S.full.sex||S.profile&&S.profile.sex)==="f", c=coach();
+  // слишком быстро: подходы отмечены за долю от плана — не хвалим за скорость
+  const fast=st.r>=0.5&&st.min<Math.max(5,Math.round(st.plan*0.25));
+  let Q=doneQuote(st.total,st.weekDone), title="Тренировка завершена!", big=Q.mile?"🏆":"🎉", party=true;
+  if(L==="most"){ title="Тренировка почти вся!"; big="👍"; Q={q:fe?`Сделано ${st.sets} из ${st.all} подходов — хорошая работа. В следующий раз попробуй дойти до конца, можно с чуть меньшим весом 💛`:`${st.sets} из ${st.all} подходов — хорошая работа. В следующий раз добьём до конца: если тяжело, возьми вес чуть меньше.`,mile:false}; party=false; }
+  if(L==="part"){ title="Тренировка засчитана частично"; big="💪"; Q={q:fe?`Сделано ${st.sets} из ${st.all} подходов. Даже часть тренировки лучше, чем ничего, но для результата важно доходить до конца. Расскажи, что помешало, — я подстрою следующие 💛`:`${st.sets} из ${st.all} подходов. Часть тренировки лучше, чем ничего, но результат дают полные тренировки. Расскажи, что помешало, — я подстрою следующие.`,mile:false}; party=false; }
+  if(fast){ const j=funLine("fast",{n:st.sets,min:st.min,plan:st.plan}); Q.q=j||(`Подходы отмечены очень быстро — за ${st.min} мин вместо ~${st.plan}. Отмечай их по ходу тренировки и отдыхай между подходами: отдых тоже часть программы.`); }
   const w=document.createElement("div"); w.id="dfCeleb"; w.className="celebrate";
-  w.innerHTML=`<div class="cc" role="dialog" aria-label="Тренировка завершена"><div class="big">${Q.mile?"🏆":"🎉"}</div>
-    <h2>Тренировка завершена!</h2><p class="hint small mt0">${esc(st.title)}</p>
-    <div class="stats"><span>⏱ ${st.min} мин</span><span>✅ ${st.sets} ${plural(st.sets,"подход","подхода","подходов")}</span><span>🔥 ${st.total}-я тренировка</span></div>
+  w.innerHTML=`<div class="cc" role="dialog" aria-label="${title}"><div class="big">${big}</div>
+    <h2>${title}</h2><p class="hint small mt0">${esc(st.title)}</p>
+    <div class="stats"><span>⏱ ${st.min} мин</span><span>✅ ${st.sets} из ${st.all} ${plural(st.all,"подхода","подходов","подходов")}</span>${L!=="part"?`<span>🔥 ${st.total}-я тренировка</span>`:""}</div>
     ${c?`<div class="quote">${avatar(c)}<div class="bubble grow"><b>${c.name}</b>${esc(Q.q)}</div></div>`:`<p>${esc(Q.q)}</p>`}
     <button class="btn" id="dfCelebOk">Оценить тренировку</button></div>`;
   document.body.appendChild(w);
   const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if(!reduce) confetti(w);
+  if(!reduce&&party&&!fast) confetti(w);
   w.querySelector("#dfCelebOk").onclick=()=>w.remove();
 }
 
@@ -3889,10 +3999,23 @@ function startTimer(sec){
   stopTimer(); timerEnd=Date.now()+sec*1000; $("#timer").hidden=false; tick();
   timerInt=setInterval(tick,250);
 }
+/* Отдых закончился, а следующий подход не отмечен 2,5 минуты — тренер мягко напоминает (один раз на упражнение). */
+let idleT=null;
+function idleWatch(){ clearTimeout(idleT); if(!workout) return; const key=workout.w+"-"+workout.d+"-"+(view==="exdo"?workout.cur:"l"), sets=JSON.stringify(workout.sets);
+  idleT=setTimeout(()=>{ if(!workout||!["exdo","workout"].includes(view)||JSON.stringify(workout.sets)!==sets||timerInt) return;
+    workout.nudged=workout.nudged||{}; if(workout.nudged[key]) return; workout.nudged[key]=1;
+    const c=coach(); coachToast(c, funLine("idle")||"Отдых закончился пару минут назад — можно делать следующий подход."); },150000); }
+function coachToast(c,t){
+  const old=document.getElementById("coachToast"); if(old) old.remove();
+  const w=document.createElement("div"); w.id="coachToast"; w.className="ctoast"; w.setAttribute("role","status");
+  w.innerHTML=`${c?avatar(c):""}<div class="grow"><b>${c?c.name:"Тренер"}</b><div>${esc(t)}</div></div><button aria-label="Закрыть">✕</button>`;
+  w.querySelector("button").onclick=()=>w.remove(); document.body.appendChild(w); haptic("light");
+  setTimeout(()=>{ if(document.body.contains(w)) w.remove(); },9000);
+}
 function tick(){
   const left=Math.max(0,Math.round((timerEnd-Date.now())/1000));
   $("#tleft").textContent=`${Math.floor(left/60)}:${String(left%60).padStart(2,"0")}`;
-  if(left<=0){ stopTimer(); haptic("success"); }
+  if(left<=0){ stopTimer(); haptic("success"); idleWatch(); }
 }
 function stopTimer(){ clearInterval(timerInt); timerInt=null; $("#timer").hidden=true; }
 
@@ -3930,6 +4053,7 @@ document.addEventListener("input",e=>{
   if(t.dataset.kg!==undefined && workout){ workout.kg[t.dataset.kg]=t.value.replace(",",".").replace(/[^\d.]/g,"").slice(0,6); }
 });
 document.addEventListener("change",e=>{ const t=e.target; if(t.dataset.f&&t.type==="checkbox") draft2[t.dataset.f]=t.checked;
+  if(t.hasAttribute&&t.hasAttribute("data-tone-toggle")){ S.tone=t.checked?"fun":"calm"; save(); scheduleSync(); haptic("light"); }
   if(t.hasAttribute&&t.hasAttribute("data-anim-toggle")){ S.noAnim=!t.checked; document.documentElement.setAttribute("data-anim",S.noAnim?"off":"on"); save(); }
   if(t.dataset.nt){ notifCfg()[t.dataset.nt]=t.checked; save(); haptic("light"); render(); }
   if(t.hasAttribute&&t.hasAttribute("data-nt-time")&&/^\d{2}:\d{2}$/.test(t.value)){
@@ -3956,6 +4080,7 @@ const GUIDE=[
   "С подпиской у каждого упражнения есть рабочий вес. Если повторов выходит больше нормы — прибавь, меньше — убавь. Впиши вес, с которым реально работал: в следующий раз он учтётся.",
   "Неудобно или занят тренажёр — «Заменить упражнение».",
   "В конце — заминка и растяжка: каждое упражнение нажимается и открывает технику.",
+  "Итог тренировки зависит от отмеченных подходов: если сделана только часть, тренер спросит, что помешало, и подстроит следующие тренировки. Если не отмечено ни одного подхода, можно отметить всё разом, вернуться к тренировке или завершить её без зачёта.",
   "Нажми «Завершить тренировку» и оцени её: легко, нормально или тяжело. От оценки зависит число подходов в следующих тренировках, а с подпиской — ещё и рабочие веса."]],
  ["🥗","Питание",[
   "Доступно с подпиской. Сначала короткий опросник: сколько раз ешь (от 2 раз до 3 приёмов + 2 перекуса), тип питания, исключения и бюджет.",
@@ -3965,6 +4090,7 @@ const GUIDE=[
   "Съел не столько, сколько в меню, — нажми «✏️ Изменить граммовки» под блюдом и впиши, сколько было на самом деле. Калории и БЖУ считаются сразу, пока вводишь. Быстрые кнопки ½, ¾, 1¼, 1½ меняют всю порцию разом, а ненужный продукт убирается, если поставить 0.",
   "Если после записи осталась часть нормы приёма, этот приём не закрывается: можно добавить к нему ещё блюдо. Сверху будет написано, сколько уже съедено и сколько осталось.",
   "Ошибся при записи — в «Съедено сегодня» нажми «Изменить» у блюда и поправь граммы или «Убрать», чтобы удалить запись. Остаток дня пересчитается.",
+  "Тренировки подстраиваются под питание. Если несколько дней подряд ешь заметно меньше нормы, тренер временно уберёт по подходу в базовых упражнениях и не будет прибавлять веса — так сохраняются мышцы и силы. Если при похудении ешь заметно больше нормы — добавит 10 минут спокойного кардио. Как только питание в норме, всё возвращается само. День считается, если записаны все приёмы пищи.",
   "Ешь 2 раза в день — меню предложит сытные блюда с белком, а если блюда не хватает до нормы приёма, к нему добавится перекус: творог, йогурт, кефир, орехи или фрукт. Тренировки в этом режиме не длиннее 65 минут, а в «Правилах» есть советы, как совместить два приёма пищи с тренировками.",
   "«Своя еда» — для всего, что ешь вне меню. «Покупки» — список на неделю. «Правила» — твоя норма и как всё считается.",
   "Новый день начинается в полночь, записи хранятся 30 дней."]],
@@ -3979,7 +4105,8 @@ const GUIDE=[
  ["👤","Профиль и настройки",[
   "«Базовая анкета» — смена цели, уровня или места тренировок пересобирает программу и пересчитывает питание.",
   "«Индивидуальная анкета» — обнови вес, ограничения или желаемый вес, если что-то изменилось.",
-  "«Уведомления» — дни и время напоминаний о тренировках, итоги недели, напоминание после перерыва."]],
+  "«Уведомления» — дни и время напоминаний о тренировках, итоги недели, напоминание после перерыва.",
+  "«Тренер с юмором» — Ева и Макс шутят над ситуацией и над собой (но никогда над тобой, телом или едой). Выключи, если нравится спокойный тон: он применится и в приложении, и в сообщениях в Telegram."]],
  ["🔔","Уведомления в Telegram",[
   "Тренер пишет в чат с ботом не больше одного раза в день. Напоминание о тренировке — во время, которое ты выбрал, остальное — с 9 до 22.",
   "Настроить можно в Профиле → Уведомления. Команда /notify в боте выключает все напоминания сразу.",
