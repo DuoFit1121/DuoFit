@@ -462,15 +462,18 @@ const LIMS = {knees:"Колени",back:"Спина / поясница",shoulder
 
 const DAYS = {
  A:{t:"Всё тело A",s:["squat","push_h","pull_h","hinge","core"]},
- B:{t:"Всё тело B",s:["lunge","push_v","pull_v","glute","core"]},
+ B:{t:"Всё тело B",s:["lunge","push_h","pull_v","push_v","glute","core"]},
  C:{t:"Всё тело C",s:["squat","push_h","pull_v","hinge","lat","core"]},
- U:{t:"Верх тела",s:["push_h","pull_h","push_v","pull_v","lat","bi","tri"]},
+ U:{t:"Верх тела",s:["push_h","pull_h","push_h","pull_v","lat","bi","tri"]},
+ U2:{t:"Верх тела",s:["push_v","pull_v","push_h","pull_h","lat","bi","tri"]},
  L:{t:"Низ тела",s:["squat","hinge","lunge","glute","core"]},
- P:{t:"Толкающие",s:["push_h","push_v","lat","tri","core"]},
- Q:{t:"Тянущие",s:["pull_v","pull_h","lat","bi","core"]},
+ P:{t:"Толкающие",s:["push_h","push_v","push_h","lat","tri","core"]},
+ Q:{t:"Тянущие",s:["pull_v","pull_h","rear","bi","core"]},
  G:{t:"Ноги",s:["squat","hinge","lunge","glute","core"]}
 };
 const SPLITS = {2:["A","B"],3:["A","B","C"],4:["U","L","U","L"],5:["P","Q","G","U","L"]};
+/* Недельный объём по группам мышц сбалансирован: грудь получает 2–3 упражнения в неделю на каждые 2–3 тренировки
+   (не меньше спины), плечи — жим над головой и махи, но не больше груди. Второй «Верх» в сплите 4 дня — с акцентом на жим над головой (U2). */
 /* Растяжка: дни по зонам. В конце — одно упражнение на контроль и силу в новой амплитуде. */
 Object.assign(DAYS,{
  FA:{t:"Ноги и таз",s:["fl_ham","fl_hip","fl_glute","fl_add","fl_calf","core"]},
@@ -607,7 +610,7 @@ const TIPS_GEN=[
  "Мышцы ноют через 1–2 дня после тренировки — это нормально. Острая боль во время упражнения — нет: остановись.",
  "Выдох на усилии, вдох на возвращении. Не задерживай дыхание надолго.",
  "Прогресс не только в весе: +1 повтор с тем же весом — тоже шаг вперёд.",
- "Отдыхай между подходами столько, сколько показывает таймер. Он стоит не просто так.",
+ "Таймер отдыха — ориентир, а не правило. Слишком короткий отдых съедает силы на следующий подход, слишком долгий — остужает мышцы. Слушай себя.",
  "Одна неидеальная неделя ничего не ломает. Результат складывается из месяцев.",
  "Опускай вес медленно, за 2–3 секунды: так мышцы работают больше, чем при быстром броске.",
  "Кофе за 30–60 минут до тренировки добавит бодрости. Но не вечером: сон важнее.",
@@ -697,9 +700,9 @@ function tipText(c){
 const funOn=()=>S.tone!=="calm";
 const FUN={
  fast:{m:["{n} подходов за {min} мин? Либо ты Флэш, либо кто-то просто тыкал кнопки 😏 Давай по-честному: отмечай подходы по ходу тренировки — так я точнее подстрою программу.",
-          "Рекорд скорости: {min} мин вместо ~{plan}! Подозреваю, штанга даже не успела тебя заметить 😄 Отмечай подходы по ходу и отдыхай по таймеру — так я точнее посчитаю следующий шаг."],
+          "Рекорд скорости: {min} мин вместо ~{plan}! Подозреваю, штанга даже не успела тебя заметить 😄 Отмечай подходы по ходу и не забывай отдыхать между ними — так я точнее посчитаю следующий шаг."],
        f:["{n} подходов за {min} мин? Ты либо супергероиня, либо просто нажала все кнопки разом 😏 Отмечай подходы по ходу — так я точнее подстрою программу 💛",
-          "{min} мин вместо ~{plan}? Даже я так быстро не считаю 😄 Давай отмечать подходы по ходу тренировки и отдыхать по таймеру."]},
+          "{min} мин вместо ~{plan}? Даже я так быстро не считаю 😄 Давай отмечать подходы по ходу тренировки и отдыхать между ними."]},
  idle:{m:["Ты там не уснул? Таймер отдыха давно закончился, штанга скучает 😄","Отдых затянулся. Я, конечно, ИИ и могу ждать вечно, а вот мышцы остывают 🙂 Следующий подход?"],
        f:["Ты там не уснула? Отдых давно закончился, гантели скучают 😄","Отдых затянулся 🙂 Мышцы остывают — давай следующий подход, я в тебя верю!"]},
  hard:{m:["Вот это было мощно! В следующий раз чуть полегче 💪","Чувствую, ты выложился по полной. Уважаю, но давай без героизма."],
@@ -1083,10 +1086,10 @@ function buildProgram(){
   const o=opts(), cdays=o.goal==="custom"?customDays(o):null, fuel=fuelState();
   const split=cdays?cdays.map(x=>x.code):o.goal==="flex"?(FL_SPLITS[o.days]||FL_SPLITS[3]):(SPLITS[o.days]||SPLITS[3]), weeks=[];
   for(let w=1;w<=o.weeks;w++){
-    const wi=weekInfo(w,o), days=[], cyc=Math.floor((w-1)/4), seen={};
+    const wi=weekInfo(w,o), days=[], cyc=Math.floor((w-1)/4), seen={}, wsl={};   // wsl: сколько раз слот уже был на этой неделе — чтобы в разные дни были разные варианты (жим лёжа → жим гантелей → на наклонной)
     split.forEach((code,d)=>{
       const occ=seen[code]||0; seen[code]=occ+1;
-      const tpl=cdays?{t:cdays[d].t,s:cdays[d].s}:DAYS[code]; let slots=tpl.s.slice();
+      const tpl=cdays?{t:cdays[d].t,s:cdays[d].s}:(code==="U"&&occ%2===1)?DAYS.U2:DAYS[code]; let slots=tpl.s.slice();
       if(o.goal==="back"){                 // спина и осанка: вместо рук — задние дельты и лопатки, в конце мобильность
         slots=slots.map(x=>x==="bi"||x==="lat"?"rear":x).filter(x=>x!=="tri");
         if(!slots.includes("rear")) slots.splice(slots.includes("core")?slots.indexOf("core"):slots.length,0,"rear");
@@ -1099,7 +1102,7 @@ function buildProgram(){
       const items=[], usedFam=new Set();
       slots.forEach((slot,i)=>{
         const key=`${code}${d}|${slot}|${i}`;
-        const variant=(slot==="core"||slot==="cardio"||slot==="mob"||slot.startsWith("fl_"))?d+cyc+occ:occ+cyc;
+        const variant=(slot==="core"||slot==="cardio"||slot==="mob"||slot.startsWith("fl_"))?d+cyc+occ:(o.goal!=="strength"&&o.level>=2?(wsl[slot]||0):occ)+cyc;   // новичку и на силу — одни и те же базовые упражнения: техника и прогрессия важнее разнообразия
         const e=pick(slot,o,variant,key,usedFam);
         if(!e) return;
         usedFam.add(fam(e));
@@ -1118,6 +1121,7 @@ function buildProgram(){
         if(ex){ const m=(parseInt(ex.reps)||10)+10; ex.reps=`${m} мин ровного темпа`; }
         else items.push({id:cid,slot:"cardio",ps:"cardio",key:`${code}${d}|fuel`,sets:1,reps:"10 мин ровного темпа: можешь говорить, но не петь",rest:0,timed:true,fuel:true});
       }
+      new Set(slots).forEach(x=>{ wsl[x]=(wsl[x]||0)+1; });
       const warm=warmup(code,o); fitTime(items,warm,o);
       days.push({code,title:tpl.t,items,warm,wd:cdays?cdays[d].wd:null});
     });
@@ -1145,7 +1149,11 @@ function fitTime(items,warm,o){
     if(c){ c.sets--; c.trim=1; continue; }
     // убирать можно только второстепенное: руки и дельты; ягодицы у женщин и при цели «спина», задние дельты при «спине» — ключевые
     const keep=new Set(["core","cardio","mob"]); if(o.goal==="back") keep.add("rear").add("glute"); if(o.sex==="f"&&o.goal!=="gain") keep.add("glute");
-    const acc=items.map((it,i)=>[it,i]).filter(([it])=>iso(it)&&!keep.has(EXI[it.id].slot)&&!keep.has(it.ps));
+    // и никогда не убираем последнее упражнение на низ или на верх тела — день должен оставаться сбалансированным
+    const LOW=new Set(["squat","hinge","lunge","glute"]), UPP=new Set(["push_h","push_v","pull_h","pull_v","lat","bi","tri","rear"]);
+    const zone=it=>LOW.has(it.ps)||LOW.has(EXI[it.id].slot)?"L":UPP.has(it.ps)||UPP.has(EXI[it.id].slot)?"U":"";
+    const cnt=z=>items.filter(x=>zone(x)===z).length;
+    const acc=items.map((it,i)=>[it,i]).filter(([it])=>iso(it)&&!keep.has(EXI[it.id].slot)&&!keep.has(it.ps)&&!(zone(it)&&cnt(zone(it))<=1));
     if(acc.length&&items.length>5){ items.splice(acc[acc.length-1][1],1); continue; }
     c=pool.filter(it=>it.sets>2).sort((a,b)=>b.sets-a.sets)[0]; if(c){ c.sets--; c.trim=1; continue; }
     break;
@@ -2346,12 +2354,13 @@ function vExDo(){
     ${rec?`<div class="small" style="margin-bottom:6px">Вес: <b>${rec.text}</b> <span class="hint">· ${rec.why}</span>${rec.capped?`<div class="hint">Это самые тяжёлые гантели из твоей анкеты: делай верхнюю границу повторов и опускай вес медленнее.</div>`:""}${rec.t==="mc"&&rec.why.startsWith("стартовый")?`<div class="hint">Шкала у разных тренажёров отличается: первый подход сделай пробным.</div>`:""}</div>`:""}
     <h3 style="margin:0">${it.flex?"Отмечай круги":it.timed?"Отметь, когда сделаешь":"Какой подход сделан"}</h3>
     <div class="sets big">${Array.from({length:it.sets},(_,s)=>`<button class="set${s<n?" on":""}" data-a="setDone" data-i="${i}" data-s="${s}">${it.timed?"✓":s+1}</button>`).join("")}</div>
-    <p class="small hint" id="exdoCnt" style="margin:8px 0 0">${n>=it.sets?"Все подходы сделаны 💪":`Сделано ${n} из ${it.sets}. После отметки подхода запустится таймер отдыха.`}</p>
+    <p class="small hint" id="exdoCnt" style="margin:8px 0 0" data-rest-note="1">${n>=it.sets?"Все подходы сделаны 💪":`Сделано ${n} из ${it.sets}. После отметки подхода запустится таймер отдыха.`}</p>
     <div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap">
       ${it.rest?`<button class="btn sec sm" style="margin:0" id="restBtn" data-a="restGo" data-v="${restFor(it,i)}">⏱ Отдых ${restFor(it,i)} с</button>`:""}
       ${kgOn?`<input inputmode="decimal" placeholder="${rec&&(rec.t==="db")?"кг в руке":"вес, кг"}" value="${esc(workout.kg[i]||"")}" data-kg="${i}" aria-label="Рабочий вес" style="width:110px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-family:inherit;font-size:inherit"<span class="hint small">кг</span>`:""}
       ${prem&&!it.timed?`<button class="link" data-a="swap" data-i="${i}">Заменить упражнение</button>`:""}
     </div>
+    ${it.rest?`<p class="small hint" style="margin:8px 0 0">⏱ Время отдыха — рекомендация, а не обязательное правило. Готов${((S.full&&S.full.sex)||(S.profile&&S.profile.sex))==="f"?"а":""} раньше или нужно чуть больше — ориентируйся на самочувствие. На программу и расчёт весов это не влияет.</p>`:""}
     ${it.flex?"":`<div class="hrbox"><div class="row" style="gap:8px;align-items:center;flex-wrap:wrap"><b class="small">❤️ Пульс ${EXI[it.id].slot==="cardio"?"во время упражнения":"сразу после подхода"}</b><span class="hint small">по желанию</span></div>
       <div class="row" style="gap:8px;align-items:center;margin-top:6px"><input inputmode="numeric" data-hr="${i}" placeholder="уд/мин" value="${esc(String((workout.hr||{})[i]||""))}" aria-label="Пульс, ударов в минуту" style="width:110px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-family:inherit;font-size:inherit"><span class="hint small">уд/мин</span></div>
       <div class="small" id="hrOut" style="margin-top:6px">${hrHtml(it,i)}</div></div>`}
@@ -4074,7 +4083,7 @@ const GUIDE=[
  ["🏋️","Во время тренировки",[
   "Начни с разминки — она в начале тренировки. Нажми на название упражнения разминки, чтобы посмотреть технику.",
   "Нажми «Приступить» у упражнения — откроется его экран: номера подходов, таймер отдыха, рабочий вес и техника с анимацией.",
-  "Сделал подход — нажми на его номер. Запустится таймер отдыха; его можно пропустить или запустить заново кнопкой «⏱ Отдых».",
+  "Сделал подход — нажми на его номер. Запустится таймер отдыха; его можно пропустить или запустить заново кнопкой «⏱ Отдых». Время отдыха — рекомендация: ориентируйся на самочувствие, на программу и веса это не влияет.",
   "Есть возможность замерить пульс — впиши его сразу после подхода (по желанию). Подскажем, сколько отдыхать и до какого пульса восстановиться перед следующим подходом, а таймер отдыха подстроится. На кардио покажем, в какой ты зоне.",
   "«Следующее →» переводит к следующему несделанному упражнению, «К списку» — обратно ко всей тренировке. В списке видно, сколько подходов уже сделано.",
   "С подпиской у каждого упражнения есть рабочий вес. Если повторов выходит больше нормы — прибавь, меньше — убавь. Впиши вес, с которым реально работал: в следующий раз он учтётся.",
