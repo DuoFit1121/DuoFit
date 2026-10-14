@@ -327,11 +327,12 @@ const EX = [
  {id:"hip_thrust",n:"Ягодичный мост со штангой",slot:"glute",place:"g",eq:"gym",avoid:[],lvl:2,m:"Большая ягодичная, задняя поверхность бедра",how:["Лопатки на скамье, штанга на тазу (с мягкой накладкой)","Поднимай таз до горизонтали корпуса","Подбородок прижат, рёбра не задираются"]},
  {id:"abd_m",n:"Отведение бедра в тренажёре",slot:"glute",place:"g",eq:"gym",avoid:[],lvl:1,iso:true,m:"Средняя ягодичная",how:["Сядь ровно, спина прижата","Разводи ноги плавно, без рывка","Задержись в крайней точке на секунду"]},
  {id:"bridge_1",n:"Ягодичный мост на одной ноге",slot:"glute",place:"b",eq:"none",avoid:[],lvl:2,m:"Большая и средняя ягодичные, задняя поверхность бедра",how:["Одна нога на полу, вторая вытянута","Поднимай таз, не перекашивая его","Делай одинаково на обе ноги"]},
+ {id:"kick_cable",n:"Отведение ноги назад в кроссовере",slot:"glute",place:"g",eq:"gym",avoid:[],lvl:1,iso:true,m:"Большая ягодичная",how:["Манжета на щиколотке, трос от нижнего блока; встань лицом к тренажёру и держись за раму","Корпус чуть наклонён вперёд, опорное колено слегка согнуто","Отводи ногу назад за счёт ягодицы, не прогибая поясницу","Вверху задержись на секунду, опускай медленно, не бросая вес"]},
  {id:"kick_band",n:"Отведение ноги назад с резинкой",slot:"glute",place:"h",eq:"band",avoid:[],lvl:1,iso:true,m:"Большая ягодичная",how:["Стоя на четвереньках, резинка на стопах","Отводи прямую ногу назад и вверх","Поясница не прогибается"]},
 
  {id:"lunge_rev",n:"Выпады назад",slot:"lunge",place:"b",eq:"none",avoid:["knees"],lvl:1,m:"Квадрицепсы, ягодицы, приводящие мышцы бедра",how:["Шагни назад, опускаясь почти до касания коленом пола","Передняя голень близка к вертикали","Возвращайся, толкаясь передней ногой"]},
  {id:"split",n:"Болгарские сплит-приседания",slot:"lunge",place:"b",eq:"none",avoid:["knees"],lvl:2,m:"Квадрицепсы, ягодицы, приводящие мышцы бедра",how:["Задняя нога на скамье или диване","Опускайся вертикально вниз","Вес на передней ноге"]},
- {id:"stepup",n:"Зашагивания на скамью",slot:"lunge",place:"b",eq:"none",avoid:["knees"],lvl:1,m:"Квадрицепсы, ягодицы",how:["Устойчивая опора высотой до колена","Поднимайся за счёт ноги на опоре, без толчка снизу","Опускайся медленно"]},
+ {id:"stepup",n:"Зашагивания на скамью",slot:"lunge",place:"b",eq:"none",avoid:["knees"],lvl:1,m:"Квадрицепсы, ягодицы",how:["Нижняя ступенька лестницы или устойчивая скамья высотой до колена — не табурет и не стул на колёсиках","Поднимайся за счёт ноги на опоре, без толчка снизу","Опускайся медленно"]},
 
  {id:"bench",n:"Жим штанги лёжа",slot:"push_h",place:"g",eq:"gym",avoid:["shoulders"],lvl:2,m:"Грудь, трицепс, передние дельты",how:["Лопатки сведены, стопы упираются в пол","Опускай штангу к нижней части груди","Локти под углом около 45° к корпусу"]},
  {id:"db_bench",n:"Жим гантелей лёжа",slot:"push_h",place:"b",eq:"db",avoid:[],lvl:1,m:"Грудь, трицепс, передние дельты",how:["На скамье или на полу","Опускай гантели до уровня груди","Выжимай вверх, не стукая гантели"]},
@@ -339,7 +340,7 @@ const EX = [
  {id:"pushup",n:"Отжимания",slot:"push_h",place:"b",eq:"none",avoid:[],lvl:2,m:"Грудь, трицепс, передние дельты, мышцы живота",how:["Тело прямое от головы до пяток","Опускайся грудью почти до пола","Локти не разводи в стороны"]},
  {id:"pushup_k",n:"Отжимания с колен",slot:"push_h",place:"h",eq:"none",avoid:[],lvl:1,m:"Грудь, трицепс, передние дельты",how:["Опора на колени, тело прямое от головы до колен","Опускайся медленно","Хороший шаг к полным отжиманиям"]},
 
- {id:"pushup_inc",n:"Отжимания от опоры",slot:"push_h",place:"h",eq:"none",avoid:[],lvl:1,m:"Грудь, трицепс, передние дельты",how:["Ладони на краю стола, подоконника или дивана","Тело прямое, опускайся грудью к опоре","Чем ниже опора, тем сложнее"]},
+ {id:"pushup_inc",n:"Отжимания от опоры",slot:"push_h",place:"h",eq:"none",avoid:[],lvl:1,m:"Грудь, трицепс, передние дельты",how:["Ладони на подоконнике, диване или кухонной столешнице — на том, что не сдвинется и не опрокинется","Тело прямое, опускайся грудью к опоре","Чем ниже опора, тем сложнее"]},
  {id:"ohp",n:"Армейский жим стоя",slot:"push_v",place:"g",eq:"gym",avoid:["shoulders","back"],lvl:2,m:"Дельты, трицепс, мышцы кора",how:["Штанга у ключиц, ягодицы и пресс напряжены","Выжимай вертикально над головой","Не прогибайся в пояснице"]},
  {id:"db_ohp",n:"Жим гантелей сидя",slot:"push_v",place:"b",eq:"db",avoid:["shoulders"],lvl:1,m:"Передние и средние дельты, трицепс",how:["Спина прижата к спинке или прямая","Гантели от уровня ушей вверх","Не своди гантели до удара"]},
  {id:"pike",n:"Пайк-отжимания",slot:"push_v",place:"h",eq:"none",avoid:["shoulders"],lvl:2,m:"Передние дельты, трицепс",how:["Таз высоко, тело в форме перевёрнутой V","Опускай голову к полу между ладонями","Выжимай себя вверх"]},
@@ -350,7 +351,7 @@ const EX = [
  {id:"row_band",n:"Тяга резинки к поясу",slot:"pull_h",place:"h",eq:"band",avoid:[],lvl:1,m:"Широчайшие, ромбовидные, задние дельты, бицепс",how:["Резинка закреплена на уровне пояса или за стопами","Тяни локтями назад","Своди лопатки"]},
  {id:"superman",n:"Лодочка (супермен)",slot:"pull_h",place:"h",eq:"none",avoid:["back"],lvl:1,m:"Разгибатели спины, ягодицы, задние дельты",how:["Лёжа на животе, руки вперёд","Приподними руки и грудь, взгляд в пол","Держи 2 секунды и опускайся"]},
 
- {id:"table_row",n:"Тяга под столом",slot:"pull_h",place:"h",eq:"none",avoid:[],lvl:2,m:"Широчайшие, ромбовидные, бицепс",how:["Ляг под прочный стол и возьмись за край","Тяни грудь к краю, тело прямое","Сначала проверь, что стол выдержит твой вес"]},
+ {id:"table_row",retired:1,n:"Тяга под столом",slot:"pull_h",place:"h",eq:"none",avoid:[],lvl:2,m:"Широчайшие, ромбовидные, бицепс",how:["Ляг под прочный стол и возьмись за край","Тяни грудь к краю, тело прямое","Сначала проверь, что стол выдержит твой вес"]},
  {id:"pullup",n:"Подтягивания",slot:"pull_v",place:"b",eq:"bar",avoid:[],lvl:3,m:"Широчайшие, бицепс, нижняя трапеция",how:["Хват чуть шире плеч","Тяни грудь к перекладине, не раскачиваясь","Опускайся до почти прямых рук"]},
  {id:"latpd",n:"Тяга верхнего блока",slot:"pull_v",place:"g",eq:"gym",avoid:[],lvl:1,m:"Широчайшие, бицепс, нижняя трапеция",how:["Хват чуть шире плеч","Тяни к верху груди, лёгкий наклон назад","Не тяни за голову"]},
  {id:"band_pd",n:"Тяга резинки сверху вниз",slot:"pull_v",place:"h",eq:"band",avoid:[],lvl:1,m:"Широчайшие, нижняя трапеция",how:["Резинка закреплена высоко (дверь, турник)","Тяни вниз к груди, локти к рёбрам","Возвращай медленно"]},
@@ -374,7 +375,7 @@ const EX = [
  {id:"pushup_close",n:"Отжимания узким хватом",slot:"tri",place:"h",eq:"none",avoid:["shoulders"],lvl:2,iso:true,m:"Трицепс, грудь",how:["Ладони под плечами или чуть уже","Локти идут вдоль корпуса","Можно с колен"]},
  {id:"pushdown",n:"Разгибания рук на блоке",slot:"tri",place:"g",eq:"gym",avoid:[],lvl:1,iso:true,m:"Трицепс",how:["Локти прижаты к бокам","Разгибай до прямых рук","Работают только предплечья"]},
  {id:"ext_db",n:"Французский жим гантели из-за головы",slot:"tri",place:"b",eq:"db",avoid:["shoulders"],lvl:1,iso:true,m:"Трицепс",how:["Гантель двумя руками над головой","Опускай за голову, локти смотрят вперёд","Разгибай руки вверх"]},
- {id:"dips_chair",n:"Обратные отжимания от стула",slot:"tri",place:"h",eq:"none",avoid:["shoulders"],lvl:1,iso:true,m:"Трицепс",how:["Ладони на краю устойчивого стула","Опускайся до прямого угла в локтях","Плечи не поднимаются к ушам"]},
+ {id:"dips_chair",n:"Обратные отжимания от стула",slot:"tri",place:"h",eq:"none",avoid:["shoulders"],lvl:1,iso:true,m:"Трицепс",how:["Поставь стул спинкой вплотную к стене, чтобы он не уехал","Ладони на краю сиденья, пальцы вперёд","Опускайся до прямого угла в локтях","Плечи не поднимаются к ушам"]},
 
  {id:"bike",n:"Велотренажёр",slot:"cardio",place:"g",eq:"gym",avoid:[],lvl:1,m:"Сердце и сосуды; квадрицепсы, ягодицы",how:["Сиденье на такой высоте, чтобы колено в нижней точке было слегка согнуто","Ровный темп: можешь говорить короткими фразами","Интервалы: 30 секунд быстро, 30 секунд спокойно"]},
  {id:"incline",n:"Ходьба в горку на дорожке",slot:"cardio",place:"g",eq:"gym",avoid:[],lvl:1,m:"Сердце и сосуды; ягодицы, икры",how:["Наклон 8–12%, скорость 4–5,5 км/ч","Не держись за поручни","Ровный умеренный темп"]},
@@ -421,6 +422,11 @@ const EX = [
  {id:"st_twist",n:"Скрутка лёжа",slot:"stretch",alt:["fl_spine","fl_side"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 30 с на сторону",m:"Косые мышцы, поясница, ягодицы",how:["Ляг на спину, руки в стороны, колени согнуты и вместе","Опусти колени в одну сторону, лопатки остаются на полу","Голову поверни в противоположную сторону","Дыши медленно; возвращай колени через центр, без рывков"]},
  {id:"st_neck",n:"Растяжка шеи",slot:"stretch",alt:["fl_neck"],place:"b",eq:"none",avoid:[],lvl:1,dose:"по 20 с на сторону",m:"Верх трапеций, мышцы шеи",how:["Сядь прямо, плечи опущены","Наклони голову ухом к плечу","Для лёгкого усиления положи ладонь на голову, не тяни","Двигайся медленно, без вращений головой"]},
 ];
+/* Тяга без инвентаря — безопасные замены «тяги под столом» */
+EX.push(
+ {id:"door_row",n:"Тяга у дверного косяка",slot:"pull_h",place:"h",eq:"none",avoid:[],lvl:1,m:"Широчайшие, ромбовидные, задние дельты, бицепс",how:["Встань лицом к открытой двери, стопы у самого косяка","Обхвати косяк двумя руками на уровне груди, руки прямые","Отклонись назад, тело прямое, колени слегка согнуты","Подтяни грудь к косяку, сводя лопатки, и медленно вернись. Держись только за неподвижный косяк, не за дверь"]},
+ {id:"bag_row",n:"Тяга рюкзака в наклоне",slot:"pull_h",place:"h",eq:"none",avoid:[],lvl:1,m:"Широчайшие, ромбовидные, бицепс",how:["Положи в рюкзак книги или бутылки с водой — 3–8 кг","Колено и ладонь на диване или устойчивом стуле, спина ровная","Тяни рюкзак к поясу, локоть вдоль корпуса, сведи лопатку","Опусти до прямой руки. Затем смени сторону. Легко — добавь в рюкзак ещё бутылку"]}
+);
 /* Брусья, кольца/петли, гиря — домашний инвентарь (в зале они тоже бывают, поэтому place:"b") */
 EX.push(
  {id:"dips_bar",n:"Отжимания на брусьях",slot:"push_h",alt:["tri"],place:"b",eq:"dips",avoid:["shoulders"],lvl:2,m:"Нижняя часть груди, трицепс, передние дельты",how:["Выйди в упор на прямых руках, плечи опущены от ушей","Опускайся, слегка наклонив корпус вперёд, до угла в локтях около 90°","Локти идут назад, а не в стороны","Выжмись вверх, не запрокидывая голову. Тяжело — начни с отжиманий с опорой ног или от скамьи"]},
@@ -447,13 +453,13 @@ const MGROUPS={warm:"Разминка",chest:"Грудь",back:"Спина",shou
 const MUSC={
  sq_bb:"legs glutes", sq_goblet:"legs glutes core", sq_press:"legs glutes", sq_bw:"legs glutes warm", sq_box:"legs glutes", leg_ext:"legs",
  dl:"legs glutes back", rdl_db:"legs glutes", rdl_bb:"legs glutes", gm_bw:"legs glutes", leg_curl:"legs", bridge:"glutes legs warm", hyper:"back glutes",
- side_leg:"glutes", clam:"glutes", hip_thrust:"glutes", abd_m:"glutes", bridge_1:"glutes", kick_band:"glutes",
+ side_leg:"glutes", clam:"glutes", hip_thrust:"glutes", abd_m:"glutes", bridge_1:"glutes", kick_band:"glutes", kick_cable:"glutes",
  lunge_rev:"legs glutes warm", split:"legs glutes", stepup:"legs glutes",
  bench:"chest arms shoulders", db_bench:"chest arms", incl_db:"chest shoulders arms", m_press:"chest arms", pec_deck:"chest",
  pushup:"chest arms core", pushup_k:"chest arms", pushup_inc:"chest arms",
  ohp:"shoulders arms", db_ohp:"shoulders arms", pike:"shoulders arms", lat_raise:"shoulders", bottle_raise:"shoulders",
  face_pull:"shoulders back posture", band_pa:"shoulders back posture", rev_fly:"shoulders back posture", wall_slide:"posture shoulders",
- row_db:"back arms", row_bb:"back arms", row_cable:"back arms", row_band:"back arms", table_row:"back arms", superman:"back posture",
+ row_db:"back arms", row_bb:"back arms", row_cable:"back arms", row_band:"back arms", table_row:"back arms", door_row:"back arms", bag_row:"back arms", superman:"back posture",
  pullup:"back arms", latpd:"back arms", band_pd:"back", ytw:"back shoulders posture",
  plank:"core", side_plank:"core", deadbug:"core", crunch:"core", leg_raise:"core", rev_crunch:"core", pallof:"core", bird_dog:"core back posture",
  curl_db:"arms", curl_band:"arms", towel_curl:"arms", hammer:"arms", pushup_close:"arms chest", pushdown:"arms", ext_db:"arms", dips_chair:"arms",
@@ -778,7 +784,7 @@ function cloudRestore(){
    Программа строится из шаблона дней (по числу тренировок в неделю), а упражнения в каждом
    слоте выбираются по приоритетному списку для места тренировок с учётом уровня, инвентаря,
    ограничений, возраста, ИМТ и анкеты безопасности. */
-const FAM={dips_chair:"dips",dips_bar:"dips",ring_pushup:"pushup",sq_goblet:"goblet",kb_goblet:"goblet",row_db:"row1",kb_row:"row1",table_row:"invrow",ring_row:"invrow",curl_db:"curl",ring_curl:"curl",rdl_bb:"rdl",rdl_db:"rdl",bridge:"bridge",bridge_1:"bridge",hip_thrust:"bridge",pushup:"pushup",pushup_k:"pushup",pushup_inc:"pushup",pushup_close:"pushup",plank:"plank",side_plank:"plank"};
+const FAM={dips_chair:"dips",dips_bar:"dips",ring_pushup:"pushup",sq_goblet:"goblet",kb_goblet:"goblet",row_db:"row1",kb_row:"row1",table_row:"invrow",door_row:"doorrow",bag_row:"row1",ring_row:"invrow",curl_db:"curl",ring_curl:"curl",rdl_bb:"rdl",rdl_db:"rdl",bridge:"bridge",bridge_1:"bridge",hip_thrust:"bridge",pushup:"pushup",pushup_k:"pushup",pushup_inc:"pushup",pushup_close:"pushup",plank:"plank",side_plank:"plank"};
 const IMPACT=new Set(["jacks","burpee"]);          // прыжки и ударная нагрузка
 const KNEELOAD=new Set(["lunge_rev","split"]);     // высокая нагрузка на колени
 const HEAVY=new Set(["sq_bb","dl","ohp","row_bb","rdl_bb"]);// работа со штангой на больших весах
@@ -787,11 +793,11 @@ const fam=e=>FAM[e.id]||e.id;
 const PREF={
  squat:{gym:["sq_bb","sq_press","sq_goblet","sq_box","leg_ext"],home:["sq_goblet","kb_goblet","sq_bw","sq_box"]},
  hinge:{gym:["dl","rdl_bb","rdl_db","hyper","leg_curl","bridge"],home:["rdl_db","kb_swing","bridge","gm_bw"]},
- glute:{gym:["hip_thrust","abd_m","bridge_1","side_leg"],home:["bridge_1","kick_band","side_leg","clam"]},
+ glute:{gym:["hip_thrust","abd_m","kick_cable","bridge_1","side_leg"],home:["bridge_1","kick_band","side_leg","clam"]},
  lunge:{gym:["split","lunge_rev","stepup"],home:["split","lunge_rev","stepup"]},
  push_h:{gym:["bench","db_bench","incl_db","m_press","pec_deck","pushup"],home:["db_bench","dips_bar","ring_pushup","pushup","pushup_k","pushup_inc"]},
  push_v:{gym:["ohp","db_ohp"],home:["db_ohp","kb_press","pike"]},
- pull_h:{gym:["row_bb","row_cable","row_db"],home:["row_db","ring_row","kb_row","table_row","row_band","superman"]},
+ pull_h:{gym:["row_bb","row_cable","row_db"],home:["row_db","ring_row","kb_row","door_row","bag_row","row_band","superman"]},
  pull_v:{gym:["pullup","latpd"],home:["pullup","band_pd","ytw"]},
  core:{gym:["plank","deadbug","side_plank","leg_raise","pallof","bird_dog","rev_crunch","crunch"],home:["plank","knee_raise_dips","deadbug","side_plank","bird_dog","rev_crunch","pallof","crunch"]},
  rear:{gym:["face_pull","rev_fly","band_pa","ytw","wall_slide"],home:["band_pa","rev_fly","ytw","wall_slide"]},
@@ -839,6 +845,7 @@ function opts(){ /* twoMeals: питание 2 раза в день (разде�
     n.push(`${o.days} ${o.days<5?"тренировки":"тренировок"} в неделю, ${o.place==="gym"?"в зале":"дома"}`);
     if(f.days>o.days) n.push(`вместо ${f.days} тренировок в неделю — ${o.days}: ${caution?"в щадящем режиме":"новичку"} нужно больше времени на восстановление`);
     n.push(`длительность ${o.plan.weeks} ${plural(o.plan.weeks,"неделя","недели","недель")}: ${o.plan.why.join("; ")}`);
+    if(o.goal!=="flex"&&o.level>=2) n.push(o.level===3?(o.place==="gym"?"опытный уровень: базовые упражнения со штангой и свободными весами, 4 подхода, в днях «всё тело» — дополнительное упражнение на руки; упрощённых вариантов нет":"опытный уровень: самые сложные варианты упражнений, которые позволяет инвентарь, 4 подхода, медленный темп опускания"):(o.place==="gym"?"средний уровень: штанга и свободные веса вместе с тренажёрами, упражнения меняются от дня ко дню":"средний уровень: без упрощённых вариантов — отжимания с пола, тяги и выпады в полную амплитуду"));
     if(senior) n.push("возраст 50+: без прыжков, разминка 10 минут, больше отдыха между подходами");
     if(youth) n.push("возраст до 18 лет: без максимальных весов, упор на технику");
     if(obese) n.push(`ИМТ ${bmi.toFixed(1)}: упражнения без ударной нагрузки на суставы, кардио ходьбой в каждой тренировке`);
@@ -924,6 +931,7 @@ function planLength(o,f){
   return {weeks,why};
 }
 function okPlace(e,o){
+  if(e.retired) return false;   // снятые упражнения (небезопасные) не попадают в программы и замены
   if(o.place==="gym") return e.place!=="h";
   return e.place!=="g" && (e.eq==="none"||o.eq.includes(e.eq));
 }
@@ -955,20 +963,35 @@ function swapPool(it,day,o){
   let pool=[...base,...rel].filter(e=>e.id===it.id||(!others.has(e.id)&&!famO.has(fam(e))));
   if(pool.length<2) pool=[...base,...rel].filter(e=>e.id===it.id||!others.has(e.id));
   if(pool.length<2){ const gs=new Set(mgOf(orig)); const wide=EX.filter(e=>e.slot!=="warm"&&swKind(e)===k&&mgOf(e).some(x=>gs.has(x))&&allowed(e,o)&&!others.has(e.id)&&!pool.includes(e)); pool=pool.concat(wide); }   // дома без инвентаря выбор мал — берём упражнения, задевающие те же мышцы
+  pool=pool.filter(e=>regOk(e,o,sl)).concat(pool.filter(e=>!regOk(e,o,sl)));   // упрощённые варианты — в конце списка
   if(!pool.includes(orig)) pool.unshift(orig);
   return pool;
 }
+/* Упрощённые варианты (регрессии): с какого уровня они не ставятся в программу, если есть полноценная замена.
+   Опытному — отжимания с пола, а не с колен; в зале — работа со снарядом, а не упражнения «для дома». */
+const REG={pushup_k:2,pushup_inc:2,sq_box:2,clam:2,side_leg:2,superman:2,bottle_raise:2,towel_curl:2,bird_dog:2,march:2,gm_bw:3,ytw:{l:2,s:"pull_v"}};
+const REG_FB=new Set(["pull_v"]);   // слоты, где соседний слот нагружает те же мышцы: вместо упрощённого варианта можно взять его
+function regOk(e,o,slot){
+  const r=REG[e.id]; if(!r) return true;
+  if(e.id==="march"&&o.lowImpact) return true;          // при щадящих суставах ходьба — основное кардио
+  const lv=typeof r==="number"?r:r.l; if(typeof r==="object"&&r.s!==slot) return true;
+  return o.level<lv;
+}
 function pick(slot,o,variant,key,usedFam){
   if(o.prem&&S.swaps[key]){ const sw=EXI[S.swaps[key]]; if(sw&&sw.slot!=="warm"&&allowed(sw,o)&&!usedFam.has("#"+sw.id)) return sw; }   // выбранная человеком замена
-  let s=slot, guard=0;
+  let s=slot, guard=0, fbTried=0;
   while(s && guard++<4){
     let pool=poolFor(s,o).filter(e=>!usedFam.has(fam(e)));
     if(!pool.length) pool=poolFor(s,o,true).filter(e=>!usedFam.has(fam(e)));
+    const full=pool.filter(e=>regOk(e,o,s));
+    if(full.length) pool=full;
+    else if(pool.length&&REG_FB.has(s)&&!fbTried){ fbTried=1; const alt=pick(FALLBACK[s],o,variant,key+"~",usedFam); if(alt&&regOk(alt,o,FALLBACK[s])) return alt; }   // у опытного — полноценное упражнение соседнего слота вместо упрощённого
     if(pool.length){
       if(o.prem&&S.swaps[key]){ const sw=EXI[S.swaps[key]]; if(sw&&pool.includes(sw)) return sw; }
       let cand=pool;
       if(o.goal==="flex"){ const bw=pool.filter(e=>e.eq==="none"); if(bw.length) cand=bw; }   // в растяжке — без снарядов и рабочих весов
       else if(isLoaded(pool[0],o)) cand=pool.filter(e=>isLoaded(e,o)); // не меняем упражнение с весом на упражнение без веса
+      if(o.place==="gym"&&o.goal!=="flex"){ const pr=(PREF[s]&&PREF[s].gym)||[], rk=cand.filter(e=>pr.includes(e.id)); if(rk.length) cand=rk; }   // в зале — зальные упражнения; домашние (гиря, кольца) только если других нет
       const top=cand.slice(0,s==="mob"||s.startsWith("fl_")?4:3);   // 3 варианта: в длинных программах циклы не повторяют друг друга подряд
       return top[variant%top.length];
     }
@@ -1021,7 +1044,7 @@ const LOAD={
  db_ohp:{t:"db",r:0.16,g:"push"}, row_db:{t:"db1",r:0.3,g:"pull"}, m_press:{t:"mc",r:0.55,g:"push"},
  row_cable:{t:"mc",r:0.55,g:"pull"}, latpd:{t:"mc",r:0.6,g:"pull"}, lat_raise:{t:"db",r:0.07,g:"push"},
  face_pull:{t:"mc",r:0.2,g:"pull"}, curl_db:{t:"db",r:0.12,g:"pull"}, pushdown:{t:"mc",r:0.25,g:"push"},
- ext_db:{t:"db1",r:0.15,g:"push"}, abd_m:{t:"mc",r:0.5,g:"lower"},
+ ext_db:{t:"db1",r:0.15,g:"push"}, abd_m:{t:"mc",r:0.5,g:"lower"}, kick_cable:{t:"mc",r:0.12,g:"hinge"},
  split:{t:"db",r:0.15,g:"lower",opt:1}, lunge_rev:{t:"db",r:0.15,g:"lower",opt:1}, stepup:{t:"db",r:0.12,g:"lower",opt:1},
  bridge:{t:"db1",r:0.3,g:"hinge",opt:1}, bridge_1:{t:"db1",r:0.15,g:"hinge",opt:1},
  rdl_bb:{t:"bb",r:0.8,g:"hinge"}, leg_curl:{t:"mc",r:0.35,g:"hinge"}, leg_ext:{t:"mc",r:0.45,g:"lower"},
@@ -1145,6 +1168,10 @@ function buildProgram(){
         if(!slots.includes("core")) slots.push("core");
       }
       if(!cdays&&(o.goal==="back"||(o.sex==="f"&&o.goal!=="gain"))&&!slots.includes("glute")&&(code==="A"||code==="C")) slots.splice(slots.indexOf("core"),0,"glute");
+      if(!cdays&&o.level>=3&&o.goal!=="back"&&o.goal!=="flex"){   // опытному в днях «всё тело» — ещё одно упражнение на руки: объёма базовых мало для роста
+        const acc=code==="A"?"bi":code==="B"?"tri":null;
+        if(acc&&!slots.includes(acc)) slots.splice(slots.includes("core")?slots.indexOf("core"):slots.length,0,acc);
+      }
       if((o.goal==="lose"||o.obese)&&!slots.includes("cardio")) slots.push("cardio");
       if(o.goal==="back") slots.push("mob");
       if(o.goal==="flex"&&o.weak){ const last=slots[slots.length-1]; if(!slots.includes(o.weak.slot)||code!=="FB") slots.splice(slots.length-1,0,o.weak.slot); }
@@ -2554,7 +2581,7 @@ function showLock(o){
   const old=document.getElementById("dfSheet"); if(old) old.remove();
   const c=coach(), w=document.createElement("div"); w.id="dfSheet"; w.className="sheet-bg";
   const feats=[["📋","Техника с анимацией","фигура в движении с подсветкой мышц и шаги: как встать, как двигаться"],["⚠️","Безопасность","когда упражнение лучше заменить и на что"],["⚖️","Рабочий вес под тебя","рассчитан по анкете и растёт с твоими результатами"],["🔄","Замена в одно касание","равноценное упражнение, если это не подходит"]];
-  const all=`${EX.length} ${plural(EX.length,"упражнения","упражнений","упражнений")}`;
+  const all=`${EX.filter(e=>!e.retired).length} ${plural(EX.filter(e=>!e.retired).length,"упражнения","упражнений","упражнений")}`;
   w.innerHTML=`<div class="sheet" role="dialog" aria-label="Доступно по подписке"><div class="grip"></div>
     <div class="lockic">${o.icon}</div>
     <h2 class="center" style="margin:0 0 4px;font-size:20px">${esc(o.title)}</h2>
@@ -2574,13 +2601,13 @@ function showLock(o){
   haptic("light");
 }
 
-function libCount(k){ return EX.filter(e=>k==="all"||(k==="gym"?e.place!=="h":e.place!=="g")).length; }
+function libCount(k){ return EX.filter(e=>!e.retired&&(k==="all"||(k==="gym"?e.place!=="h":e.place!=="g"))).length; }
 let libOpen={};
 function vLibrary(){
-  const list=EX.filter(e=>libFilter==="all"||(libFilter==="gym"?e.place!=="h":e.place!=="g"));
+  const list=EX.filter(e=>!e.retired).filter(e=>libFilter==="all"||(libFilter==="gym"?e.place!=="h":e.place!=="g"));
   const groups={}; list.forEach(e=>mgOf(e).forEach(g=>(groups[g]=groups[g]||[]).push(e)));
   const keys=Object.keys(MGROUPS).filter(g=>groups[g]);
-  let h=`<h1>Упражнения</h1><p class="hint mt0">${EX.length} ${plural(EX.length,"упражнение","упражнения","упражнений")} с техникой выполнения</p>
+  let h=`<h1>Упражнения</h1><p class="hint mt0">${EX.filter(e=>!e.retired).length} ${plural(EX.filter(e=>!e.retired).length,"упражнение","упражнения","упражнений")} с техникой выполнения</p>
   <div class="chips">${[["all","Все"],["gym","Зал"],["home","Дом"]].map(([k,v])=>`<button class="chip${libFilter===k?" on":""}" data-a="libf" data-v="${k}">${v} (${libCount(k)})</button>`).join("")}</div>`;
   if(!S.premium){
     h+=`<div class="card small" style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px">💡</span><div>Технику упражнений из твоей бесплатной программы смотри на вкладке «Программа» — кнопка «Техника» у каждого упражнения. <span class="hint">Вся библиотека по разделам открывается по подписке.</span></div></div>
@@ -3688,6 +3715,10 @@ const EXANIM={
    return {f,legs:[{A:[3,Y0,9],toe:FW,pole:FW},{A:vc(f.hip(1),dA(a),66),toe:v3.n([1,.15*Math.sin(ph),0]),pole:FW}],
      arms:[{H:vc(f.sh(0),DN,22,LZ,30,FW,6),pole:v3.n([0,0,1])},{H:vc(f.sh(1),DN,40,FW,lerp(-14,16,(1+Math.sin(ph))/2)),pole:BK}],
      props:[{k:"box",box:[[-8,40,40],[4,140,46]],d:40}]};}},
+ kick_cable:{P:2.6,views:["side"],m:[["glutes"],["hams","lowback"]],pose:t=>{
+   const f=mk([-2,70,0],lerp(-82,-74,t)), a=lerp(96,140,t), A=vc(f.hip(1),dA(a),66);
+   return {f,legs:[{A:[3,Y0,9],toe:FW,pole:FW},{A,toe:v3.n([1,.3,0]),pole:FW}],
+     arms:both(i=>({H:[44,40,sd(i)*16],pole:v3.n([-.4,.8,sd(i)*.8])})),props:[{k:"box",box:[[46,-40,-60],[52,140,60]],d:-60},{k:"cable",pts:[A,[45,Y0-10,0]]}]};}},
  w_kickstand:{P:2.4,views:["side"],m:[["glutes"],["hams","lowback"]],pose:t=>{
    const f=mk([-2,70,0],lerp(-84,-76,t)), a=lerp(92,138,t);
    return {f,legs:[{A:[3,Y0,9],toe:FW,pole:FW},{A:vc(f.hip(1),dA(a),66),toe:v3.n([1,.3,0]),pole:FW}],
@@ -3731,6 +3762,16 @@ const EXANIM={
    const f=mk([-14,68,0],-11.5), S=f.S, H0=[lerp(S[0]+2,S[0]-16,t),lerp(110,82,t),16];
    return {f,legs:[{A:[-30,Y0,13],toe:FW,pole:FW},{A:[-44,100,-8],toe:v3.n([-1,.3,0]),pole:DN}],
      arms:[{H:H0,pole:v3.n([-1,-1,.15])},{H:[38,103,-16],pole:BK}],props:[...benchP(-56,44,104,13,-40),{k:"kb",at:vc(H0,DN,8)}]};}},
+/* ===== Тяга без инвентаря ===== */
+ bag_row:{P:2.6,views:["side"],m:[["back","biceps"],["rdelts","traps"]],pose:t=>{
+   const f=mk([-14,68,0],-11.5), S=f.S, H0=[lerp(S[0]+2,S[0]-16,t),lerp(110,82,t),16];
+   return {f,legs:[{A:[-30,Y0,13],toe:FW,pole:FW},{A:[-44,100,-8],toe:v3.n([-1,.3,0]),pole:DN}],
+     arms:[{H:H0,pole:v3.n([-1,-1,.15])},{H:[38,103,-16],pole:BK}],
+     props:[...benchP(-56,44,104,13,-40),{k:"box",box:[[H0[0]-9,H0[1]+1,9],[H0[0]+9,H0[1]+22,23]],d:6}]};}},
+ door_row:{P:2.8,views:["side"],m:[["back","biceps"],["rdelts","forearms"]],pose:t=>{
+   const A=[-26,135,0], U=dA(lerp(-60,-77,t)), P=vc(A,U,66.5), f=frame(P,U,LZ,null,6);
+   return {f,legs:both(i=>({A:[-26,135,sd(i)*8],toe:v3.n([-1,0.15,0]),pole:v3.n([-1,-.2,0])})),arms:both(i=>({H:[-40,60+sd(i)*-5,sd(i)*3],pole:v3.n([.3,1,sd(i)*.6])})),
+     props:[{k:"box",box:[[-48,-40,-6],[-38,135,6]],d:-30}]};}},
 /* ===== Приседания ===== */
  sq_bw:{P:2.8,views:["side","front"],m:[["quads","glutes"],["adductors","hams","abs"]],pose:t=>{
    const f=mk(lp3([0,69,0],[-26,104,0],t),lerp(-88,-50,t));
@@ -4247,6 +4288,7 @@ document.addEventListener("change",e=>{ const t=e.target; if(t.dataset.f&&t.type
    при первой анкете). Чтобы показать новое окно в следующий раз — поменяй NEWS_V и список пунктов. p:1 — пункт про подписку. */
 const NEWS_V="2026-10";
 const NEWS=[
+ ["💪","Программы по уровню подготовки","опытным в зале — штанга и свободные веса, без упрощённых вариантов вроде отжиманий с колен; новичкам — тренажёры и освоение техники."],
  ["🎯","«Выберу сам»","новая цель: сам выбираешь мышцы и дни недели, а для каждого дня — верх, низ или всё тело."],
  ["▶️","Новый экран упражнения","кнопка «Приступить»: крупно «3 подхода по 12 повторений», отметки подходов, техника с анимацией, отдых и пульс."],
  ["⏱","Секундомер","для планки, кардио и растяжки: по сигналу подход отмечается сам."],
