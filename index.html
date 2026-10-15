@@ -812,6 +812,12 @@ const PREF={
  ["fl_add",["st_frog","st_wide","st_butterfly","st_side_lunge"]],["fl_spine",["st_cobra","cat_cow","st_twist","child"]],["fl_thor",["st_thread","open_book","st_chest"]],
  ["fl_shoulder",["st_shoulder","st_tri","st_chest"]],["fl_side",["st_side","st_twist"]],["fl_calf",["st_down_dog","st_calf"]],["fl_neck",["st_neck"]]]
  .forEach(([k,l])=>PREF[k]={gym:l,home:l});
+/* Схема «верх / низ» при 3 тренировках в неделю — по умолчанию со среднего уровня, в профиле можно вернуть «всё тело».
+   При 2 тренировках — всегда всё тело: иначе каждая мышца работала бы только раз в неделю.
+   3 тренировки: недели чередуются — «низ, верх, низ», потом «верх, низ, верх»: за 2 недели каждая зона получает поровну.
+   При 4–5 тренировках программа и так раздельная. Новичку и в щадящем режиме — всё тело: движения повторяются чаще, техника осваивается быстрее. */
+function ulAllowed(o){ return o.level>=2&&!o.caution&&o.goal!=="custom"&&o.goal!=="flex"&&o.days===3; }
+function splitFor(o,w){ if(!o.ul) return SPLITS[o.days]||SPLITS[3]; return w%2?["L","U","L"]:["U","L","U"]; }
 function bmiOf(f){ return f&&f.height&&f.weight ? f.weight/Math.pow(f.height/100,2) : null; }
 /* Тренировка «сегодня в другом месте»: на время экрана тренировки программа собирается для зала или дома.
    Тот же день, та же цель и прогрессия по неделям; отметка тренировки, опрос и итоги — общие. Замены упражнений
@@ -838,6 +844,7 @@ function opts(){ /* twoMeals: питание 2 раза в день (разде�
     noHeavy: youth||age>=60||caution||(senior&&obese)
   };
   if(goal==="flex"){ o.level=caution?1:flexLevelOf(); o.weak=flexWeak(); }
+  o.ul=p.split!=="fb"&&ulAllowed(o);
   if(goal==="custom"){ o.cplan=customPlanOf(p).slice(0,o.days); o.cg=(p.cg&&p.cg.length)?p.cg:cgDefault(); }
   if(f){ o.plan=planLength(o,f); o.weeks=o.plan.weeks+4*(S.extra||0); }
   const n=[];
@@ -846,6 +853,7 @@ function opts(){ /* twoMeals: питание 2 раза в день (разде�
     if(f.days>o.days) n.push(`вместо ${f.days} тренировок в неделю — ${o.days}: ${caution?"в щадящем режиме":"новичку"} нужно больше времени на восстановление`);
     n.push(`длительность ${o.plan.weeks} ${plural(o.plan.weeks,"неделя","недели","недель")}: ${o.plan.why.join("; ")}`);
     if(o.goal!=="flex"&&o.level>=2) n.push(o.level===3?(o.place==="gym"?"опытный уровень: базовые упражнения со штангой и свободными весами, 4 подхода, в днях «всё тело» — дополнительное упражнение на руки; упрощённых вариантов нет":"опытный уровень: самые сложные варианты упражнений, которые позволяет инвентарь, 4 подхода, медленный темп опускания"):(o.place==="gym"?"средний уровень: штанга и свободные веса вместе с тренажёрами, упражнения меняются от дня ко дню":"средний уровень: без упрощённых вариантов — отжимания с пола, тяги и выпады в полную амплитуду"));
+    if(o.ul) n.push("схема «верх / низ»: недели чередуются — «низ, верх, низ» и «верх, низ, верх», за 2 недели каждая зона получает поровну; в каждой тренировке больше упражнений на одну зону");
     if(senior) n.push("возраст 50+: без прыжков, разминка 10 минут, больше отдыха между подходами");
     if(youth) n.push("возраст до 18 лет: без максимальных весов, упор на технику");
     if(obese) n.push(`ИМТ ${bmi.toFixed(1)}: упражнения без ударной нагрузки на суставы, кардио ходьбой в каждой тренировке`);
@@ -1156,8 +1164,9 @@ function warmup(code,o){
 }
 function buildProgram(){
   const o=opts(), cdays=o.goal==="custom"?customDays(o):null, fuel=fuelState();
-  const split=cdays?cdays.map(x=>x.code):o.goal==="flex"?(FL_SPLITS[o.days]||FL_SPLITS[3]):(SPLITS[o.days]||SPLITS[3]), weeks=[];
+  const weeks=[];
   for(let w=1;w<=o.weeks;w++){
+    const split=cdays?cdays.map(x=>x.code):o.goal==="flex"?(FL_SPLITS[o.days]||FL_SPLITS[3]):splitFor(o,w);
     const wi=weekInfo(w,o), days=[], cyc=Math.floor((w-1)/4), seen={}, wsl={};   // wsl: сколько раз слот уже был на этой неделе — чтобы в разные дни были разные варианты (жим лёжа → жим гантелей → на наклонной)
     split.forEach((code,d)=>{
       const occ=seen[code]||0; seen[code]=occ+1;
@@ -1175,10 +1184,10 @@ function buildProgram(){
       if((o.goal==="lose"||o.obese)&&!slots.includes("cardio")) slots.push("cardio");
       if(o.goal==="back") slots.push("mob");
       if(o.goal==="flex"&&o.weak){ const last=slots[slots.length-1]; if(!slots.includes(o.weak.slot)||code!=="FB") slots.splice(slots.length-1,0,o.weak.slot); }
-      const items=[], usedFam=new Set();
+      const items=[], usedFam=new Set(), base=o.ul?`${code}_${occ}`:`${code}${d}`;   // «верх / низ» чередуется по неделям: ключ — «какой по счёту верх/низ», чтобы замены и прогрессия совпадали между неделями
       slots.forEach((slot,i)=>{
-        const key=`${o.ovr?o.ovr+":":""}${code}${d}|${slot}|${i}`;
-        const variant=(slot==="core"||slot==="cardio"||slot==="mob"||slot.startsWith("fl_"))?d+cyc+occ:(o.goal!=="strength"&&o.level>=2?(wsl[slot]||0):occ)+cyc;   // новичку и на силу — одни и те же базовые упражнения: техника и прогрессия важнее разнообразия
+        const key=`${o.ovr?o.ovr+":":""}${base}|${slot}|${i}`;
+        const variant=(slot==="core"||slot==="cardio"||slot==="mob"||slot.startsWith("fl_"))?(o.ul?(wsl[slot]||0)+cyc+w-1:d+cyc+occ):(o.goal!=="strength"&&o.level>=2?(wsl[slot]||0):occ)+cyc;   // новичку и на силу — одни и те же базовые упражнения: техника и прогрессия важнее разнообразия
         const e=pick(slot,o,variant,key,usedFam);
         if(!e) return;
         usedFam.add(fam(e)); usedFam.add("#"+e.id);
@@ -1193,23 +1202,24 @@ function buildProgram(){
         items.push({id:e.id,slot:e.slot,ps:e.alt&&e.alt.includes(slot)?slot:e.slot,key,sets,reps:sc.reps,rest:sc.rest,timed:!!sc.timed,min:sc.min});
       });
       if(fuel&&fuel.mode==="high"){   // ест заметно больше нормы при похудении — +10 минут спокойного кардио
-        const fk=`${o.ovr?o.ovr+":":""}${code}${d}|fuel`, swc=S.swaps[fk]&&EXI[S.swaps[fk]]&&poolFor("cardio",o).includes(EXI[S.swaps[fk]])?S.swaps[fk]:null;
+        const fk=`${o.ovr?o.ovr+":":""}${base}|fuel`, swc=S.swaps[fk]&&EXI[S.swaps[fk]]&&poolFor("cardio",o).includes(EXI[S.swaps[fk]])?S.swaps[fk]:null;
         const cid=swc||(o.place==="gym"?"incline":"march"), ex=items.find(x=>x.id===cid);
         if(ex){ const m=(parseInt(ex.reps)||10)+10; ex.reps=`${m} мин ровного темпа`; }
         else items.push({id:cid,slot:"cardio",ps:"cardio",key:fk,sets:1,reps:"10 мин ровного темпа: можешь говорить, но не петь",rest:0,timed:true,fuel:true});
       }
       new Set(slots).forEach(x=>{ wsl[x]=(wsl[x]||0)+1; });
       const warm=warmup(code,o); fitTime(items,warm,o);
-      days.push({code,title:tpl.t,items,warm,wd:cdays?cdays[d].wd:null});
+      days.push({code,base,title:tpl.t,items,warm,wd:cdays?cdays[d].wd:null});
     });
     weeks.push({n:w,note:wi.note,days});
   }
   // если в пиковой неделе цикла по времени убрали изолирующее упражнение — убираем его во всём цикле, чтобы состав дней не прыгал
   if(o.prem) for(let c0=0;c0<weeks.length;c0+=4){ const pk=weeks[Math.min(c0+2,weeks.length-1)];
-    for(let i=c0;i<Math.min(c0+4,weeks.length);i++) weeks[i].days.forEach((d,di)=>{ const keep=new Set(((pk.days[di]||{}).items||[]).map(x=>x.key)); d.items=d.items.filter(x=>keep.has(x.key)); }); }
+    for(let i=c0;i<Math.min(c0+4,weeks.length);i++) weeks[i].days.forEach(d=>{ const pd=pk.days.find(x=>x.base===d.base); if(!pd) return; const keep=new Set(pd.items.map(x=>x.key)); d.items=d.items.filter(x=>keep.has(x.key)); }); }
   // разгрузочная неделя всегда легче предыдущей: если пик недели 3 урезан по времени, урезаем и неделю 4
-  if(o.prem) for(let i=3;i<weeks.length;i+=4) weeks[i].days.forEach((d,di)=>d.items.forEach(it=>{
-    const prev=(weeks[i-1].days[di]||{items:[]}).items.find(x=>x.key===it.key); if(!prev||it.timed) return;
+  if(o.prem) for(let i=3;i<weeks.length;i+=4) weeks[i].days.forEach(d=>d.items.forEach(it=>{
+    const pw=weeks.slice(Math.max(0,i-3),i).reverse().map(w=>w.days.find(x=>x.base===d.base)).find(Boolean);   // при «верх / низ» тот же день мог быть в другой неделе цикла
+    const prev=(pw||{items:[]}).items.find(x=>x.key===it.key); if(!prev||it.timed) return;
     it.sets=Math.max(it.flex?1:2,Math.min(it.sets,prev.sets-1)); }));
   return weeks;
 }
@@ -2678,6 +2688,7 @@ function vProfile(){
   ${notifHtml()}
   <div class="card"><h3>Базовая анкета</h3><p class="small hint mt0">${p.sex?(p.sex==="m"?"Мужчина":"Женщина")+" · ":""}${GOALS[p.goal]}${p.goal==="custom"?` (${CG.filter(g=>(opts().cg||[]).includes(g.k)).map(g=>g.n.toLowerCase()).join(", ")}; ${opts().cplan.map(x=>WDN[x.d]).join(", ")})`:""} · ${LEVELS[p.level]} · ${PLACES[p.place]}${p.place==="home"&&p.eq.length?" ("+p.eq.map(x=>EQ[x].toLowerCase()).join(", ")+")":""}</p>
   <button class="btn sm sec" data-a="editBasic">Изменить</button></div>
+  ${splitHtml()}
   ${prem?`<div class="card"><h3>Индивидуальная анкета</h3>${f?`<p class="small hint mt0">${f.sex==="m"?"Мужчина":"Женщина"}, ${f.age} лет, ${f.height} см, ${f.weight} кг · ${opts().days} трен. в неделю${f.lims.length?" · ограничения: "+f.lims.map(x=>LIMS[x].toLowerCase()).join(", "):""}</p>`:`<p class="small hint mt0">Ещё не заполнена</p>`}
   <button class="btn sm sec" data-a="editFull">${f?"Изменить":"Заполнить"}</button>
   ${f&&Object.keys(S.swaps).length?`<button class="link" data-a="resetSwaps" style="margin-left:12px">Вернуть исходные упражнения</button>`:""}</div>`:""}
@@ -2692,6 +2703,16 @@ function vProfile(){
   <button class="btn sec" data-a="reset">Удалить мои данные</button>`;
 }
 
+function splitHtml(){
+  const o=opts(); if(o.goal==="custom"||o.goal==="flex") return "";
+  if(o.days>=4) return "";
+  if(o.days===2) return `<div class="card"><h3>Схема тренировок</h3><p class="small hint mt0">При 2 тренировках в неделю каждая — на всё тело: так каждая мышца работает 2 раза в неделю. Со схемой «верх / низ» было бы только по разу — это заметно хуже для результата. «Верх / низ» доступна при 3 тренировках.</p></div>`;
+  if(!ulAllowed(o)) return `<div class="card"><h3>Схема тренировок</h3><p class="small hint mt0">Сейчас — всё тело в каждой тренировке. Схема «верх / низ» откроется со среднего уровня подготовки${o.caution?" и без щадящего режима":""}: ${o.caution?"пока бережём нагрузку":"новичку полезнее всё тело — движения повторяются чаще, техника осваивается быстрее"}.</p></div>`;
+  const cur=o.ul?"ul":"fb";
+  return `<div class="card"><h3>Схема тренировок</h3>
+  <div class="seg" style="grid-template-columns:1fr 1fr">${[["fb","Всё тело"],["ul","Верх / низ"]].map(([k,l])=>`<button data-a="splitSet" data-v="${k}" aria-pressed="${cur===k}">${l}</button>`).join("")}</div>
+  <p class="small hint" style="margin:8px 0 0">${cur==="ul"?"Недели чередуются: «низ, верх, низ», затем «верх, низ, верх». В каждой тренировке больше упражнений на одну зону, за 2 недели всё тело получает поровну. Рекомендуем для твоего уровня.":"Каждая тренировка — на всё тело, каждая мышца работает 3 раза в неделю, но упражнений на одну зону за тренировку меньше. Для твоего уровня рекомендуем «Верх / низ»."}</p></div>`;
+}
 function vPaywall(){
   return `<div class="card center">${coachAv()}
   <h1 style="margin-top:12px">Тренировки и питание</h1><p class="hint">${coach()?`${coach().name} соберёт программу и меню именно под тебя`:"Макс и Ева соберут программу и меню именно под тебя"}</p></div>
@@ -2881,7 +2902,10 @@ const A={
   yn:(v,el)=>{draft2["q_"+el.dataset.k]=v==="1";render();},
   finishOnboard:()=>{
     const prev=S.profile?{goal:opts().goal,asked:S.profile.goal,c:S.premium&&S.full?calc():null}:null;
+    const oldP=S.profile||{};
     S.profile={sex:draft.sex,goal:draft.goal,level:+draft.level,place:draft.place,eq:draft.place==="home"?(draft.eq||[]):[]};
+    if(oldP.homeEq) S.profile.homeEq=oldP.homeEq;    // инвентарь «сегодня дома» и выбранная схема не теряются при правке анкеты
+    if(oldP.split) S.profile.split=oldP.split;
     if(draft.goal==="custom"){ S.profile.cg=(draft.cg||[]).slice(); S.profile.plan=cplanNorm(draft.cg,draft.plan||[]).slice(0,maxPlanDays());
       if(S.full) S.full.days=Math.min(S.profile.plan.length,5);
       if(S.notif) S.notif.days=S.profile.plan.map(x=>x.d); }
@@ -3117,6 +3141,8 @@ const A={
   libf:v=>{libFilter=v;render();},
   libgrp:v=>{ if(!S.premium){ groupSheet(v); return; } libOpen[v]=!libOpen[v]; render(); },
   resetSwaps:()=>{S.swaps={};save();render();},
+  splitSet:v=>{ const p=S.profile; if(!p||(opts().ul?"ul":"fb")===v) return; p.split=v;
+    S.swaps={}; save(); haptic("light"); render(); popup(v==="ul"?"Готово: тренировки по схеме «верх / низ». Программа пересобрана, уже отмеченные тренировки сохранены.":"Готово: снова всё тело в каждой тренировке. Отмеченные тренировки сохранены."); },
   newsOk:()=>{ S.newsSeen=NEWS_V; save(); const w=document.getElementById("dfCeleb"); if(w) w.remove(); haptic("light"); },
   wkok:v=>{ S.wkSeen=v; save(); render(); },
   fuelOk:v=>{ S.fuelSeen={mode:v,d:today()}; save(); render(); },
@@ -4288,6 +4314,7 @@ document.addEventListener("change",e=>{ const t=e.target; if(t.dataset.f&&t.type
    при первой анкете). Чтобы показать новое окно в следующий раз — поменяй NEWS_V и список пунктов. p:1 — пункт про подписку. */
 const NEWS_V="2026-10";
 const NEWS=[
+ ["↕️","Схема «Верх / низ»","со среднего уровня при 3 тренировках в неделю тренировки теперь чередуются: низ, верх, низ, а на следующей неделе — верх, низ, верх. Больше упражнений на каждую зону. Вернуть «всё тело» можно в профиле."],
  ["💪","Программы по уровню подготовки","опытным в зале — штанга и свободные веса, без упрощённых вариантов вроде отжиманий с колен; новичкам — тренажёры и освоение техники."],
  ["🎯","«Выберу сам»","новая цель: сам выбираешь мышцы и дни недели, а для каждого дня — верх, низ или всё тело."],
  ["▶️","Новый экран упражнения","кнопка «Приступить»: крупно «3 подхода по 12 повторений», отметки подходов, техника с анимацией, отдых и пульс."],
@@ -4321,7 +4348,8 @@ const GUIDE=[
   "Программа делится на циклы по 4 недели. У каждого цикла свой цвет: нажми «Цикл N», и ниже появятся его недели того же цвета.",
   "Внутри цикла упражнения одни и те же — так видно, как растут твои веса. Меняется нагрузка: 1-я неделя — освоение, 2-я — +1–2 повтора, 3-я — +1 подход, 4-я — разгрузка. В новом цикле часть упражнений обновляется.",
   "Длительность программы рассчитана под твою цель. Если к концу цель не достигнута, программа продолжится новыми циклами.",
-  "Нажми на карточку дня, чтобы открыть тренировку. Сделанные дни помечаются «Готово»."]],
+  "Нажми на карточку дня, чтобы открыть тренировку. Сделанные дни помечаются «Готово».",
+  "Схема тренировок. Новичкам и при 2 тренировках в неделю — всё тело в каждой тренировке: каждая мышца работает 2–3 раза в неделю, движения повторяются чаще. Со среднего уровня при 3 тренировках — «верх / низ»: недели чередуются, «низ, верх, низ», потом «верх, низ, верх». Вернуть «всё тело» можно в профиле. При 4–5 тренировках верх и низ всегда в разные дни."]],
  ["🏋️","Во время тренировки",[
   "Начни с разминки — она в начале тренировки. Нажми на название упражнения разминки, чтобы посмотреть технику.",
   "Нажми «Приступить» у упражнения — откроется его экран: сколько подходов и повторений, номера подходов, рабочий вес, техника с анимацией, ниже — отдых, пульс и замена.",
@@ -4420,7 +4448,7 @@ function admDemo(){
   const N=["Анна","Иван","Мария","Сергей","Ольга","Дмитрий","Елена","Алексей","Наталья","Павел","Ирина","Андрей","Юлия","Максим","Светлана","Никита","Татьяна","Артём","Ксения","Роман","Дарья","Егор","Алина","Кирилл"];
   const now=Date.now(), G=Object.keys(ADM_G), src=["","","dom_chat","dom_chat","insta","friend"], users=N.map((n,i)=>{ const seen=now-[0.5,1,3,20,60,180,400,900,1500,3000,6000,9000][i%12]*60e3*(1+i%3);
     const ps=i%7===0?"paid":i%3===0?"gift":null; return {id:String(500000000+i*7919),name:n,un:i%4?"user_"+(1000+i*37):"",first:now-(i*2+1)*864e5,seen,online:now-seen<150e3,app:i%9!==8,
-    goal:G[i%G.length],lvl:1+i%3,sex:i%2?"m":"f",place:i%3?"gym":"home",total:(i*5)%23,last:null,src:src[i%src.length],full:!!ps,psrc:ps,prem:!!ps,until:ps==="paid"?now+20*864e5:null,paid:ps==="paid",blocked:i===17,mute:i===11,days:(i*3)%25+1}; });
+    goal:G[i%G.length],lvl:1+i%3,sex:i%2?"m":"f",place:i%3?"gym":"home",total:(i*5)%23,last:null,src:src[i%src.length],full:!!ps,psrc:ps,prem:!!ps,until:ps==="paid"?now+20*864e5:null,paid:ps==="paid",blocked:i===17,nt:{days:[1,3,5],time:"19:00",tz:"Europe/Kyiv",train:true,syncAt:i%5===0?null:now-i*3600e3,last:i%4?{at:now-(i%4)*864e5,type:["train","week","brk"][i%3]}:null,err:i===5?{at:now-864e5,msg:"Too Many Requests: retry after 5"}:null,status:i===17?{ok:false,why:"бот заблокирован пользователем"}:i%5===0?{ok:false,why:"приложение ещё не прислало настройки: нужно открыть DuoFit из Telegram"}:{ok:true,why:"следующее — завтра в 19:00 (Europe/Kyiv)"}},mute:i===11,days:(i*3)%25+1}; });
   const cnt=f=>users.filter(f).length, by=k=>users.reduce((m,u)=>{const v=u[k]||"—"; m[v]=(m[v]||0)+1; return m;},{});
   return {demo:true,now,online:cnt(u=>u.online),active:{today:cnt(u=>now-u.seen<864e5),d7:cnt(u=>now-u.seen<7*864e5),d30:users.length},total:users.length,app:cnt(u=>u.app),botOnly:cnt(u=>!u.app),
     fresh:{today:1,d7:4},subs:{paid:cnt(u=>u.psrc==="paid"),gift:cnt(u=>u.psrc==="gift"),everPaid:cnt(u=>u.paid),payments:4,revenue:3200},workouts:users.reduce((a,u)=>a+u.total,0),trained:cnt(u=>u.total>0),
@@ -4476,6 +4504,11 @@ function admUserSheet(id){
     ${row("Тренировок",u.total)}${row("Источник",esc(u.src||"без метки"))}
     ${row("Подписка",u.psrc==="paid"?"оплачена"+(u.until?" до "+new Date(u.until).toLocaleDateString("ru-RU"):""):u.psrc==="gift"?"подарочная":u.psrc==="test"?"тестовая":"нет")}${row("Индивидуальная анкета",u.full?"заполнена":"нет")}
     ${row("Уведомления",u.blocked?"бот заблокирован":u.mute?"выключены":"включены")}
+    ${u.nt?`${row("Напоминания",u.nt.days?`${WD_ORDER.filter(d=>u.nt.days.includes(d)).map(d=>WD[d]).join(", ")||"дни не выбраны"} · ${esc(u.nt.time||"")}${u.nt.train===false?" · выключены":""}`:"—")}
+    ${row("Настройки из приложения",u.nt.syncAt?dtTxt(u.nt.syncAt):"не приходили")}
+    ${row("Последнее сообщение",u.nt.last?`${({train:"напоминание",week:"итоги недели",brk:"перерыв",fuel:"питание",free:"конец бесплатной",win:"возврат",pay:"оплата",exp:"конец подписки"})[u.nt.last.type]||"сообщение"} · ${dtTxt(u.nt.last.at)}`:"не было")}
+    ${u.nt.err?row("Ошибка отправки",`${esc(u.nt.err.msg)} · ${dtTxt(u.nt.err.at)}`):""}
+    <p class="small" style="margin:6px 0 0;color:${u.nt.status&&u.nt.status.ok?"var(--ok)":"var(--warn,#e0a12e)"}">${u.nt.status?(u.nt.status.ok?"✓ ":"⚠ ")+esc(u.nt.status.why):""}</p>`:""}
     <div class="row" style="gap:8px;margin-top:12px"><button class="btn sm sec grow" id="admCopy">Скопировать ID</button><a class="btn sm grow" href="${link}" target="_blank" rel="noopener" style="text-align:center;text-decoration:none">Написать</a></div>
     <button class="btn sec" id="admClose" style="margin-top:8px">Закрыть</button></div>`;
   document.body.appendChild(w);
